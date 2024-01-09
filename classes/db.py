@@ -14,7 +14,7 @@ class DB:
         self.all=db.all
 
 class MYSQLDB:
-    def __init__(self,table,host='localhost',user="root",password='',database='line_bot_configs',port=3306):
+    def __init__(self,table,host='172.18.0.12',user="root",password='root',database='hongyun-line',port=3306):
         self.connection = self.openConnection(host=host,user=user,password=password,database=database,port=port)
         self.cursor = self.connection.cursor(dictionary=True)
         self.table= table
@@ -155,7 +155,7 @@ class MYSQLDB:
     #DB ROOT
 
     #DB connection
-    def openConnection(self, host='localhost',user="root",password='',database='line_bot_configs',port=3306):
+    def openConnection(self, host='172.18.0.12',user="root",password='root',database='hongyun-line',port=3306):
         return mysql.connector.connect(
             host=host,
             user=user,

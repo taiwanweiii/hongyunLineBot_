@@ -414,14 +414,8 @@ def LineBotv1(company):
 		if 'events' not in data: return print('events not exists.')
 		for event in data["events"]:
 			# init
-			print('===============event==================')
-
-			print(event)
-			print('===============event==================')
-
 			event = line.setEvent(event)
-			print(event)
-
+			
 			user_status = member.isMember(event.uid,company)
 			# 
 			match event.type:
@@ -439,7 +433,6 @@ def LineBotv1(company):
 
 					# underButtonSendMessageList=eval(underButtonSendMessageListStr)
 
-					configsSearchDBProjectList,LineToken,ballRollNumber,searchBallRollfillterTrue,projectDetails,projectList,projectNameList,projectsActiveList,projectsDayList,projectsintervalList,publicBlackTimeList,projectsoffsetList,projectsblockTimeList,projectSnumberOfAppointmentsList,projectGroupReserveStatusList,projectGroupNameList=getIsProject(company)
 					# underButtonLableList = configs.appointment.underButtonLableList
 					# underButtonSendMessageList = configs.appointment.underButtonSendMessageList
 					underButtonLableList=projectNameList
@@ -545,8 +538,8 @@ def LineBotv1(company):
 							# line.replyMessage(template)
 
 						elif event.message in underButtonSendMessageList and reserve.isReserveDBState(event.uid,company)=='noProject':
+							event.message=str(event.message)
 							reserve.reserveDB.updateThreeSearchWhere('project',event.message[2:],'userId',event.uid,'status','0',"company",company)
-							print('=================print(')
 							"""
 							#時間轉UNIX
 							def convert_to_timestamps(active_list):
@@ -596,6 +589,12 @@ def LineBotv1(company):
 
 
 							dayList=[]
+							print('---------------publicBlackTimeList=====')
+							print(publicBlackTimeList)
+							print('---------------projectsoffset=====')
+							print('---------------projectsoffset=====')
+							print('---------------projectsoffset=====')
+							print('---------------projectsoffset=====')
 
 							# dayList.append(todayTimestamp)
 							ranges = [(start, start + 86400 - 1) for start in publicBlackTimeList]
@@ -790,588 +789,534 @@ def LineBotv1(company):
 				case 'postback':
 
 					match event.postback:
-							case data if data.startswith('appointment_confirm_reserve:'):
-								# isReserveFunction=reserve.isReserveDBState(event.uid)
-								# if isReserveFunction.isShortReserveDBState()==True:
-								if len(data.split(":")) > 1:
-									reserveTimeUnix = int(data.split(":")[1].strip())
-									# print(reserveTimeUnix)
-								reserve.reserveDB.updateThreeSearchWhere('dataTime',reserveTimeUnix,'userId',event.uid,'status','0',"company",company)
-								
-								if reserve.isReserveDBState(event.uid,company) == True:
-									memberSearchData=member.dbSearch(event.uid,company)
-									template = copy.deepcopy(line.flexTemplate('appointment confirmation'))
-									template['body']['contents'][2]['contents'][0]['contents'][1]['text']=memberSearchData['name']
-									template['body']['contents'][2]['contents'][2]['contents'][1]['text']=memberSearchData['phone']
+						#選擇小時
+						case data if data.startswith('appointment_confirm_reserve:'):
+							# isReserveFunction=reserve.isReserveDBState(event.uid)
+							# if isReserveFunction.isShortReserveDBState()==True:
+							if len(data.split(":")) > 1:
+								reserveTimeUnix = int(data.split(":")[1].strip())
+								projectName = (data.split(":"))
 
-									# timeFormatYYYYMMDDhhmm=(datetime.fromtimestamp(isReserveFunction.shortDBSearch()[0]['dataTime'],TZ)).strftime("%Y年%m月%d日 %H:%M")
-									timeFormatYYYYMMDDhhmm=(datetime.fromtimestamp(reserve.reserveDB.TableThreeSearch('userId',event.uid,'status','0',"company",company)[0]['dataTime'],TZ)).strftime("%Y年%m月%d日 %H:%M")
-
-									print(timeFormatYYYYMMDDhhmm)
-									# template['body']['contents'][2]['contents'][4]['contents'][1]['text']=isReserveFunction.shortDBSearch()[0]['project']
-									reserveProjectName=reserve.reserveDB.TableThreeSearch('userId',event.uid,'status','0','company',company)[0]['project']
-									template['body']['contents'][2]['contents'][4]['contents'][1]['text']=reserveProjectName
-
-									template['body']['contents'][2]['contents'][6]['contents'][1]['text']=timeFormatYYYYMMDDhhmm
-									line.replyFlex(template)
-
-									# template_item = copy.deepcopy(template["contents"][0]['body']['contents'])
-									# template['contents'][0]['header']['contents'][0]['text']=dateFormatYYYYMMDD
-									# template['contents'][0]['body']['contents'] = []
-
-							case 'ConfirmReservation':
-								reserveCount= configs.appointment.reserveCount
-								# isReserveFunction=reserve.ShortAndHistoryReserveFunction(event.uid)
-								NOTIFYTOKEN=configs.appointment.NOTIFYTOKEN
-								# historySearchStatusUserId=isReserveFunction.historyDBSearchStatusUserId()
-								historySearchStatusUserId = reserve.reserveDB.TableThreeSearch('userid',event.uid,'status','1','company',company)
-								getReserveTimeList = [item['dataTime'] for item in historySearchStatusUserId]
-								nowTime=getDatetime()
-								nowTimeUinx=int(nowTime.timestamp())
-								count = len({x for x in getReserveTimeList if x is not None and x > int(nowTimeUinx)})
-								if not reserve.reserveDB.execute_query(f"SELECT * FROM reserve WHERE userId = '{event.uid}' AND (dataTime IS NULL OR project IS NULL) AND company = '{company}'"):
-									if count< reserveCount:
-										# userReservedate=isReserveFunction.historyDBAdd()
-										userReservedate=reserve.reserveDB.rdbmsSearch(company,event.uid)[0]
-
-										reserve.reserveDB.updateThreeSearchWhere('status','1','userId',event.uid,'status','0','company',company)
-										reserve.reserveDB.Insert(("userId","company",),(event.uid,company,))
-
-										print(userReservedate)
-										notifyFunction=notify(NOTIFYTOKEN)
-										print('-datetime.fromtimestamp(userReservedate["dataTime"]))----')
-										# print((userReservedate))
-										# print(reserve.reser)
-										notifyTime=(datetime.fromtimestamp(userReservedate["dataTime"])).strftime('%Y年%m月%d日 %H:%M')
-										notifyFunction.SendMessage(f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n')
-										line.replyText(f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}\n')
-									else:
-										line.replyText('系統自動判斷目前您以有預約時段,請點擊會員查詢確認時段是否預約,若無預約煩請致電～')
-									# isReserveFunction.historyDBUpdate(memberDate)
-
-									# isReserveFunction.shortDBDelete()
-									# print("確認預約")
-								else:
-									line.replyText('目前系統尚無預約資料，請從新預約！！！')
-
-							case 'CancelReservation':
-								# isReserveFunction=reserve.ShortAndHistoryReserveFunction(event.uid)
-								try:
-									if (reserve.reserveDB.TableThreeSearch('userId',event.uid,'status','0','company',company)):
-										reserve.reserveDB.updateThreeSearchWhere("dataTime",None,"userId",event.uid,"status","0","company",company)
-										reserve.reserveDB.updateThreeSearchWhere("project",None,"userId",event.uid,"status","0","company",company)
-								# if isReserveFunction.shortDBcontains():
-								# 	isReserveFunction.shortDBDelete()
-								# 	reserve.add(event.uid)
-								except:print()
-								pass
-							case 'updateuserId':
-								memberDB= MYSQLDB('member')
-
-								memberDB.updateTwoSearchWhere('name',None,'company',company,'userId',event.uid)
-								# member.update(event.uid,{'name':None})
-								line.replyText("請輸入使用者暱稱")
-							case 'updateUserPhone':
-								memberDB= MYSQLDB('member')
-
-								# memberDB.updateTwoSearchWhere('phone',None,'company',company,'userId',event.uid)
-								line.replyText("若要更動電話號碼請聯繫店家")
-							case data if data.startswith('ReserveProject') :
-								print(data)
-							case 'firstviewTutoril':
-								template=functionTemplate.videoTemplate('https://imgur.com/XVmZmIE','https://img.ttshow.tw/images/media/frontcover/2020/08/06/6.jpg')
-								line.replyMessage(template)
-							case 'registerNow':
-								user_status = member.isMember(event.uid,company)
-								if user_status == 'nouser':
-									member.memberDB.Insert(('userId','company'),(event.uid,company))
-									line.replyText("請輸入使用者名稱")
-								elif user_status == 'name':
-									line.replyText("請先輸入使用者名稱")
-								elif user_status == 'phone':
-									line.replyText("請先輸入電話號碼")
-							case 'register':
-								memberDB= MYSQLDB('member')
-								if not memberDB.TableOneSearchAddField("userId","userId",event.uid,"company",company):
-									memberDB.insertMember(event.uid,company)
-									template = line.flexTemplate('memberRegister')
-
-									line.doubleReplyFlexMessageText('請於下方小鍵盤，輸入會員電話',template,'使用者電話輸入')
-
-								else:
-									user_status=member.isMember(event.uid,company)
-									if user_status == 'name':
-										line.replyText("請先輸入使用者名稱")
-									elif user_status == 'phone':
-										line.replyText("請先輸入電話號碼")
-									elif user_status == 'sex':
-										line.replyText("請輸入性別\n🙋🏻‍♂️男性請輸入男\n🙋🏻‍♀️女性請輸入女")
-							case data if data.startswith('personalData:'):
-								personalData = (data.split(":"))[1]
-
-								if personalData=='揮桿數據':
-									clubDataDB=MYSQLDB('clubData')
-									print(event.uid)
-									clubDataSearch=(clubDataDB.clubTableSearch('clubData.ballHead,clubData.clubHead,clubData.shaftWeightStiffness,clubData.gripWeight,clubData.swingWeight,clubData.clubfaceAngle,clubData.lieAngle,clubData.remark','clubData',event.uid))
-									print(clubDataSearch)
-									template=copy.deepcopy(line.flexTemplate('carousel'))
-									templateAdd = copy.deepcopy(line.flexTemplate('clubInformation'))
-									#球桿名稱
-									for index, value in enumerate(clubDataSearch):
-										templateAdd['body']['contents'][0]['contents'][1]['contents'][1]['contents'][0]['contents'][1]['text']=value['ballHead']
-										templateAdd['body']['contents'][0]['contents'][1]['contents'][1]['contents'][1]['contents'][1]['text']=value['clubHead']
-										templateAdd['body']['contents'][0]['contents'][1]['contents'][2]['contents'][0]['contents'][1]['text']=value['shaftWeightStiffness']
-										templateAdd['body']['contents'][0]['contents'][1]['contents'][2]['contents'][1]['contents'][1]['text']=value['gripWeight']
-										templateAdd['body']['contents'][0]['contents'][1]['contents'][3]['contents'][0]['contents'][1]['text']=value['swingWeight']
-										templateAdd['body']['contents'][0]['contents'][1]['contents'][3]['contents'][1]['contents'][1]['text']=value['clubfaceAngle']
-										templateAdd['body']['contents'][0]['contents'][1]['contents'][4]['contents'][0]['contents'][1]['text']=value['lieAngle']
-										templateAdd['body']['contents'][0]['contents'][1]['contents'][5]['contents'][0]['contents'][1]['text']=value['remark']
-										template['contents'].append(copy.deepcopy(templateAdd))
-
-								if personalData=='球桿數據':
-									playclubDB=MYSQLDB('playclubData')
-									playclubSearch=(playclubDB.clubTableSearch('playclubData.name,playclubData.speed,playclubData.averageToTalDistance,playclubData.averageFlightDistance,playclubData.takeoffAngle,playclubData.ballSpeed,playclubData.remark','playclubData',event.uid))
-									print(playclubSearch)
-									template=copy.deepcopy(line.flexTemplate('carousel'))
-									templateAdd = copy.deepcopy(line.flexTemplate('playclubInformation'))
-									for index, value in enumerate(playclubSearch):
-										templateAdd['body']['contents'][0]['contents'][0]['text']=value['name']
-										templateAdd['body']['contents'][0]['contents'][1]['contents'][1]['contents'][0]['contents'][1]['text']=value['speed']
-										templateAdd['body']['contents'][0]['contents'][1]['contents'][1]['contents'][1]['contents'][1]['text']=f"{value['averageToTalDistance']}y"
-										templateAdd['body']['contents'][0]['contents'][1]['contents'][2]['contents'][0]['contents'][1]['text']=f"{value['averageFlightDistance']}y"
-										templateAdd['body']['contents'][0]['contents'][1]['contents'][2]['contents'][1]['contents'][1]['text']=f"{value['takeoffAngle']}°"
-										templateAdd['body']['contents'][0]['contents'][1]['contents'][3]['contents'][0]['contents'][1]['text']=f"{value['ballSpeed']}"
-										templateAdd['body']['contents'][0]['contents'][1]['contents'][4]['contents'][0]['contents'][1]['text']=value['remark']
-										template['contents'].append(copy.deepcopy(templateAdd))
-
-								line.replyFlex(template)					
-
-							case data if data.startswith('postReserveProject:') and (user_status==True):
-								reserveProjectName = (data.split(":"))[1]
-								reserve.reserveDB.updateThreeSearchWhere('project',reserveProjectName,'userId',event.uid,'status','0',"company",company)
-								reserve.reserveDB.updateThreeSearchWhere("dataTime",None,"userId",event.uid,"status","0","company",company)
-								reserve.reserveDB.updateThreeSearchWhere("project",None,"userId",event.uid,"status","0","company",company)
-								print(f"projectNameList$$${projectNameList}")
-								if reserveProjectName in projectNameList:
-									projectNameIdx = projectNameList.index(reserveProjectName)
-									projectName=projectNameList[projectNameIdx]
-									projectsDay=projectsDayList[projectNameIdx]
-									projectsActive=projectsActiveList[projectNameIdx]
-									projectsoffset=projectsoffsetList[projectNameIdx]
-									projectsinterval=projectsintervalList[projectNameIdx]
-									current_datetime = datetime.now()
-									current = current_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
-									nowtimestamp = current.timestamp()
-									todayTimestamp=nowtimestamp+projectsDay+86400
-									projectNameIdx = projectNameList.index(reserveProjectName)
-
-									projectName=projectNameList[projectNameIdx]
-									projectsDay=projectsDayList[projectNameIdx]
-									projectsActive=projectsActiveList[projectNameIdx]
-									projectsoffset=projectsoffsetList[projectNameIdx]
-									projectsinterval=projectsintervalList[projectNameIdx]
-									current_datetime = datetime.now()
-									current = current_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
-									nowtimestamp = current.timestamp()
-									todayTimestamp=nowtimestamp+projectsDay+86400
-									projectNameIdx = projectNameList.index(reserveProjectName)
-
-									projectName=projectNameList[projectNameIdx]
-									projectsDay=projectsDayList[projectNameIdx]
-									projectsActive=projectsActiveList[projectNameIdx]
-									projectsoffset=projectsoffsetList[projectNameIdx]
-									projectsinterval=projectsintervalList[projectNameIdx]
-									current_datetime = datetime.now()
-									current = current_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
-									nowtimestamp = current.timestamp()
-									todayTimestamp=nowtimestamp+projectsDay+86400
-									projectNameIdx = projectNameList.index(reserveProjectName)
-									print('---------------projectNameIDx--------')
-									print(projectNameIdx)
-									print('---------------projectNameIDx--------')
-
-									projectName=projectNameList[projectNameIdx]
-									projectsDay=projectsDayList[projectNameIdx]
-									projectsActive=projectsActiveList[projectNameIdx]
-									projectsoffset=projectsoffsetList[projectNameIdx]
-									projectsinterval=projectsintervalList[projectNameIdx]
-									current_datetime = datetime.now()
-									current = current_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
-									nowtimestamp = current.timestamp()
-									todayTimestamp=nowtimestamp+projectsDay+86400
-									projectNameIdx = projectNameList.index(reserveProjectName)
-									print('---------------projectNameIDx--------')
-									print(projectNameIdx)
-									print('---------------projectNameIDx--------')
-
-									projectName=projectNameList[projectNameIdx]
-									projectsDay=projectsDayList[projectNameIdx]
-									projectsActive=projectsActiveList[projectNameIdx]
-									projectsoffset=projectsoffsetList[projectNameIdx]
-									projectsinterval=projectsintervalList[projectNameIdx]
-									current_datetime = datetime.now()
-									current = current_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
-									nowtimestamp = current.timestamp()
-									todayTimestamp=nowtimestamp+projectsDay+86400
-									nextTimestamp=todayTimestamp+projectsoffset
-
-									dayList=[]
-									ranges = [(start, start + 86400 - 1) for start in publicBlackTimeList]
-
-									while todayTimestamp < nextTimestamp:
-										if not any(start <= todayTimestamp <= end for start, end in ranges):
-											dayList.append(todayTimestamp)
-										todayTimestamp += 86400
-									template = copy.deepcopy(line.flexTemplate('appointmentNow'))
-									template_item = copy.deepcopy(template["contents"][0]['body']['contents'])
-									template_page_item=copy.deepcopy(template['contents'][0])
-									template['contents'][0]['body']['contents'] = []
-									datapage = configs.appointment.datapage
-									blackweekday=[]
-									weekday_chinese = ['一', '二', '三', '四', '五', '六', '日']
-									template['contents'][0]['header']['contents'][0]['text']=f'{reserveProjectName}-請選擇日期'
-									for i in range(7):
-										if (projectsActive[i][0][0]=="00:00" and projectsActive[i][0][1]=="00:00"):
-											blackweekday.append(weekday_chinese[i])
-									idex=1
-									for idx,ts in enumerate(dayList):
-										dt = datetime.fromtimestamp(ts)
-										year = dt.year
-										month = dt.month
-										day = dt.day
-										if not weekday_chinese[dt.weekday()] in blackweekday:
-											typePage = (idex / datapage) + 1 if idex % datapage > 0 else (idex / datapage)
-											typePage = int(typePage)
-											if len(template['contents'])<typePage:
-												template['contents'].append(copy.deepcopy(template['contents'][0]))
-												template['contents'][typePage-1]['body']['contents'] = []
-											template_item[0]['contents'][0]['text'] = f"{dt.month}/{dt.day} ({weekday_chinese[dt.weekday()]})"
-											template_item[0]['contents'][1]['action']['data'] = f"appointment_choose_time:{int(ts)}:project:{projectName}"
-											template["contents"][typePage-1]['body']['contents'].append(copy.deepcopy(template_item[0]))
-											template["contents"][typePage-1]['body']['contents'].append(copy.deepcopy(template_item[1]))
-											idex+=1
-											print(int(ts))
-										else:
-											print(weekday_chinese[dt.weekday()])
-									line.replyFlex(template)
-								else:
-									line.doubleReplyMessageText(f'👨‍💻{reserveProjectName}尚未開放','☎️如有疑問請致電｜0919-102-803')				
-							case data if data.startswith('appointment_choose_time:') and 'project:'in data:
-								parts = data.split(":")
-								timeUnix=parts[1]
-								projectName=parts[3]
-								reserve.reserveDB.updateThreeSearchWhere("project",projectName,"userId",event.uid,"status","0","company",company)
-
-								if reserve.isReserveDBState(event.uid,company)=='noDataTime':
-									projectNameIdx = projectNameList.index(projectName)
-									projectName=projectNameList[projectNameIdx]
-									projectsDay=projectsDayList[projectNameIdx]
-									projectsActive=projectsActiveList[projectNameIdx]
-									projectsoffset=projectsoffsetList[projectNameIdx]
-									projectsinterval=projectsintervalList[projectNameIdx]
-									projectSumberOfAppointments=projectSnumberOfAppointmentsList[projectNameIdx]
-									projectGroupReserveStatus=projectGroupReserveStatusList[projectNameIdx]
-									ALLprojectList = configsSearchDBProjectList[1:-1].split(',')
-
-									AllProjectIndex=ALLprojectList.index(projectName)
-									filterTimeUnix=[]
-									element_count = {}
-
-									# if projectsblockTimeList[projectNameIdx]:
-
-									projectsblockTime=projectsblockTimeList[AllProjectIndex]
-									def convert_to_timestamps(active_list):
-										converted_active = []
-										for time_range in active_list:
-											converted_range = []
-											for time_point in time_range:
-												if time_point[0] is not None:
-													start_time_str, end_time_str = time_point
-													start_time = int(start_time_str.split(':')[0]) * 60 * 60 + int(start_time_str.split(':')[1])*60
-													end_time = int(end_time_str.split(':')[0]) * 60 * 60 + int(end_time_str.split(':')[1])*60
-													converted_range.append([int(start_time), int(end_time)] if time_range[0] is not None else [None, None])
-												else:
-													converted_range.append([None, None])
-											converted_active.append(converted_range)
-										return converted_active
-									weekday_chinese = ['一', '二', '三', '四', '五', '六', '日']
-									dt = datetime.fromtimestamp(int(timeUnix))
-									print(f"{dt.year}/{dt.month}/{dt.day} ({weekday_chinese[dt.weekday()]})")
-									unixActive=convert_to_timestamps(projectsActive)
-									unixTimeActive=[]
-									if((unixActive[dt.weekday()])[1][0]==None):
-										while (unixActive[dt.weekday()][0][0])<(unixActive[dt.weekday()][0][1]):
-											print('----unixActive[dt.weekday()][0][0]----')
-											print(unixActive[dt.weekday()][0][0])
-											print(unixActive[dt.weekday()][0][1])
-											print(projectsActive)
-											print(unixActive)
-											print(f'dt.weekday():{dt.weekday()}')
-											print('----unixActive[dt.weekday()][0][0]----')
-											unixTimeActive.append((unixActive[dt.weekday()][0][0])+(int(dt.timestamp())))
-											unixActive[dt.weekday()][0][0]+=projectsinterval
-										print(int(dt.timestamp()))
-										# timestamp = datetime.strptime(date_string, date_format).timestamp()
-									else:
-										while (unixActive[dt.weekday()][0][0])<(unixActive[dt.weekday()][0][1]):
-											unixTimeActive.append((unixActive[dt.weekday()][0][0])+(int(dt.timestamp())))
-											unixActive[dt.weekday()][0][0]+=projectsinterval
-										while(unixActive[dt.weekday()][1][0])<(unixActive[dt.weekday()][1][1]):
-											unixTimeActive.append((unixActive[dt.weekday()][1][0])+(int(dt.timestamp())))
-											unixActive[dt.weekday()][1][0]+=projectsinterval
-									uniqueUnixTimeActive = list(set(unixTimeActive))
-									sortedUnixTimeActive = sorted(uniqueUnixTimeActive)
-
-									print(f'sortedUnixTimeActive${sortedUnixTimeActive}')
-									print(f'projectsblockTime{projectsblockTime}')
-
-									filterBlackTimeUnix = [timestamp for timestamp in sortedUnixTimeActive if not any(range_item[0] <= timestamp <= range_item[1] for range_item in projectsblockTime)]
-									if (projectGroupReserveStatus=='own'):
-										historydate = reserve.reserveDB.TableThreeSearch('project',projectName,'status','1','company',company)
-										historyDataTime = [item['dataTime'] for item in historydate]
-										# historyDataTimeFormatYYYYMMDD=(datetime.fromtimestamp(int(historyDataTime),TZ)).strftime('20%y年%m月%d日')
-										# if 
-										print('-----x-x--xx--x-x')
-										print(historyDataTime)
-										for x in historyDataTime:
-											element_count[x] = element_count.get(x, 0) + 1
-										print(element_count)
-										filterTimeUnix = [x for x in filterBlackTimeUnix if element_count.get(x, 0) < projectSumberOfAppointments]
-									if (projectGroupReserveStatus=='groupReserve'):
-										groupProjectList = []
-										# numberAppointments=''
-										for group, details in projectGroupNameList.items():
-											print('test--------')
-											print(AllProjectIndex)
-											print(f'project{projectNameIdx+1}')
-											print(details)
-											print('test--------')
-											if f'project{AllProjectIndex+1}' in details['projectList']:
-												for item in details['projectList']:
-													print('======item=====')
-													groupProjectList.append(item)
-													print('======item=====')
-												print(f"project{projectNameIdx+1} is in group {group}")
-												numberAppointments=details['numberAppointments']
-										print(f'groupProjectList:{groupProjectList}')
-										print('projectDetails------')
-										# print(projectDetails)
-										# print(projectDetails[groupProjectList[0]])
-										groupProjectName=[]
-
-										for projectNumber in groupProjectList:
-											groupProjectName.append({projectDetails[projectNumber]['name']:projectDetails[projectNumber]['numberOfAppointments']})
-										print(groupProjectName)
-										# groupProjectUnixNumber={}
-										for item in groupProjectName:
-											for projectOneName , number in item.items():
-												print('=-----------projectOneName-----')
-												print(projectOneName)
-												searchGroupHistoryUnixTime=reserve.reserveDB.TableThreeSearch('project',projectOneName,'status','1','company',company)
-												if searchGroupHistoryUnixTime:
-													for data in searchGroupHistoryUnixTime:
-														found = False
-														print("測試")
-														for entryTime,entryNummber in element_count.items():
-															print('---entry')
-															print(entryTime, entryNummber)
-															print(data['dataTime'])
-															if data['dataTime'] == entryTime:
-																element_count[data['dataTime']] += number
-																found = True
-
-																break
-														if not found:
-															element_count[data['dataTime']]=number
-
-														# for key,value in groupProjectUnixNumber.items():
-															# if key in 
-														
-												print('=-----------projectOneName-----')
-										print(element_count)
-										print(f'numberAppointments:{numberAppointments}')
-										print(f'element_count:{element_count}')
-										print(f'filterBlackTimeUnix:{filterBlackTimeUnix}')
-										print(f'projectSumberOfAppointments:{projectSumberOfAppointments}')
-										print(type(numberAppointments))
-										print(int(projectSumberOfAppointments))
-										print(type(projectSumberOfAppointments))
-										print(numberAppointments-projectSumberOfAppointments)
-										filterTimeUnix = [x for x in filterBlackTimeUnix if element_count.get(x, 0) <= int(numberAppointments)-int(projectSumberOfAppointments)]
-										print(filterTimeUnix)
-									# filterTimeUnix = [x for x in filterBlackTimeUnix if x not in historyDataTime]
-									filterTimeYYYYDDList=[]
-									print(f'filterTimeUnix:{filterTimeUnix}')
-									dateFormatYYYYMMDD=(datetime.fromtimestamp(int(filterTimeUnix[0]),TZ)).strftime('20%y年%m月%d日')
-									for filterTimeYYYYDD in filterTimeUnix:
-										dt = datetime.fromtimestamp(filterTimeYYYYDD,TZ).strftime('%H:%M')
-										filterTimeYYYYDDList.append(dt)
-
-									# if len(filterTimeYYYYDDList)<1:
-										# line.replyText(f'({})當日預約已滿請上方從選擇日期')
-									# else:
-									template = copy.deepcopy(line.flexTemplate('appointmentNow'))
-									template_item = copy.deepcopy(template["contents"][0]['body']['contents'])
-									template['contents'][0]['header']['contents'][0]['text']=dateFormatYYYYMMDD
-									template['contents'][0]['body']['contents'] = []
-									timepage= configs.appointment.timepage
-									for idx,ts in enumerate(filterTimeYYYYDDList):
-										idx+=1
-										typePage = (idx / timepage) + 1 if idx % timepage > 0 else (idx / timepage)
-										typePage = int(typePage)
-										if len(template['contents'])<typePage:
-											template['contents'].append(copy.deepcopy(template['contents'][0]))
-											template['contents'][typePage-1]['body']['contents'] = []
-										template_item[0]['contents'][0]['text'] = ts
-										template_item[0]['contents'][1]['action']['data'] = f"appointment_confirm_reserve:{filterTimeUnix[idx-1]}"
-										template["contents"][typePage-1]['body']['contents'].append(copy.deepcopy(template_item[0]))
-										template["contents"][typePage-1]['body']['contents'].append(copy.deepcopy(template_item[1]))
-									# print(template)
-									line.replyFlex(template)
-
-							case data if data.startswith('buyBallRoll:') and (user_status==True):
-								reserve.reserveDB.updateThreeSearchWhere("dataTime",None,"userId",event.uid,"status","0","company",company)
-								reserve.reserveDB.updateThreeSearchWhere("project",None,"userId",event.uid,"status","0","company",company)
-								urlList=["https://i.imgur.com/HD83R4p.png","https://i.imgur.com/ekSGB7U.png","https://i.imgur.com/HYbdtoZ.png"]
-								template=copy.deepcopy(line.flexTemplate('carousel'))
-								ballRoll = copy.deepcopy(line.flexTemplate('ballRoll'))
-								i=0
-								if searchBallRollfillterTrue:
-									for key,value in searchBallRollfillterTrue.items():
-										k=i%3
-										ballRoll['hero']['contents'][0]['contents'][0]['url']=urlList[k]
-										ballRoll['hero']['contents'][0]['contents'][1]['text']=value['courtName']
-										ballRoll['hero']['contents'][1]['contents'][0]['action']['data']=f"chooseBallRoll:{value['courtName']}"
-
-										template['contents'].append(copy.deepcopy(ballRoll))
-										i+=1
-									line.replyFlex(template)
-								else:
-									line.doubleReplyMessageText(f'👨‍💻球卷尚未開放','☎️如有疑問請致電｜0919-102-803')				
-
-							case data if data.startswith('chooseBallRoll:'):
-								currentDate=datetime.now()
-								first_day_of_month = currentDate.replace(day=1, hour=0, minute=0, second=0 ,microsecond=0)
-								unix_timestamp = int(first_day_of_month.timestamp())
-
-								parts = data.split(":")
-								ballRollName = parts[1] if len(parts)>1 else None
-								for key, value in searchBallRollfillterTrue.items():
-									if value.get('courtName') == ballRollName:
-										monthNumber = value.get('monthNumber', {})
-								filtered_month_number = {key: value for key, value in monthNumber.items() if int(key) >= unix_timestamp}
-								yearMonthDict = [datetime.utcfromtimestamp((int(timestamp)+86400)).strftime('%Y/%m') for timestamp in filtered_month_number.keys()]
-								yearMonthValueDict=[]
-								underButtonTextList=[]
-								underButtonData=[]
-								for key ,value in filtered_month_number.items():
-									yearMonthValueDict.append(value)
-								for i in range(ballRollNumber):
-									underButtonTextList.append(yearMonthDict[i])
-									underButtonData.append(f'ballRollunixTime:{yearMonthDict[i]}:ballRollnumber:{yearMonthValueDict[i]}:ballRollName:{ballRollName}')
-								print('-----underButtonTextList----')
-								print(underButtonTextList)
-								print(type(underButtonData))
-								template=functionTemplate.postUnderTemplate(underButtonTextList,underButtonData,f"目前已選擇{ballRollName}\n請於下方選擇月份")
-								line.replyMessage(template)
-
-								# reserve.reserveDB.updateThreeSearchWhere("project",ballRollName,"userId",event.uid,"status","0","company",company)
-							case data if data.startswith('ballRollunixTime:') and ('ballRollnumber:' in data) and ('ballRollName:' in data):
-								parts = data.split(":")
-								unixTime=parts[1]
-								number=parts[3]
-								name=parts[5]
-								input_date = datetime.strptime(unixTime, '%Y/%m')
-								first_day_of_month = input_date.replace(day=1, hour=0, minute=0, second=0)
-								unix_timestamp = int(first_day_of_month.timestamp())
-
-
-								underButtonTextList=['1張','2張','3張','4張']
-								underButtonData=[f'ballRollunixTime:{unixTime}:number:{1}:ballRollName:{name}',f'ballRollunixTime:{unixTime}:number:{2}:ballRollName:{name}',f'ballRollunixTime:{unixTime}:number:{3}:ballRollName:{name}',f'ballRollunixTime:{unixTime}:number:{4}:ballRollName:{name}']
-								template=functionTemplate.postUnderTemplate(underButtonTextList,underButtonData,f"請選擇數量")
-
-								print(template)
-
-								line.replyMessage(template)
-							case data if data.startswith('ballRollunixTime:') and ('number:' in data) and ('ballRollName:' in data):
-								parts = data.split(":")
-								unixTime=parts[1]
-								number=parts[3]
-								name=parts[5]
-								date_object = datetime.strptime(unixTime, "%Y/%m")
-								first_day_of_month = date_object.replace(day=1, hour=0, minute=0, second=0)
-								unix_timestamp = int(first_day_of_month.timestamp())
-
+								# print(reserveTimeUnix)
+							reserve.reserveDB.updateThreeSearchWhere('dataTime',reserveTimeUnix,'userId',event.uid,'status','0',"company",company)
+							if reserve.isReserveDBState(event.uid,company) == True:
 								memberSearchData=member.dbSearch(event.uid,company)
 								template = copy.deepcopy(line.flexTemplate('appointment confirmation'))
 								template['body']['contents'][2]['contents'][0]['contents'][1]['text']=memberSearchData['name']
 								template['body']['contents'][2]['contents'][2]['contents'][1]['text']=memberSearchData['phone']
-								template['body']['contents'][3]['contents'][0]['action']['data']=f'ballRollConfirmf:ballRollunixTime:{unixTime}:number:{number}:ballRollName:{name}'
-								# timeFormatYYYYMMDDhhmm=(datetime.fromtimestamp(isReserveFunction.shortDBSearch()[0]['dataTime'],TZ)).strftime("%Y年%m月%d日 %H:%M")
-								# timeFormatYYYYMMDDhhmm=(datetime.fromtimestamp(reserve.reserveDB.TableThreeSearch('userId',event.uid,'status','0',"company",company)[0]['dataTime'],TZ)).strftime("%Y年%m月%d日 %H:%M")
-								reserveProjectName=reserve.reserveDB.TableThreeSearch('userId',event.uid,'status','0','company',company)[0]['project']
-								template['body']['contents'][2]['contents'][4]['contents'][1]['text']=name
 
-								template['body']['contents'][2]['contents'][6]['contents'][1]['text']=unixTime
-								template['body']['contents'][1]['text']='球卷確認單'
+								# timeFormatYYYYMMDDhhmm=(datetime.fromtimestamp(isReserveFunction.shortDBSearch()[0]['dataTime'],TZ)).strftime("%Y年%m月%d日 %H:%M")
+								timeFormatYYYYMMDDhhmm=(datetime.fromtimestamp(reserve.reserveDB.TableThreeSearch('userId',event.uid,'status','0',"company",company)[0]['dataTime'],TZ)).strftime("%Y年%m月%d日 %H:%M")
+
+								print(timeFormatYYYYMMDDhhmm)
+								# template['body']['contents'][2]['contents'][4]['contents'][1]['text']=isReserveFunction.shortDBSearch()[0]['project']
+								reserveProjectName=reserve.reserveDB.TableThreeSearch('userId',event.uid,'status','0','company',company)[0]['project']
+								template['body']['contents'][2]['contents'][4]['contents'][1]['text']=reserveProjectName
+								template['body']['contents'][3]['contents'][0]['action']['data']=f'ConfirmReservation:{projectName}'
+
+								template['body']['contents'][2]['contents'][6]['contents'][1]['text']=timeFormatYYYYMMDDhhmm
 								line.replyFlex(template)
 
-							case data if data.startswith('ballRollConfirmf:ballRollunixTime:') and ('number:' in data) and ('ballRollName:' in data):
-								reserveCount= configs.appointment.reserveCount
-								# isReserveFunction=reserve.ShortAndHistoryReserveFunction(event.uid)
-								NOTIFYTOKEN=configs.appointment.NOTIFYTOKEN
-								# historySearchStatusUserId=isReserveFunction.historyDBSearchStatusUserId()
-								parts = data.split(":")
-								unixTime=parts[2]
-								number=parts[4]
-								name=parts[6]
-								
-								date_object = datetime.strptime(unixTime, "%Y/%m")
-								first_day_of_month = date_object.replace(day=1, hour=0, minute=0, second=0)
-								unix_timestamp = int(first_day_of_month.timestamp())
-								# for i in number:
-								# 	reserve.reserveDB.updateThreeSearchWhere("project",name,"userId",event.uid,"status","0","company",company)
-								# 	reserve.reserveDB.updateThreeSearchWhere("dataTime",unix_timestamp,"userId",event.uid,"status","0","company",company)
-								# 	reserve.reserveDB.TableThreeSearch('userid',event.uid,'status','ballRoll','company',company)
-								historySearchStatusUserId = reserve.reserveDB.TableThreeSearch('userid',event.uid,'status','ballRoll','company',company)
-								getReserveTimeList = [item['dataTime'] for item in historySearchStatusUserId]
-								nowTime=getDatetime()
-								nowTimeUinx=int(nowTime.timestamp())
-								print(f'getReserveTimeList:{getReserveTimeList}')
-								print(f'historySearchStatusUserId:{historySearchStatusUserId}')
+								# template_item = copy.deepcopy(template["contents"][0]['body']['contents'])
+								# template['contents'][0]['header']['contents'][0]['text']=dateFormatYYYYMMDD
+								# template['contents'][0]['body']['contents'] = []
+#預約單確認專案
+						case data if data.startswith('ConfirmReservation:'):
+							reserveCount= configs.appointment.reserveCount
+							# isReserveFunction=reserve.ShortAndHistoryReserveFunction(event.uid)
+							NOTIFYTOKEN=configs.appointment.NOTIFYTOKEN
+							# historySearchStatusUserId=isReserveFunction.historyDBSearchStatusUserId()
+							historySearchStatusUserId = reserve.reserveDB.TableThreeSearch('userid',event.uid,'status','1','company',company)
+							getReserveTimeList = [item['dataTime'] for item in historySearchStatusUserId]
+							nowTime=getDatetime()
+							nowTimeUinx=int(nowTime.timestamp())
+							count = len({x for x in getReserveTimeList if x is not None and x > int(nowTimeUinx)})
+							result = reserve.reserveDB.execute_query(f"SELECT * FROM reserve WHERE userId = '{event.uid}' AND status='0' AND dataTime IS NOT NULL AND project IS NOT NULL AND company = '{company}'")
+							print('000d00d0d0d0d0d0d0d0d0d0d0d0d0d00dd00d')
+							print(result)
+							if result:
+								if count< reserveCount:
+									# userReservedate=isReserveFunction.historyDBAdd()
+									userReservedate=reserve.reserveDB.rdbmsSearch(company,event.uid)[0]
 
-								count = len({x for x in getReserveTimeList if x is not None and x > int(nowTimeUinx)})
-								print(f'count{count}')
-								print(reserveCount)
-								if not reserve.reserveDB.execute_query(f"SELECT * FROM reserve WHERE userId = '{event.uid}' AND (dataTime IS NULL OR project IS NULL) AND company = '{company}'"):
-									if count< reserveCount:
-										print('------------')
-										# userReservedate=isReserveFunction.historyDBAdd()
-										userReservedate=reserve.reserveDB.rdbmsSearch(company,event.uid)[0]
-										for i in number:
-											reserve.reserveDB.Insert(("userId","company","project","dataTime","status",),(event.uid,company,name,unix_timestamp,"ballRoll",))
+									reserve.reserveDB.updateThreeSearchWhere('status','1','userId',event.uid,'status','0','company',company)
+									reserve.reserveDB.Insert(("userId","company",),(event.uid,company,))
 
-										print(userReservedate)
-										notifyFunction=notify(NOTIFYTOKEN)
-										# print((userReservedate))
-										# print(reserve.reser)
-										unixTime=userReservedate['dataTime']
-										date_object = datetime.utcfromtimestamp(unixTime)
-										year_month_str = date_object.strftime('%Y/%m')
-
-										print(userReservedate['dataTime'])
-										notifyTime=(datetime.fromtimestamp(userReservedate["dataTime"])).strftime('%Y年%m月%d日 %H:%M')
-										notifyFunction.SendMessage(f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n球場:{userReservedate["project"]}\n球卷月份:{year_month_str}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n')
-										line.replyText(f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n球場:{userReservedate["project"]}\n球卷月份:{year_month_str}')
-									else:
-										line.replyText('系統自動判斷目前您以有預約時段,請點擊會員查詢確認時段是否預約,若無預約煩請致電～')
-									# isReserveFunction.historyDBUpdate(memberDate)
-
-									# isReserveFunction.shortDBDelete()
-									# print("確認預約")
+									print(userReservedate)
+									notifyFunction=notify(NOTIFYTOKEN)
+									print('-datetime.fromtimestamp(userReservedate["dataTime"])----')
+									# print((userReservedate))
+									# print(reserve.reser)
+									notifyTime=(datetime.fromtimestamp(userReservedate["dataTime"])).strftime('%Y年%m月%d日 %H:%M')
+									notifyFunction.SendMessage(f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n')
+									line.replyText(f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}\n')
 								else:
-									line.replyText('目前系統尚無預約資料，請從新預約！！！')
-							case data if (user_status!=True) and (data.startswith('postReserveProject:') or data.startswith('buyBallRoll:')):
+									line.replyText('系統自動判斷目前您以有預約時段,請點擊會員查詢確認時段是否預約,若無預約煩請致電～')
+								# isReserveFunction.historyDBUpdate(memberDate)
+
+								# isReserveFunction.shortDBDelete()
+								# print("確認預約")
+							else:
+								line.replyText('目前系統尚無預約資料，請從新預約！！！')
+
+						case 'CancelReservation':
+							# isReserveFunction=reserve.ShortAndHistoryReserveFunction(event.uid)
+							try:
+								if (reserve.reserveDB.TableThreeSearch('userId',event.uid,'status','0','company',company)):
+									reserve.reserveDB.updateThreeSearchWhere("dataTime",None,"userId",event.uid,"status","0","company",company)
+									reserve.reserveDB.updateThreeSearchWhere("project",None,"userId",event.uid,"status","0","company",company)
+							# if isReserveFunction.shortDBcontains():
+							# 	isReserveFunction.shortDBDelete()
+							# 	reserve.add(event.uid)
+							except:print()
+							pass
+						case 'updateuserId':
+							memberDB= MYSQLDB('member')
+
+							memberDB.updateTwoSearchWhere('name',None,'company',company,'userId',event.uid)
+							# member.update(event.uid,{'name':None})
+							line.replyText("請輸入使用者暱稱")
+						case 'updateUserPhone':
+							memberDB= MYSQLDB('member')
+
+							# memberDB.updateTwoSearchWhere('phone',None,'company',company,'userId',event.uid)
+							line.replyText("若要更動電話號碼請聯繫店家")
+						case data if data.startswith('ReserveProject') :
+							print(data)
+						case 'firstviewTutoril':
+							template=functionTemplate.videoTemplate('https://imgur.com/XVmZmIE','https://img.ttshow.tw/images/media/frontcover/2020/08/06/6.jpg')
+							line.replyMessage(template)
+						case 'registerNow':
+							user_status = member.isMember(event.uid,company)
+							if user_status == 'nouser':
+								member.memberDB.Insert(('userId','company'),(event.uid,company))
+								line.replyText("請輸入使用者名稱")
+							elif user_status == 'name':
+								line.replyText("請先輸入使用者名稱")
+							elif user_status == 'phone':
+								line.replyText("請先輸入電話號碼")
+						case 'register':
+							memberDB= MYSQLDB('member')
+							if not memberDB.TableOneSearchAddField("userId","userId",event.uid,"company",company):
+								memberDB.insertMember(event.uid,company)
+								template = line.flexTemplate('memberRegister')
+
+								line.doubleReplyFlexMessageText('請於下方小鍵盤，輸入會員電話',template,'使用者電話輸入')
+
+							else:
+								user_status=member.isMember(event.uid,company)
+								if user_status == 'name':
+									line.replyText("請先輸入使用者名稱")
+								elif user_status == 'phone':
+									line.replyText("請先輸入電話號碼")
+								elif user_status == 'sex':
+									line.replyText("請輸入性別\n🙋🏻‍♂️男性請輸入男\n🙋🏻‍♀️女性請輸入女")
+						case data if data.startswith('personalData:'):
+							personalData = (data.split(":"))[1]
+
+							if personalData=='揮桿數據':
+								clubDataDB=MYSQLDB('clubData')
+								print(event.uid)
+								clubDataSearch=(clubDataDB.clubTableSearch('clubData.ballHead,clubData.clubHead,clubData.shaftWeightStiffness,clubData.gripWeight,clubData.swingWeight,clubData.clubfaceAngle,clubData.lieAngle,clubData.remark','clubData',event.uid))
+								print(clubDataSearch)
+								template=copy.deepcopy(line.flexTemplate('carousel'))
+								templateAdd = copy.deepcopy(line.flexTemplate('clubInformation'))
+								#球桿名稱
+								for index, value in enumerate(clubDataSearch):
+									templateAdd['body']['contents'][0]['contents'][1]['contents'][1]['contents'][0]['contents'][1]['text']=value['ballHead']
+									templateAdd['body']['contents'][0]['contents'][1]['contents'][1]['contents'][1]['contents'][1]['text']=value['clubHead']
+									templateAdd['body']['contents'][0]['contents'][1]['contents'][2]['contents'][0]['contents'][1]['text']=value['shaftWeightStiffness']
+									templateAdd['body']['contents'][0]['contents'][1]['contents'][2]['contents'][1]['contents'][1]['text']=value['gripWeight']
+									templateAdd['body']['contents'][0]['contents'][1]['contents'][3]['contents'][0]['contents'][1]['text']=value['swingWeight']
+									templateAdd['body']['contents'][0]['contents'][1]['contents'][3]['contents'][1]['contents'][1]['text']=value['clubfaceAngle']
+									templateAdd['body']['contents'][0]['contents'][1]['contents'][4]['contents'][0]['contents'][1]['text']=value['lieAngle']
+									templateAdd['body']['contents'][0]['contents'][1]['contents'][5]['contents'][0]['contents'][1]['text']=value['remark']
+									template['contents'].append(copy.deepcopy(templateAdd))
+
+							if personalData=='球桿數據':
+								playclubDB=MYSQLDB('playclubData')
+								playclubSearch=(playclubDB.clubTableSearch('playclubData.name,playclubData.speed,playclubData.averageToTalDistance,playclubData.averageFlightDistance,playclubData.takeoffAngle,playclubData.ballSpeed,playclubData.remark','playclubData',event.uid))
+								print(playclubSearch)
+								template=copy.deepcopy(line.flexTemplate('carousel'))
+								templateAdd = copy.deepcopy(line.flexTemplate('playclubInformation'))
+								for index, value in enumerate(playclubSearch):
+									templateAdd['body']['contents'][0]['contents'][0]['text']=value['name']
+									templateAdd['body']['contents'][0]['contents'][1]['contents'][1]['contents'][0]['contents'][1]['text']=value['speed']
+									templateAdd['body']['contents'][0]['contents'][1]['contents'][1]['contents'][1]['contents'][1]['text']=f"{value['averageToTalDistance']}y"
+									templateAdd['body']['contents'][0]['contents'][1]['contents'][2]['contents'][0]['contents'][1]['text']=f"{value['averageFlightDistance']}y"
+									templateAdd['body']['contents'][0]['contents'][1]['contents'][2]['contents'][1]['contents'][1]['text']=f"{value['takeoffAngle']}°"
+									templateAdd['body']['contents'][0]['contents'][1]['contents'][3]['contents'][0]['contents'][1]['text']=f"{value['ballSpeed']}"
+									templateAdd['body']['contents'][0]['contents'][1]['contents'][4]['contents'][0]['contents'][1]['text']=value['remark']
+									template['contents'].append(copy.deepcopy(templateAdd))
+
+							line.replyFlex(template)					
+
+						case data if data.startswith('postReserveProject:') and (user_status==True):
+							reserveProjectName = (data.split(":"))[1]
+							# reserve.reserveDB.updateThreeSearchWhere('project',reserveProjectName,'userId',event.uid,'status','0',"company",company)
+							reserve.reserveDB.updateThreeSearchWhere("dataTime",None,"userId",event.uid,"status","0","company",company)
+							reserve.reserveDB.updateThreeSearchWhere("project",None,"userId",event.uid,"status","0","company",company)
+							print(f"projectNameList$$${projectNameList}")
+							if reserveProjectName in projectNameList:
+								projectNameIdx = projectNameList.index(reserveProjectName)
+								projectName=projectNameList[projectNameIdx]
+								projectsDay=projectsDayList[projectNameIdx]
+								projectsActive=projectsActiveList[projectNameIdx]
+								projectsoffset=projectsoffsetList[projectNameIdx]
+								projectsinterval=projectsintervalList[projectNameIdx]
+								current_datetime = datetime.now()
+								current = current_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
+								nowtimestamp = current.timestamp()
+								todayTimestamp=nowtimestamp+projectsDay+86400
+								projectNameIdx = projectNameList.index(reserveProjectName)
+								nextTimestamp=todayTimestamp+projectsoffset
+
+								dayList=[]
+								ranges = [(start, start + 86400 - 1) for start in publicBlackTimeList]
+
+								while todayTimestamp < nextTimestamp:
+									if not any(start <= todayTimestamp <= end for start, end in ranges):
+										dayList.append(todayTimestamp)
+									todayTimestamp += 86400
+								template = copy.deepcopy(line.flexTemplate('appointmentNow'))
+								template_item = copy.deepcopy(template["contents"][0]['body']['contents'])
+								template_page_item=copy.deepcopy(template['contents'][0])
+								template['contents'][0]['body']['contents'] = []
+								datapage = configs.appointment.datapage
+								blackweekday=[]
+								weekday_chinese = ['一', '二', '三', '四', '五', '六', '日']
+								template['contents'][0]['header']['contents'][0]['text']=f'{reserveProjectName}-請選擇日期'
+								for i in range(7):
+									if (projectsActive[i][0][0]=="00:00" and projectsActive[i][0][1]=="00:00"):
+										blackweekday.append(weekday_chinese[i])
+								idex=1
+								for idx,ts in enumerate(dayList):
+									dt = datetime.fromtimestamp(ts)
+									year = dt.year
+									month = dt.month
+									day = dt.day
+									if not weekday_chinese[dt.weekday()] in blackweekday:
+										typePage = (idex / datapage) + 1 if idex % datapage > 0 else (idex / datapage)
+										typePage = int(typePage)
+										if len(template['contents'])<typePage:
+											template['contents'].append(copy.deepcopy(template['contents'][0]))
+											template['contents'][typePage-1]['body']['contents'] = []
+										template_item[0]['contents'][0]['text'] = f"{dt.month}/{dt.day} ({weekday_chinese[dt.weekday()]})"
+										template_item[0]['contents'][1]['action']['data'] = f"appointment_choose_time:{int(ts)}:project:{projectName}"
+										template["contents"][typePage-1]['body']['contents'].append(copy.deepcopy(template_item[0]))
+										template["contents"][typePage-1]['body']['contents'].append(copy.deepcopy(template_item[1]))
+										idex+=1
+										print(int(ts))
+									else:
+										print(weekday_chinese[dt.weekday()])
+								line.replyFlex(template)
+							else:
+								line.doubleReplyMessageText(f'👨‍💻{reserveProjectName}尚未開放','☎️如有疑問請致電｜0919-102-803')				
+						case data if data.startswith('appointment_choose_time:') and 'project:'in data:
+							parts = data.split(":")
+							timeUnix=parts[1]
+							projectName=parts[3]
+							reserve.reserveDB.updateThreeSearchWhere("project",projectName,"userId",event.uid,"status","0","company",company)
+
+							if reserve.isReserveDBState(event.uid,company)=='noDataTime':
+								projectNameIdx = projectNameList.index(projectName)
+								projectName=projectNameList[projectNameIdx]#單人預約
+								projectsDay=projectsDayList[projectNameIdx]#
+								projectsActive=projectsActiveList[projectNameIdx]
+								projectsoffset=projectsoffsetList[projectNameIdx]
+								projectsinterval=projectsintervalList[projectNameIdx]
+								projectSumberOfAppointments=projectSnumberOfAppointmentsList[projectNameIdx]#群組數量
+								projectGroupReserveStatus=projectGroupReserveStatusList[projectNameIdx]
+								ALLprojectList = configsSearchDBProjectList[1:-1].split(',')
+
+								AllProjectIndex=ALLprojectList.index(projectName)
+								filterTimeUnix=[]
+								element_count = {}
+								# print('*************test****************************')
+								# print(projectName)
+								# print(projectsDay)
+								# print(projectsActive)
+								# print(projectsoffset)
+								# print(projectsinterval)
+								# print(projectSumberOfAppointments)
+
+								# print('*************test****************************')
+
+								# if projectsblockTimeList[projectNameIdx]:
+
+								projectsblockTime=projectsblockTimeList[AllProjectIndex]
+								def convert_to_timestamps(active_list):
+									converted_active = []
+									for time_range in active_list:
+										converted_range = []
+										for time_point in time_range:
+											if time_point[0] is not None:
+												start_time_str, end_time_str = time_point
+												start_time = int(start_time_str.split(':')[0]) * 60 * 60 + int(start_time_str.split(':')[1])*60
+												end_time = int(end_time_str.split(':')[0]) * 60 * 60 + int(end_time_str.split(':')[1])*60
+												converted_range.append([int(start_time), int(end_time)] if time_range[0] is not None else [None, None])
+											else:
+												converted_range.append([None, None])
+										converted_active.append(converted_range)
+									return converted_active
+								weekday_chinese = ['一', '二', '三', '四', '五', '六', '日']
+								dt = datetime.fromtimestamp(int(timeUnix))
+								print(f"{dt.year}/{dt.month}/{dt.day} ({weekday_chinese[dt.weekday()]})")
+								unixActive=convert_to_timestamps(projectsActive)
+			
+								unixTimeActive=[]
+								if((unixActive[dt.weekday()])[1][0]==None):
+									while (unixActive[dt.weekday()][0][0])<(unixActive[dt.weekday()][0][1]):
+										unixTimeActive.append((unixActive[dt.weekday()][0][0])+(int(dt.timestamp())))
+										unixActive[dt.weekday()][0][0]+=projectsinterval
+									# timestamp = datetime.strptime(date_string, date_format).timestamp()
+								else:
+									while (unixActive[dt.weekday()][0][0])<(unixActive[dt.weekday()][0][1]):
+										unixTimeActive.append((unixActive[dt.weekday()][0][0])+(int(dt.timestamp())))
+										unixActive[dt.weekday()][0][0]+=projectsinterval
+									while(unixActive[dt.weekday()][1][0])<(unixActive[dt.weekday()][1][1]):
+										unixTimeActive.append((unixActive[dt.weekday()][1][0])+(int(dt.timestamp())))
+										unixActive[dt.weekday()][1][0]+=projectsinterval
+								uniqueUnixTimeActive = list(set(unixTimeActive))
+								sortedUnixTimeActive = sorted(uniqueUnixTimeActive)
+
+
+								# print(f'projectsblockTime{projectsblockTime}')
+
+								filterBlackTimeUnix = [timestamp for timestamp in sortedUnixTimeActive if not any(range_item[0] <= timestamp <= range_item[1] for range_item in projectsblockTime)]
+
+
+								if (projectGroupReserveStatus=='own'):
+									historydate = reserve.reserveDB.TableThreeSearch('project',projectName,'status','1','company',company)
+									historyDataTime = [item['dataTime'] for item in historydate]
+									# historyDataTimeFormatYYYYMMDD=(datetime.fromtimestamp(int(historyDataTime),TZ)).strftime('20%y年%m月%d日')
+									# if 
+									print('-----x-x--xx--x-x')
+									print(historyDataTime)
+									for x in historyDataTime:
+										element_count[x] = element_count.get(x, 0) + 1
+									print(element_count)
+									filterTimeUnix = [x for x in filterBlackTimeUnix if element_count.get(x, 0) < projectSumberOfAppointments]
+
+								if (projectGroupReserveStatus=='groupReserve'):
+									groupProjectList = []
+									# numberAppointments=''
+									for group, details in projectGroupNameList.items():
+										if f'project{AllProjectIndex+1}' in details['projectList']:
+											for item in details['projectList']:
+												groupProjectList.append(item)
+											print(f"project{projectNameIdx+1} is in group {group}")
+											numberAppointments=details['numberAppointments']
+									print(f'groupProjectList:{groupProjectList}')
+									print('projectDetails------')
+									# print(projectDetails)
+									# print(projectDetails[groupProjectList[0]])
+									groupProjectName=[]
+
+									for projectNumber in groupProjectList:
+										groupProjectName.append({projectDetails[projectNumber]['name']:projectDetails[projectNumber]['numberOfAppointments']})
+									print(groupProjectName)
+									# groupProjectUnixNumber={}
+									for item in groupProjectName:
+										for projectOneName , number in item.items():
+											print('=-----------projectOneName-----')
+											print(projectOneName)
+											searchGroupHistoryUnixTime=reserve.reserveDB.TableThreeSearch('project',projectOneName,'status','1','company',company)
+											if searchGroupHistoryUnixTime:
+												for data in searchGroupHistoryUnixTime:
+													found = False
+													print("測試")
+													for entryTime,entryNummber in element_count.items():
+														print('---entry')
+														print(entryTime, entryNummber)
+														print(data['dataTime'])
+														if data['dataTime'] == entryTime:
+															element_count[data['dataTime']] += number
+															found = True
+
+															break
+													if not found:
+														element_count[data['dataTime']]=number
+
+													# for key,value in groupProjectUnixNumber.items():
+														# if key in 
+													
+
+									filterTimeUnix = [x for x in filterBlackTimeUnix if element_count.get(x, 0) <= int(numberAppointments)-int(projectSumberOfAppointments)]
+								# filterTimeUnix = [x for x in filterBlackTimeUnix if x not in historyDataTime]
+								filterTimeYYYYDDList=[]
+								# print(f'filterTimeUnix:{filterTimeUnix}')
+								dateFormatYYYYMMDD=(datetime.fromtimestamp(int(filterTimeUnix[0]),TZ)).strftime('20%y年%m月%d日')
+
+								for filterTimeYYYYDD in filterTimeUnix:
+									dt = datetime.fromtimestamp(filterTimeYYYYDD,TZ).strftime('%H:%M')
+									filterTimeYYYYDDList.append(dt)
+		
+								# if len(filterTimeYYYYDDList)<1:
+									# line.replyText(f'({})當日預約已滿請上方從選擇日期')
+								# else:
+								template = copy.deepcopy(line.flexTemplate('appointmentNow'))
+								template_item = copy.deepcopy(template["contents"][0]['body']['contents'])
+								template['contents'][0]['header']['contents'][0]['text']=dateFormatYYYYMMDD
+								template['contents'][0]['body']['contents'] = []
+								timepage= configs.appointment.timepage
+								for idx,ts in enumerate(filterTimeYYYYDDList):
+									idx+=1
+									typePage = (idx / timepage) + 1 if idx % timepage > 0 else (idx / timepage)
+									typePage = int(typePage)
+									if len(template['contents'])<typePage:
+										template['contents'].append(copy.deepcopy(template['contents'][0]))
+										template['contents'][typePage-1]['body']['contents'] = []
+									template_item[0]['contents'][0]['text'] = ts
+									template_item[0]['contents'][1]['action']['data'] = f"appointment_confirm_reserve:{filterTimeUnix[idx-1]}:projectName:{projectName}"
+									template["contents"][typePage-1]['body']['contents'].append(copy.deepcopy(template_item[0]))
+									template["contents"][typePage-1]['body']['contents'].append(copy.deepcopy(template_item[1]))
+								# print(template)
+								line.replyFlex(template)
+
+						case data if data.startswith('buyBallRoll:') and (user_status==True):
+							reserve.reserveDB.updateThreeSearchWhere("dataTime",None,"userId",event.uid,"status","0","company",company)
+							reserve.reserveDB.updateThreeSearchWhere("project",None,"userId",event.uid,"status","0","company",company)
+							urlList=["https://i.imgur.com/HD83R4p.png","https://i.imgur.com/ekSGB7U.png","https://i.imgur.com/HYbdtoZ.png"]
+							template=copy.deepcopy(line.flexTemplate('carousel'))
+							ballRoll = copy.deepcopy(line.flexTemplate('ballRoll'))
+							i=0
+							if searchBallRollfillterTrue:
+								for key,value in searchBallRollfillterTrue.items():
+									k=i%3
+									ballRoll['hero']['contents'][0]['contents'][0]['url']=urlList[k]
+									ballRoll['hero']['contents'][0]['contents'][1]['text']=value['courtName']
+									ballRoll['hero']['contents'][1]['contents'][0]['action']['data']=f"chooseBallRoll:{value['courtName']}"
+
+									template['contents'].append(copy.deepcopy(ballRoll))
+									i+=1
+								line.replyFlex(template)
+							else:
+								line.doubleReplyMessageText(f'👨‍💻球卷尚未開放','☎️如有疑問請致電｜0919-102-803')				
+
+						case data if data.startswith('chooseBallRoll:'):
+							currentDate=datetime.now()
+							first_day_of_month = currentDate.replace(day=1, hour=0, minute=0, second=0 ,microsecond=0)
+							unix_timestamp = int(first_day_of_month.timestamp())
+
+							parts = data.split(":")
+							ballRollName = parts[1] if len(parts)>1 else None
+							for key, value in searchBallRollfillterTrue.items():
+								if value.get('courtName') == ballRollName:
+									monthNumber = value.get('monthNumber', {})
+							filtered_month_number = {key: value for key, value in monthNumber.items() if int(key) >= unix_timestamp}
+							yearMonthDict = [datetime.utcfromtimestamp((int(timestamp)+86400)).strftime('%Y/%m') for timestamp in filtered_month_number.keys()]
+							yearMonthValueDict=[]
+							underButtonTextList=[]
+							underButtonData=[]
+							for key ,value in filtered_month_number.items():
+								yearMonthValueDict.append(value)
+							for i in range(ballRollNumber):
+								underButtonTextList.append(yearMonthDict[i])
+								underButtonData.append(f'ballRollunixTime:{yearMonthDict[i]}:ballRollnumber:{yearMonthValueDict[i]}:ballRollName:{ballRollName}')
+							print('-----underButtonTextList----')
+							print(underButtonTextList)
+							print(type(underButtonData))
+							template=functionTemplate.postUnderTemplate(underButtonTextList,underButtonData,f"目前已選擇{ballRollName}\n請於下方選擇月份")
+							line.replyMessage(template)
+
+							# reserve.reserveDB.updateThreeSearchWhere("project",ballRollName,"userId",event.uid,"status","0","company",company)
+						case data if data.startswith('ballRollunixTime:') and ('ballRollnumber:' in data) and ('ballRollName:' in data):
+							parts = data.split(":")
+							unixTime=parts[1]
+							number=parts[3]
+							name=parts[5]
+							input_date = datetime.strptime(unixTime, '%Y/%m')
+							first_day_of_month = input_date.replace(day=1, hour=0, minute=0, second=0)
+							unix_timestamp = int(first_day_of_month.timestamp())
+
+
+							underButtonTextList=['1張','2張','3張','4張']
+							underButtonData=[f'ballRollunixTime:{unixTime}:number:{1}:ballRollName:{name}',f'ballRollunixTime:{unixTime}:number:{2}:ballRollName:{name}',f'ballRollunixTime:{unixTime}:number:{3}:ballRollName:{name}',f'ballRollunixTime:{unixTime}:number:{4}:ballRollName:{name}']
+							template=functionTemplate.postUnderTemplate(underButtonTextList,underButtonData,f"請選擇數量")
+
+							print(template)
+
+							line.replyMessage(template)
+						case data if data.startswith('ballRollunixTime:') and ('number:' in data) and ('ballRollName:' in data):
+							parts = data.split(":")
+							unixTime=parts[1]
+							number=parts[3]
+							name=parts[5]
+							date_object = datetime.strptime(unixTime, "%Y/%m")
+							first_day_of_month = date_object.replace(day=1, hour=0, minute=0, second=0)
+							unix_timestamp = int(first_day_of_month.timestamp())
+
+							memberSearchData=member.dbSearch(event.uid,company)
+							template = copy.deepcopy(line.flexTemplate('appointment confirmation'))
+							template['body']['contents'][2]['contents'][0]['contents'][1]['text']=memberSearchData['name']
+							template['body']['contents'][2]['contents'][2]['contents'][1]['text']=memberSearchData['phone']
+							template['body']['contents'][3]['contents'][0]['action']['data']=f'ballRollConfirmf:ballRollunixTime:{unixTime}:number:{number}:ballRollName:{name}'
+							# timeFormatYYYYMMDDhhmm=(datetime.fromtimestamp(isReserveFunction.shortDBSearch()[0]['dataTime'],TZ)).strftime("%Y年%m月%d日 %H:%M")
+							# timeFormatYYYYMMDDhhmm=(datetime.fromtimestamp(reserve.reserveDB.TableThreeSearch('userId',event.uid,'status','0',"company",company)[0]['dataTime'],TZ)).strftime("%Y年%m月%d日 %H:%M")
+							reserveProjectName=reserve.reserveDB.TableThreeSearch('userId',event.uid,'status','0','company',company)[0]['project']
+							template['body']['contents'][2]['contents'][4]['contents'][1]['text']=name
+
+							template['body']['contents'][2]['contents'][6]['contents'][1]['text']=unixTime
+							template['body']['contents'][1]['text']='球卷確認單'
+							line.replyFlex(template)
+
+						case data if data.startswith('ballRollConfirmf:ballRollunixTime:') and ('number:' in data) and ('ballRollName:' in data):
+							reserveCount= configs.appointment.reserveCount
+							# isReserveFunction=reserve.ShortAndHistoryReserveFunction(event.uid)
+							NOTIFYTOKEN=configs.appointment.NOTIFYTOKEN
+							# historySearchStatusUserId=isReserveFunction.historyDBSearchStatusUserId()
+							parts = data.split(":")
+							unixTime=parts[2]
+							number=parts[4]
+							name=parts[6]
+							
+							date_object = datetime.strptime(unixTime, "%Y/%m")
+							first_day_of_month = date_object.replace(day=1, hour=0, minute=0, second=0)
+							unix_timestamp = int(first_day_of_month.timestamp())
+							# for i in number:
+							# 	reserve.reserveDB.updateThreeSearchWhere("project",name,"userId",event.uid,"status","0","company",company)
+							# 	reserve.reserveDB.updateThreeSearchWhere("dataTime",unix_timestamp,"userId",event.uid,"status","0","company",company)
+							# 	reserve.reserveDB.TableThreeSearch('userid',event.uid,'status','ballRoll','company',company)
+							historySearchStatusUserId = reserve.reserveDB.TableThreeSearch('userid',event.uid,'status','ballRoll','company',company)
+							getReserveTimeList = [item['dataTime'] for item in historySearchStatusUserId]
+							nowTime=getDatetime()
+							nowTimeUinx=int(nowTime.timestamp())
+							print(f'getReserveTimeList:{getReserveTimeList}')
+							print(f'historySearchStatusUserId:{historySearchStatusUserId}')
+
+							count = len({x for x in getReserveTimeList if x is not None and x > int(nowTimeUinx)})
+							print(f'count{count}')
+							print(reserveCount)
+							if not reserve.reserveDB.execute_query(f"SELECT * FROM reserve WHERE userId = '{event.uid}' AND (dataTime IS NULL OR project IS NULL) AND company = '{company}'"):
+								if count< reserveCount:
+									print('------------')
+									# userReservedate=isReserveFunction.historyDBAdd()
+									userReservedate=reserve.reserveDB.rdbmsSearch(company,event.uid)[0]
+									for i in number:
+										reserve.reserveDB.Insert(("userId","company","project","dataTime","status",),(event.uid,company,name,unix_timestamp,"ballRoll",))
+
+									print(userReservedate)
+									notifyFunction=notify(NOTIFYTOKEN)
+									# print((userReservedate))
+									# print(reserve.reser)
+									unixTime=userReservedate['dataTime']
+									date_object = datetime.utcfromtimestamp(unixTime)
+									year_month_str = date_object.strftime('%Y/%m')
+
+									print(userReservedate['dataTime'])
+									notifyTime=(datetime.fromtimestamp(userReservedate["dataTime"])).strftime('%Y年%m月%d日 %H:%M')
+									notifyFunction.SendMessage(f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n球場:{userReservedate["project"]}\n球卷月份:{year_month_str}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n')
+									line.replyText(f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n球場:{userReservedate["project"]}\n球卷月份:{year_month_str}')
+								else:
+									line.replyText('系統自動判斷目前您以有預約時段,請點擊會員查詢確認時段是否預約,若無預約煩請致電～')
+								# isReserveFunction.historyDBUpdate(memberDate)
+
+								# isReserveFunction.shortDBDelete()
+								# print("確認預約")
+							else:
+								line.replyText('目前系統尚無預約資料，請從新預約！！！')
+						case data if (user_status!=True) and (data.startswith('postReserveProject:') or data.startswith('buyBallRoll:')):
 								template = line.flexTemplate('first')
 								line.doubleReplyFlexMessageText('您尚未註冊會員下方功能無法使用',template,'註冊訊息')
 		# when error
@@ -1383,95 +1328,96 @@ def LineBotv1(company):
 	else:return print('無此公司')
 def getIsProject(phone):
 	testDb = MYSQLDB('bot_configs')
-	LineToken = (testDb.TableOneSearch("companyphone",phone))[0]['lineConfig']
-	if (LineToken):
-		LineToken_dict = json.loads(LineToken)
-	else:
-		print('LINETOKEN iS NO EXSIT')
+	botConfigsSearchAll=testDb.TableOneSearch("companyphone",phone)
+	if isinstance(botConfigsSearchAll,list)and botConfigsSearchAll is not None:
+		LineToken = botConfigsSearchAll[0]['lineConfig']
+		if not isinstance(LineToken,list):LineToken_dict = json.loads(LineToken)
+
+		publicData = botConfigsSearchAll[0]['deniedDates']
+		if not isinstance(publicData,list)and publicData is not None:publicData_dict = json.loads(publicData)
 
 
+		publicBlackTimeList = []
+		if publicData is not None:
+			publicBlackTimeList = [item["deniedDates"] for item in publicData_dict if item["status"] == 0]
+		
+		searchBallRoll_dict = botConfigsSearchAll[0]['ballRoll']
+		if not isinstance(searchBallRoll_dict,list) and searchBallRoll_dict is not None:searchBallRoll_dict = json.loads(searchBallRoll_dict)
 
-	publicData = (testDb.TableOneSearch("companyphone",phone))[0]['deniedDates']
-	print('----publicData----')
-	print(publicData)
-	publicBlackTimeList = []
-	if publicData is not None:
-		publicData_dict = json.loads(publicData)
-		publicBlackTimeList = [item["deniedDates"] for item in publicData_dict if item["status"] == 0]
-
-	searchBallRoll = (testDb.TableOneSearch("companyphone",phone))[0]['ballRoll']
-
-	if (searchBallRoll):
-
-		searchBallRoll_dict = json.loads(searchBallRoll)
-		searchBallRollfillterTrue = {key: value for key, value in searchBallRoll_dict.items() if value.get("status") == "True"}
-	else:
-		searchBallRollfillterTrue=''
-	ballRollNumber = (testDb.TableOneSearch("companyphone",phone))[0]['ballRollTime']
-
-
-	rusult = (testDb.TableOneSearch("companyphone",phone))[0]['projectactivetimesblacktime']
-	result_dict = json.loads(rusult)
-
-	projects_with_status_1 = [project for project, details in result_dict.items() if details.get("status") == 1 and details.get("name") is not None and len(details.get("name")) > 0]
-	print("Status 为 1 的项目有：", projects_with_status_1)
-	projectsName = [details.get('name') for project, details in result_dict.items() if details.get('status') == 1 and details.get('name')]
-
-	projectsShowText = [details.get('showText') for project, details in result_dict.items() if details.get('status') == 1 and details.get('showText')]
-	# print('===projectsShowText====')
-	# print(projectsShowText)
-	projectsActive = [details.get('active') for project, details in result_dict.items() if details.get('status') == 1 and details.get('active')]
-	# print('===projectsactive====') [0]星期一 [1]星期二 [2]星期三
-	# print(projectsActive)
-	#專案往後日期
-	projectsDay = [details.get('day') for project, details in result_dict.items() if details.get('status') == 1]
-
-	#專案預約時間
-	projectsinterval = [details.get('interval') for project, details in result_dict.items() if details.get('status') == 1 and details.get('interval')]
-	print('測試中')
-	print(projectsinterval)
-	projectsoffset = [details.get('offset') for project, details in result_dict.items() if details.get('status') == 1 and details.get('offset')]
-	# print('=======result_dict======')
-	# print(result_dict)
-	# print('=======result_dict======')
-	reserveProjectListStr = ((testDb.TableOneSearch("companyphone",phone))[0]['projectList'])
-	if reserveProjectListStr:
-		list(reserveProjectListStr)
-	else:
-		print('CONFIG_BOT設定檔案ProjectList欄位為必填')
-	# projectsblockTime = [details.get('blockTime') for project, details in result_dict.items() if details.get('status') == 1 and details.get('blockTime') else []]
-	
-	projectsblockTime=[]
-	for project ,details in result_dict.items():
-		if details.get('status') == 1 and details.get('blockTime'):
-			projectsblockTime.append(details.get('blockTime'))
+		if (searchBallRoll_dict):
+			searchBallRollfillterTrue = {key: value for key, value in searchBallRoll_dict.items() if value.get("status") == "True"}
 		else:
-			projectsblockTime.append([])
+			searchBallRollfillterTrue=''
+		ballRollNumber = botConfigsSearchAll[0]['ballRollTime']
 
-	projectSnumberOfAppointments=[]
-	for project ,details in result_dict.items():
-		if details.get('status') == 1 and details.get('numberOfAppointments'):
-			projectSnumberOfAppointments.append(details.get('numberOfAppointments'))
-		# else:
-			# projectSnumberOfAppointments.append([])
+		rusult = botConfigsSearchAll[0]['projectactivetimesblacktime']
+		if not isinstance(rusult,list):
+			result_dict = json.loads(rusult)
+		else:
+			result_dict=rusult
 
-	projectGroupReserveStatus=[]
-	for project ,details in result_dict.items():
-		if details.get('status') == 1 and details.get('groupReserveStatus'):
-			projectGroupReserveStatus.append(details.get('groupReserveStatus'))
+		projects_with_status_1 = [project for project, details in result_dict.items() if details.get("status") == 1 and details.get("name") is not None and len(details.get("name")) > 0]
+		print("Status 为 1 的项目有：", projects_with_status_1)
+		projectsName = [details.get('name') for project, details in result_dict.items() if details.get('status') == 1 and details.get('name')]
 
-	projectGroupNameList=result_dict['projectGroupName']
+		projectsShowText = [details.get('showText') for project, details in result_dict.items() if details.get('status') == 1 and details.get('showText')]
+		# print('===projectsShowText====')
+		# print(projectsShowText)
+		projectsActive = [details.get('active') for project, details in result_dict.items() if details.get('status') == 1 and details.get('active')]
+		# print('===projectsactive====') [0]星期一 [1]星期二 [2]星期三
+		# print(projectsActive)
+		#專案往後日期
+		projectsDay = [details.get('day') for project, details in result_dict.items() if details.get('status') == 1]
 
-	return reserveProjectListStr,LineToken_dict,ballRollNumber,searchBallRollfillterTrue,result_dict,projects_with_status_1,projectsName,projectsActive,projectsDay,projectsinterval,publicBlackTimeList,projectsoffset,projectsblockTime,projectSnumberOfAppointments,projectGroupReserveStatus,projectGroupNameList
+		#專案預約時間
+		projectsinterval = [details.get('interval') for project, details in result_dict.items() if details.get('status') == 1 and details.get('interval')]
+		print('--=-----c-----')
+		print(projectsinterval)
+		projectsoffset = [details.get('offset') for project, details in result_dict.items() if details.get('status') == 1 and details.get('offset')]
+		# print('=======result_dict======')
+		# print(result_dict)
+		# print('=======result_dict======')
+		reserveProjectListStr = (botConfigsSearchAll[0]['projectList'])
+		if not isinstance(reserveProjectListStr,list) and reserveProjectListStr is not None:
+			list(reserveProjectListStr)
+		else:
+			print('CONFIG_BOT設定檔案ProjectList欄位為必填')
+		# projectsblockTime = [details.get('blockTime') for project, details in result_dict.items() if details.get('status') == 1 and details.get('blockTime') else []]
+		
+		projectsblockTime=[]
+		for project ,details in result_dict.items():
+			if details.get('status') == 1 and details.get('blockTime'):
+				projectsblockTime.append(details.get('blockTime'))
+			else:
+				projectsblockTime.append([])
 
+		projectSnumberOfAppointments=[]
+		for project ,details in result_dict.items():
+			if details.get('status') == 1 and details.get('numberOfAppointments'):
+				projectSnumberOfAppointments.append(details.get('numberOfAppointments'))
+			# else:
+				# projectSnumberOfAppointments.append([])
+
+		projectGroupReserveStatus=[]
+		for project ,details in result_dict.items():
+			if details.get('status') == 1 and details.get('groupReserveStatus'):
+				projectGroupReserveStatus.append(details.get('groupReserveStatus'))
+
+		projectGroupNameList=result_dict['projectGroupName']
+
+		return reserveProjectListStr,LineToken_dict,ballRollNumber,searchBallRollfillterTrue,result_dict,projects_with_status_1,projectsName,projectsActive,projectsDay,projectsinterval,publicBlackTimeList,projectsoffset,projectsblockTime,projectSnumberOfAppointments,projectGroupReserveStatus,projectGroupNameList
+	else:
+		return "getIsProject Function Error"
+getIsProject("0912345678")
 def posDB():
 	posOrderDb = MYSQLDB(
 		table='customers',
+        host="172.18.0.12",
 		# host = "pos-db.alpaca.tw",
 		# port=3316,
 		user="root",
 		# password="=?michi_pos/=!",
-		password="",
+		password="root",
 		database="hongyun_pos"
 	)
 posDB()
