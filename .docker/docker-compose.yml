@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+
+  hongyun-line-bot:
+    image: ${app_image}
+    container_name: ${app_container_name}
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Taipei
+    working_dir: /app
+    volumes:
+      - ../:/app
+    command: 'python main.py'
+    networks:
+      default:
+        ipv4_address: ${subnet}.0.14
+      
+networks:
+  default:
+    name: ${net_name}
+    driver: bridge
+    external: true
+
