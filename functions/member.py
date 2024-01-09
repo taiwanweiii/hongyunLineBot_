@@ -12,11 +12,12 @@ def isMember(userId,client):
     global memberDB 
     posCustomerDb = MYSQLDB(
 		table='customers',
-		host = "pos-db.alpaca.tw",
-		port=3316,
-		user="root",
-		password="=?michi_pos/=!",
-		database="hong_yun"
+		# host = "pos-db.alpaca.tw",
+		# port=3316,
+		# user="root",
+		# password="=?michi_pos/=!",
+        # password="",
+		database="hongyun_pos"
 	)
 
     memberDB= MYSQLDB('member')

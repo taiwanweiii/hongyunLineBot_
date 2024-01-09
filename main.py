@@ -397,12 +397,10 @@ print('-------clientWebhook------')
 def LineBotv1(company):
 	configsSearchDBProjectList,LineToken,ballRollNumber,searchBallRollfillterTrue,projectDetails,projectList,projectNameList,projectsActiveList,projectsDayList,projectsintervalList,publicBlackTimeList,projectsoffsetList,projectsblockTimeList,projectSnumberOfAppointmentsList,projectGroupReserveStatusList,projectGroupNameList=getIsProject(company)
 	line = Line(
-		CHANNEL_ACCESS_TOKEN = LineToken["CHANNEL_ACCESS_TOKEN"],
-		CHANNEL_SECRET = LineToken["CHANNEL_SECRET"]
+		CHANNEL_ACCESS_TOKEN = LineToken['CHANNEL_ACCESS_TOKEN'],
+		CHANNEL_SECRET = LineToken['CHANNEL_SECRET']
 	)
-	print('===============projectNameList==================')
-	print(projectNameList)
-	print('===============projectNameList==================')
+
 	configs.appointment.getUserName(company)
 	if company in clientWebhook:
 		data = request.get_json()
@@ -416,10 +414,15 @@ def LineBotv1(company):
 		if 'events' not in data: return print('events not exists.')
 		for event in data["events"]:
 			# init
-			
-			event = line.setEvent(event)
-			user_status = member.isMember(event.uid,company)
+			print('===============event==================')
 
+			print(event)
+			print('===============event==================')
+
+			event = line.setEvent(event)
+			print(event)
+
+			user_status = member.isMember(event.uid,company)
 			# 
 			match event.type:
 				# message
@@ -464,8 +467,7 @@ def LineBotv1(company):
 							line.replyText("電話號碼格式錯誤，請再輸入1次(Ex:0987654321)")
 						else:
 							histroyPhones=member.isPhoneRepeat(company)
-							print('--histroyPhones--')
-							print(histroyPhones)
+
 							if (event.message in histroyPhones):
 								line.doubleReplyMessageText(f'電話:{event.message} 已重複註冊','請嘗試重新輸入10碼電話號碼')
 							else:
@@ -525,8 +527,7 @@ def LineBotv1(company):
 							print('---underButtonLableList---')
 							projectlist=['球桿數據','揮桿數據']
 							imageUrl=['https://i.imgur.com/nIByphE.png','https://i.imgur.com/3PgjXM1.png']
-							print(len(projectlist))
-							print(projectlist)
+
 							i=0
 							while i <len(projectlist):
 								templateAdd['hero']['contents'][0]["url"]=imageUrl[i]
@@ -643,7 +644,6 @@ def LineBotv1(company):
 									template["contents"][typePage-1]['body']['contents'].append(copy.deepcopy(template_item[0]))
 									template["contents"][typePage-1]['body']['contents'].append(copy.deepcopy(template_item[1]))
 									idex+=1
-									print(int(ts))
 								else:
 									print(weekday_chinese[dt.weekday()])
 								# print(projectNameList[projectNameIdx])
@@ -730,9 +730,7 @@ def LineBotv1(company):
 							filtered_data = [item for item in historySearchStatusUserId if item['dataTime'] > nowTimeUnix]
 							sortFilteredDataTime = sorted(filtered_data, key=lambda x: x['dataTime'])
 
-							print('-----------會員查詢🙇‍♂️---------')
-							print((sortFilteredDataTime))
-							print('-----------會員查詢🙇‍♂️---------')
+
 							if len(sortFilteredDataTime)>0:
 								# reserveDateTimeformatYYYYMMDDhhmm=(datetime.fromtimestamp(int(sortFilteredDataTime[0]["dataTime"]),TZ)).strftime('20%y年%m月%d日%H:%M')
 
@@ -749,7 +747,6 @@ def LineBotv1(company):
 									template["hero"]["contents"][1]["contents"][1]["contents"].append(copy.deepcopy(templateAdd[2]))
 
 								print('--------template=======')
-								print(template)
 							else:
 								templateAdd[0]["contents"][1]["text"]='尚未預約'
 								templateAdd[1]["contents"][1]["text"]="-"
@@ -798,7 +795,7 @@ def LineBotv1(company):
 								# if isReserveFunction.isShortReserveDBState()==True:
 								if len(data.split(":")) > 1:
 									reserveTimeUnix = int(data.split(":")[1].strip())
-									print(reserveTimeUnix)
+									# print(reserveTimeUnix)
 								reserve.reserveDB.updateThreeSearchWhere('dataTime',reserveTimeUnix,'userId',event.uid,'status','0',"company",company)
 								
 								if reserve.isReserveDBState(event.uid,company) == True:
@@ -1384,7 +1381,6 @@ def LineBotv1(company):
 		# end
 		return jsonify({"status": "OK"})
 	else:return print('無此公司')
-print('test================')
 def getIsProject(phone):
 	testDb = MYSQLDB('bot_configs')
 	LineToken = (testDb.TableOneSearch("companyphone",phone))[0]['lineConfig']
@@ -1392,7 +1388,7 @@ def getIsProject(phone):
 		LineToken_dict = json.loads(LineToken)
 	else:
 		print('LINETOKEN iS NO EXSIT')
-	print(f'LineToken{LineToken}')
+
 
 
 	publicData = (testDb.TableOneSearch("companyphone",phone))[0]['deniedDates']
@@ -1429,9 +1425,6 @@ def getIsProject(phone):
 	# print(projectsActive)
 	#專案往後日期
 	projectsDay = [details.get('day') for project, details in result_dict.items() if details.get('status') == 1]
-	print('-----projectsDay-----')
-	print(projectsDay)
-	print('-----projectsDay-----')
 
 	#專案預約時間
 	projectsinterval = [details.get('interval') for project, details in result_dict.items() if details.get('status') == 1 and details.get('interval')]
@@ -1474,10 +1467,11 @@ def getIsProject(phone):
 def posDB():
 	posOrderDb = MYSQLDB(
 		table='customers',
-		host = "pos-db.alpaca.tw",
-		port=3316,
+		# host = "pos-db.alpaca.tw",
+		# port=3316,
 		user="root",
-		password="=?michi_pos/=!",
+		# password="=?michi_pos/=!",
+		password="",
 		database="hongyun_pos"
 	)
 posDB()
