@@ -1,0 +1,99 @@
+{
+    "type": "bubble",
+    "size": "kilo",
+    "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [],
+        "backgroundColor": "#194051"
+    },
+    "body": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+            {
+                "type": "text",
+                "text": "🔊預約即將到來",
+                "weight": "bold",
+                "size": "xxl",
+                "margin": "none"
+            },
+            {
+                "type": "box",
+                "layout": "horizontal",
+                "margin": "md",
+                "contents": [
+                    {
+                        "type": "text",
+                        "text": "項目",
+                        "size": "md",
+                        "flex": 0
+                    }
+                ]
+            },
+            {
+                "type": "box",
+                "layout": "horizontal",
+                "margin": "none",
+                "contents": [
+                    {
+                        "type": "text",
+                        "text": "預約時間",
+                        "size": "md",
+                        "flex": 0
+                    }
+                ]
+            },
+            {
+                "type": "box",
+                "layout": "vertical",
+                "margin": "none",
+                "contents": [
+                    {
+                        "type": "text",
+                        "text": "本預約為自動提醒訊息",
+                        "color": "#aaaaaa",
+                        "size": "xs",
+                        "align": "start",
+                        "adjustMode": "shrink-to-fit"
+                    },
+                    {
+                        "type": "text",
+                        "text": "若有事無刻前往請致電通知",
+                        "color": "#aaaaaa",
+                        "size": "xs",
+                        "align": "start",
+                        "adjustMode": "shrink-to-fit"
+                    }
+                ]
+            },
+            {
+                "type": "separator",
+                "margin": "none"
+            },
+            {
+                "type": "box",
+                "layout": "horizontal",
+                "margin": "none",
+                "contents": [
+                    {
+                        "type": "button",
+                        "action": {
+                            "type": "uri",
+                            "label": "致電取消",
+                            "uri": "tel:0919102803"
+                        },
+                        "style": "link",
+                        "offsetTop": "md"
+                    }
+                ]
+            }
+        ]
+    },
+    "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [],
+        "backgroundColor": "#194051"
+    }
+}

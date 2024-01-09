@@ -1,0 +1,266 @@
+{
+  "type": "carousel",
+  "contents": [
+    {
+      "type": "bubble",
+      "size": "hecto",
+      "direction": "rtl",
+      "hero": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "image",
+            "url": "https://i.imgur.com/nIByphE.png",
+            "position": "absolute",
+            "size": "full",
+            "aspectMode": "cover",
+            "margin": "none"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "text",
+                "text": "公司名稱",
+                "margin": "none",
+                "align": "center",
+                "color": "#FFFFFF"
+              }
+            ],
+            "backgroundColor": "#194051",
+            "cornerRadius": "xxl",
+            "borderWidth": "none",
+            "borderColor": "#000000",
+            "offsetStart": "33px",
+            "offsetTop": "5px",
+            "width": "70%"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [],
+                "backgroundColor": "#ffffff",
+                "borderWidth": "none",
+                "offsetTop": "30px"
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "點擊預約打球",
+                    "margin": "none",
+                    "align": "center",
+                    "color": "#FFFFFF"
+                  }
+                ],
+                "backgroundColor": "#194051",
+                "cornerRadius": "xxl",
+                "borderWidth": "medium",
+                "borderColor": "#000000",
+                "width": "70%",
+                "offsetStart": "33px",
+                "offsetBottom": "15px",
+                "offsetTop": "140px"
+              }
+            ],
+            "height": "1000px"
+          }
+        ],
+        "height": "200px",
+        "action": {
+          "type": "postback",
+          "label": "action",
+          "data": "hello",
+          "displayText": "ㄢ"
+        }
+      },
+      "styles": {
+        "body": {
+          "backgroundColor": "#F0F0F0"
+        }
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "hecto",
+      "direction": "rtl",
+      "hero": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "image",
+            "url": "https://i.imgur.com/3PgjXM1.png",
+            "position": "absolute",
+            "size": "full",
+            "aspectMode": "cover",
+            "margin": "none"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "text",
+                "text": "公司名稱",
+                "margin": "none",
+                "align": "center",
+                "color": "#FFFFFF"
+              }
+            ],
+            "backgroundColor": "#194051",
+            "cornerRadius": "xxl",
+            "borderWidth": "none",
+            "borderColor": "#000000",
+            "offsetStart": "33px",
+            "offsetTop": "5px",
+            "width": "70%"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [],
+                "backgroundColor": "#ffffff",
+                "borderWidth": "none",
+                "offsetTop": "30px"
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "點擊預約模擬訓練",
+                    "margin": "none",
+                    "align": "center",
+                    "color": "#FFFFFF"
+                  }
+                ],
+                "backgroundColor": "#194051",
+                "cornerRadius": "xxl",
+                "borderWidth": "medium",
+                "borderColor": "#000000",
+                "width": "70%",
+                "offsetStart": "33px",
+                "offsetBottom": "15px",
+                "offsetTop": "140px"
+              }
+            ],
+            "height": "1000px"
+          }
+        ],
+        "height": "200px",
+        "action": {
+          "type": "postback",
+          "label": "action",
+          "data": "hello",
+          "displayText": "ㄢ"
+        }
+      },
+      "styles": {
+        "body": {
+          "backgroundColor": "#F0F0F0"
+        }
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "hecto",
+      "direction": "rtl",
+      "hero": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "image",
+            "url": "https://i.imgur.com/xunFsl6.png",
+            "position": "absolute",
+            "size": "full",
+            "aspectMode": "cover",
+            "margin": "none"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "text",
+                "text": "公司名稱",
+                "margin": "none",
+                "align": "center",
+                "color": "#FFFFFF"
+              }
+            ],
+            "backgroundColor": "#194051",
+            "cornerRadius": "xxl",
+            "borderWidth": "none",
+            "borderColor": "#000000",
+            "offsetStart": "33px",
+            "offsetTop": "5px",
+            "width": "70%"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [],
+                "backgroundColor": "#ffffff",
+                "borderWidth": "none",
+                "offsetTop": "30px"
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "點擊預約維修",
+                    "margin": "none",
+                    "align": "center",
+                    "color": "#FFFFFF"
+                  }
+                ],
+                "backgroundColor": "#194051",
+                "cornerRadius": "xxl",
+                "borderWidth": "medium",
+                "borderColor": "#000000",
+                "width": "70%",
+                "offsetStart": "33px",
+                "offsetBottom": "15px",
+                "offsetTop": "140px"
+              }
+            ],
+            "height": "1000px"
+          }
+        ],
+        "height": "200px",
+        "action": {
+          "type": "postback",
+          "label": "action",
+          "data": "hello",
+          "displayText": "ㄢ"
+        }
+      },
+      "styles": {
+        "body": {
+          "backgroundColor": "#F0F0F0"
+        }
+      }
+    }
+  ]
+}

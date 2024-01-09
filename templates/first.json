@@ -1,0 +1,18 @@
+{
+  "type": "bubble",
+  "size": "mega",
+  "direction": "ltr",
+  "hero": {
+    "type": "image",
+    "url": "https://i.imgur.com/Qknon8o.png",
+    "size": "full",
+    "aspectRatio": "20:13",
+    "aspectMode": "cover",
+    "action": {
+      "type": "postback",
+      "label": "action",
+      "data": "register",
+      "displayText": "🔥立馬註冊！！！"
+    }
+  }
+}

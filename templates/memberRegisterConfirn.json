@@ -1,0 +1,168 @@
+{
+    "type": "bubble",
+    "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [],
+        "backgroundColor": "#194051",
+        "borderWidth": "none",
+        "margin": "none",
+        "height": "30px",
+        "paddingAll": "0px"
+    },
+    "hero": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+            {
+                "type": "text",
+                "text": "🙋🏻‍♂️註冊資訊🙋🏻‍♀️",
+                "size": "3xl",
+                "weight": "bold",
+                "align": "center",
+                "gravity": "center"
+            },
+            {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                    {
+                        "type": "box",
+                        "layout": "vertical",
+                        "contents": [
+                            {
+                                "type": "box",
+                                "layout": "baseline",
+                                "contents": [
+                                    {
+                                        "type": "text",
+                                        "text": "會員名稱:",
+                                        "margin": "md",
+                                        "offsetStart": "0px",
+                                        "contents": [],
+                                        "color": "#000000",
+                                        "size": "20px",
+                                        "flex": 0
+                                    },
+                                    {
+                                        "type": "text",
+                                        "text": "名稱尚未輸入",
+                                        "size": "20px",
+                                        "color": "#000000"
+                                    }
+                                ],
+                                "flex": 3
+                            },
+                            {
+                                "type": "separator",
+                                "color": "#000000"
+                            },
+                            {
+                                "type": "box",
+                                "layout": "baseline",
+                                "contents": [
+                                    {
+                                        "type": "text",
+                                        "text": "會員電話:",
+                                        "margin": "md",
+                                        "offsetStart": "0px",
+                                        "contents": [],
+                                        "color": "#000000",
+                                        "size": "20px",
+                                        "flex": 0
+                                    },
+                                    {
+                                        "type": "text",
+                                        "size": "20px",
+                                        "color": "#000000",
+                                        "text": "電話尚未輸入"
+                                    }
+                                ],
+                                "flex": 3
+                            },
+                            {
+                                "type": "separator",
+                                "color": "#000000"
+                            },
+                            {
+                                "type": "box",
+                                "layout": "baseline",
+                                "contents": [
+                                    {
+                                        "type": "text",
+                                        "text": "會員性別:",
+                                        "margin": "md",
+                                        "offsetStart": "0px",
+                                        "contents": [],
+                                        "color": "#000000",
+                                        "size": "20px",
+                                        "flex": 0
+                                    },
+                                    {
+                                        "type": "text",
+                                        "text": "性別尚未輸入",
+                                        "size": "20px",
+                                        "color": "#000000"
+                                    }
+                                ],
+                                "flex": 3
+                            },
+                            {
+                                "type": "separator",
+                                "color": "#000000"
+                            }
+                        ],
+                        "margin": "lg",
+                        "spacing": "xs"
+                    }
+                ],
+                "paddingStart": "10px",
+                "borderColor": "#F0F0F0",
+                "paddingEnd": "15px"
+            },
+            {
+                "type": "box",
+                "layout": "horizontal",
+                "contents": [
+                    {
+                        "type": "button",
+                        "action": {
+                            "type": "postback",
+                            "label": "確認資料",
+                            "data": "confirnMember:"
+                        },
+                        "style": "primary",
+                        "color": "#0243AA",
+                        "margin": "10px"
+                    },
+                    {
+                        "type": "button",
+                        "action": {
+                            "type": "postback",
+                            "label": "重新填寫",
+                            "data": "cancelMember:"
+                        },
+                        "color": "#BC0100",
+                        "style": "primary",
+                        "margin": "10px"
+                    }
+                ],
+                "paddingStart": "2px",
+                "paddingTop": "5px",
+                "paddingBottom": "5px",
+                "paddingEnd": "20px"
+            }
+        ]
+    },
+    "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [],
+        "backgroundColor": "#194051"
+    },
+    "styles": {
+        "body": {
+            "backgroundColor": "#F0F0F0"
+        }
+    }
+}

@@ -1,0 +1,216 @@
+{
+    "type": "bubble",
+    "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [],
+        "backgroundColor": "#194051",
+        "borderWidth": "none",
+        "margin": "none",
+        "height": "30px"
+    },
+    "hero": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+            {
+                "type": "text",
+                "text": "🔥VIP會員🔥",
+                "size": "3xl",
+                "weight": "bold",
+                "align": "center",
+                "gravity": "center"
+            },
+            {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                    {
+                        "type": "box",
+                        "layout": "vertical",
+                        "contents": [
+                            {
+                                "type": "box",
+                                "layout": "baseline",
+                                "contents": [
+                                    {
+                                        "type": "text",
+                                        "text": "會員等級:",
+                                        "margin": "md",
+                                        "offsetStart": "lg",
+                                        "contents": [],
+                                        "color": "#000000",
+                                        "size": "md"
+                                    },
+                                    {
+                                        "type": "icon",
+                                        "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png",
+                                        "margin": "md",
+                                        "offsetTop": "2px",
+                                        "offsetEnd": "72px"
+                                    },
+                                    {
+                                        "type": "icon",
+                                        "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png",
+                                        "margin": "md",
+                                        "offsetTop": "2px",
+                                        "offsetEnd": "77px"
+                                    },
+                                    {
+                                        "type": "icon",
+                                        "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png",
+                                        "margin": "md",
+                                        "offsetTop": "2px",
+                                        "offsetEnd": "82px"
+                                    },
+                                    {
+                                        "type": "icon",
+                                        "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png",
+                                        "margin": "md",
+                                        "offsetTop": "2px",
+                                        "offsetEnd": "87px"
+                                    },
+                                    {
+                                        "type": "icon",
+                                        "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png",
+                                        "margin": "md",
+                                        "offsetTop": "2px",
+                                        "offsetEnd": "92px"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "box",
+                                "layout": "baseline",
+                                "contents": [
+                                    {
+                                        "type": "text",
+                                        "text": "會員暱稱:",
+                                        "margin": "md",
+                                        "offsetStart": "lg",
+                                        "color": "#000000"
+                                    },
+                                    {
+                                        "type": "text",
+                                        "text": "Wei",
+                                        "color": "#000000",
+                                        "offsetEnd": "52px"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "box",
+                                "layout": "baseline",
+                                "contents": [
+                                    {
+                                        "type": "text",
+                                        "text": "會員電話:",
+                                        "margin": "md",
+                                        "offsetStart": "lg",
+                                        "color": "#000000"
+                                    },
+                                    {
+                                        "type": "text",
+                                        "text": "0987654321",
+                                        "offsetEnd": "52px",
+                                        "color": "#000000"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "separator",
+                                "color": "#000000",
+                                "margin": "md"
+                            }
+                        ],
+                        "margin": "lg",
+                        "spacing": "xs"
+                    },
+                    {
+                        "type": "box",
+                        "layout": "vertical",
+                        "margin": "md",
+                        "contents": [
+                            {
+                                "type": "text",
+                                "text": "🙇‍♂️當前預約狀況🙇‍♂️",
+                                "wrap": true,
+                                "margin": "none",
+                                "size": "xl",
+                                "align": "center",
+                                "gravity": "center",
+                                "contents": [],
+                                "weight": "bold"
+                            },
+                            {
+                                "type": "box",
+                                "layout": "baseline",
+                                "contents": [],
+                                "offsetStart": "20px"
+                            },
+                            {
+                                "type": "box",
+                                "layout": "baseline",
+                                "contents": [],
+                                "offsetStart": "20px"
+                            },
+                            {
+                                "type": "separator",
+                                "margin": "xs"
+                            }
+                        ],
+                        "spacing": "xs"
+                    },
+                    {
+                        "type": "separator",
+                        "color": "#000000",
+                        "margin": "md"
+                    },
+                    {
+                        "type": "box",
+                        "layout": "vertical",
+                        "contents": [
+                            {
+                                "type": "button",
+                                "action": {
+                                    "type": "postback",
+                                    "label": "更改會員暱稱👬",
+                                    "data": "updateuserId"
+                                },
+                                "style": "primary",
+                                "margin": "md"
+                            },
+                            {
+                                "type": "button",
+                                "action": {
+                                    "type": "postback",
+                                    "label": "更改電話號碼📱",
+                                    "data": "updateUserPhone"
+                                },
+                                "margin": "md",
+                                "style": "primary",
+                                "color": "#8B4513"
+                            }
+                        ],
+                        "offsetTop": "0px"
+                    }
+                ],
+                "paddingBottom": "20px",
+                "paddingStart": "10px",
+                "paddingEnd": "15px",
+                "borderColor": "#F0F0F0"
+            }
+        ]
+    },
+    "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [],
+        "backgroundColor": "#194051"
+    },
+    "styles": {
+        "body": {
+            "backgroundColor": "#F0F0F0"
+        }
+    }
+}

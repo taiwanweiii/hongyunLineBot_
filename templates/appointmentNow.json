@@ -1,0 +1,63 @@
+{
+  "type": "carousel",
+  "contents": [
+    {
+      "type": "bubble",
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "預約 - 請選擇日期",
+            "size": "xl",
+            "weight": "bold",
+            "decoration": "underline",
+            "align": "center"
+          }
+        ]
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "9/29 (三)",
+                "size": "xl",
+                "wrap": false,
+                "align": "center",
+                "gravity": "center",
+                "weight": "bold",
+                "style": "normal"
+              },
+              {
+                "type": "button",
+                "action": {
+                  "type": "postback",
+                  "label": "預約",
+                  "data": "what_data_u_want_to_send"
+                },
+                "style": "primary",
+                "margin": "none",
+                "height": "sm",
+                "scaling": true,
+                "flex": 0
+              }
+            ],
+            "margin": "md"
+          },
+          {
+            "type": "separator",
+            "margin": "md",
+            "color": "#999999"
+          }
+        ]
+      }
+    }
+  ]
+}

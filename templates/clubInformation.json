@@ -1,0 +1,274 @@
+{
+  "type": "bubble",
+  "size": "mega",
+  "header": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [],
+    "backgroundColor": "#194051"
+  },
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "球桿資訊",
+            "weight": "bold",
+            "size": "3xl",
+            "align": "center",
+            "color": "#154050",
+            "margin": "none"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "margin": "sm",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "separator",
+                "color": "#154050",
+                "margin": "none"
+              },
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "contents": [
+                  {
+                    "type": "box",
+                    "layout": "horizontal",
+                    "contents": [
+                      {
+                        "type": "text",
+                        "text": "球頭",
+                        "size": "sm",
+                        "color": "#154050",
+                        "flex": 0
+                      },
+                      {
+                        "type": "text",
+                        "size": "sm",
+                        "color": "#154050",
+                        "align": "start",
+                        "text": "球頭"
+                      }
+                    ],
+                    "width": "150px",
+                    "spacing": "sm",
+                    "margin": "none"
+                  },
+                  {
+                    "type": "box",
+                    "layout": "horizontal",
+                    "contents": [
+                      {
+                        "type": "text",
+                        "text": "桿頭",
+                        "size": "sm",
+                        "color": "#154050",
+                        "flex": 0,
+                        "offsetStart": "5px"
+                      },
+                      {
+                        "type": "text",
+                        "text": "110y",
+                        "size": "sm",
+                        "color": "#154050",
+                        "align": "start",
+                        "offsetStart": "10px"
+                      }
+                    ],
+                    "width": "150px"
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "contents": [
+                  {
+                    "type": "box",
+                    "layout": "horizontal",
+                    "contents": [
+                      {
+                        "type": "text",
+                        "text": "桿身重量硬度",
+                        "size": "sm",
+                        "color": "#154050",
+                        "flex": 0
+                      },
+                      {
+                        "type": "text",
+                        "text": "270y",
+                        "size": "sm",
+                        "color": "#154050",
+                        "align": "start"
+                      }
+                    ],
+                    "width": "150px",
+                    "spacing": "sm",
+                    "margin": "none"
+                  },
+                  {
+                    "type": "box",
+                    "layout": "horizontal",
+                    "contents": [
+                      {
+                        "type": "text",
+                        "text": "握把重量",
+                        "size": "sm",
+                        "color": "#154050",
+                        "flex": 0,
+                        "offsetStart": "5px"
+                      },
+                      {
+                        "type": "text",
+                        "text": "15°",
+                        "size": "sm",
+                        "color": "#154050",
+                        "align": "start",
+                        "offsetStart": "10px"
+                      }
+                    ],
+                    "width": "150px"
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "contents": [
+                  {
+                    "type": "box",
+                    "layout": "horizontal",
+                    "contents": [
+                      {
+                        "type": "text",
+                        "text": "揮桿重量",
+                        "size": "sm",
+                        "color": "#154050",
+                        "flex": 0
+                      },
+                      {
+                        "type": "text",
+                        "text": "135",
+                        "size": "sm",
+                        "color": "#154050",
+                        "align": "start"
+                      }
+                    ],
+                    "width": "150px",
+                    "spacing": "sm",
+                    "margin": "none"
+                  },
+                  {
+                    "type": "box",
+                    "layout": "horizontal",
+                    "contents": [
+                      {
+                        "type": "text",
+                        "text": "桿面角度",
+                        "size": "sm",
+                        "color": "#154050",
+                        "flex": 0,
+                        "offsetStart": "5px"
+                      },
+                      {
+                        "type": "text",
+                        "text": "15°",
+                        "size": "sm",
+                        "color": "#154050",
+                        "align": "start",
+                        "offsetStart": "10px"
+                      }
+                    ],
+                    "width": "150px"
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "contents": [
+                  {
+                    "type": "box",
+                    "layout": "horizontal",
+                    "contents": [
+                      {
+                        "type": "text",
+                        "text": "桿底角",
+                        "size": "sm",
+                        "color": "#154050",
+                        "flex": 0
+                      },
+                      {
+                        "type": "text",
+                        "text": "135",
+                        "size": "sm",
+                        "color": "#154050",
+                        "align": "start"
+                      }
+                    ],
+                    "width": "150px",
+                    "spacing": "sm",
+                    "margin": "none"
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "contents": [
+                  {
+                    "type": "box",
+                    "layout": "horizontal",
+                    "contents": [
+                      {
+                        "type": "text",
+                        "text": "備註:",
+                        "size": "sm",
+                        "color": "#154050",
+                        "flex": 0
+                      },
+                      {
+                        "type": "text",
+                        "text": "未備註",
+                        "size": "sm",
+                        "color": "#154050"
+                      }
+                    ],
+                    "spacing": "sm",
+                    "margin": "none"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "separator",
+            "color": "#154050",
+            "margin": "sm"
+          }
+        ],
+        "borderWidth": "light",
+        "offsetBottom": "10px"
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [],
+    "backgroundColor": "#194051"
+  },
+  "styles": {
+    "footer": {
+      "separator": true
+    }
+  }
+}

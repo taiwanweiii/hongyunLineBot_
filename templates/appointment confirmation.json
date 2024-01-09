@@ -1,0 +1,170 @@
+{
+  "type": "bubble",
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "text",
+        "text": "RECEIPT",
+        "weight": "bold",
+        "color": "#1DB446",
+        "size": "sm"
+      },
+      {
+        "type": "text",
+        "text": "預約確認單",
+        "weight": "bold",
+        "size": "xxl",
+        "margin": "md",
+        "align": "center"
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "margin": "none",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "姓名",
+                "size": "lg",
+                "color": "#F3533A",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "小偉",
+                "size": "lg",
+                "color": "#F3533A",
+                "align": "end"
+              }
+            ],
+            "margin": "md"
+          },
+          {
+            "type": "separator",
+            "margin": "md",
+            "color": "#000000"
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "電話",
+                "size": "lg",
+                "color": "#FA9F42"
+              },
+              {
+                "type": "text",
+                "text": "0932533333",
+                "size": "lg",
+                "color": "#FA9F42",
+                "align": "end"
+              }
+            ],
+            "margin": "md"
+          },
+          {
+            "type": "separator",
+            "color": "#000000",
+            "margin": "md"
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "項目",
+                "size": "lg",
+                "color": "#8AD879",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "尚未填寫",
+                "size": "lg",
+                "color": "#8AD879",
+                "align": "end"
+              }
+            ],
+            "margin": "md"
+          },
+          {
+            "type": "separator",
+            "color": "#000000",
+            "margin": "md"
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "時間",
+                "size": "lg",
+                "color": "#5ACFC9",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "上午 10:25",
+                "size": "lg",
+                "color": "#5ACFC9",
+                "align": "end"
+              }
+            ]
+          },
+          {
+            "type": "separator",
+            "color": "#000000",
+            "margin": "md"
+          }
+        ]
+      },
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "margin": "md",
+        "contents": [
+          {
+            "type": "button",
+            "action": {
+              "type": "postback",
+              "label": "確認預約",
+              "data": "ConfirmReservation",
+              "displayText": "確認預約"
+            },
+            "color": "#228B22",
+            "style": "primary",
+            "margin": "none"
+          },
+          {
+            "type": "button",
+            "action": {
+              "type": "postback",
+              "label": "取消預約",
+              "data": "CancelReservation",
+              "displayText": "取消預約"
+            },
+            "color": "#F28500",
+            "style": "primary"
+          }
+        ],
+        "spacing": "xxl"
+      }
+    ]
+  },
+  "styles": {
+    "footer": {
+      "separator": true
+    }
+  }
+}

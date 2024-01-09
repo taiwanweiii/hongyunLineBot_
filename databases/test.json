@@ -1,0 +1,23 @@
+{
+    "customer": {
+        "id": 22,
+        "name": "\u5433\u5927\u5c71",
+        "phone": "0923456789",
+        "sex": 1
+    },
+    "products": [
+        {
+            "id": 27,
+            "name": "test",
+            "price": 199,
+            "pid": "abc123",
+            "category_2_id": 13,
+            "category_2_name": "OK",
+            "category_1_name": "\u4fbf\u5229\u5546\u5e97",
+            "category_1_id": 3,
+            "count": 5,
+            "note": ""
+        }
+    ],
+    "note": "\u6e2c\u8a66"
+}

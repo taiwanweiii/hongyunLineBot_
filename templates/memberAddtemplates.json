@@ -1,0 +1,43 @@
+[
+    {
+        "type": "box",
+        "layout": "baseline",
+        "contents": [
+            {
+                "type": "text",
+                "text": "項目:",
+                "flex": 0,
+                "color": "#000000"
+            },
+            {
+                "type": "text",
+                "text": "以預約",
+                "color": "#FF0000",
+                "weight": "bold"
+            }
+        ],
+        "offsetStart": "20px"
+    },
+    {
+        "type": "box",
+        "layout": "baseline",
+        "contents": [
+            {
+                "type": "text",
+                "text": "預約時間:",
+                "flex": 0,
+                "color": "#000000"
+            },
+            {
+                "type": "text",
+                "text": "2023年10月10號15:00",
+                "color": "#000000"
+            }
+        ],
+        "offsetStart": "20px"
+    },
+    {
+        "type": "separator",
+        "margin": "xs"
+    }
+]

@@ -1,0 +1,23 @@
+{
+  "altText": "Buttons template",
+  "template": {
+    "actions": [
+      {
+        "label": "\u6211\u8981\u8a3b\u518a",
+        "text": "\ud83d\udd25\u7acb\u99ac\u8a3b\u518a\uff01\uff01\uff01",
+        "type": "message"
+      },
+      {
+        "label": "\u89c0\u770b\u6559\u5b78\u5f71\u7247",
+        "type": "uri",
+        "uri": "http://example.com/"
+      },
+      { "label": "uri", "type": "uri", "uri": "http://example.com/" }
+    ],
+    "text": "\u7b2c\u4e00\u6b21\u52a0\u5165\u9ede\u64ca\u4e0b\u65b9\u6211\u8981\u8a3b\u518a",
+    "thumbnailImageUrl": "https://example.com/image.jpg",
+    "title": "\u5e33\u865f\u8a3b\u518a",
+    "type": "buttons"
+  },
+  "type": "template"
+}
