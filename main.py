@@ -723,7 +723,9 @@ def LineBotv1(company):
 							# template['body']['contents'][1]['contents'][2]['contents'][1]['text']=member.memberDB.TableTwoSearch('userId',event.uid,'company',company)[0]['phone']
 							# # historySearchStatusUserId=isReserveFunction.historyDBSearchStatusUserId()
 							memberdate = member.memberDB.TableTwoSearch('userId',event.uid,'company',company)
-							historySearchStatusUserId = reserve.reserveDB.TableThreeSearch('userId',event.uid,'company',company,'status',1)
+							reserveDBSearch=MYSQLDB('reserve')
+
+							historySearchStatusUserId = reserveDBSearch.TableThreeSearch('userId',event.uid,'company',company,'status',1)
 							nowTimeUnix = datetime.timestamp(datetime.now())
 			
 							filtered_data = [item for item in historySearchStatusUserId if item['dataTime'] > nowTimeUnix]
@@ -1246,6 +1248,7 @@ def LineBotv1(company):
 							date_object = datetime.strptime(unixTime, "%Y/%m")
 							first_day_of_month = date_object.replace(day=1, hour=0, minute=0, second=0)
 							unix_timestamp = int(first_day_of_month.timestamp())
+							reserve.reserveDB.updateThreeSearchWhere("project",name,"userId",event.uid,"status","0","company",company)
 
 							memberSearchData=member.dbSearch(event.uid,company)
 							template = copy.deepcopy(line.flexTemplate('appointment confirmation'))
@@ -1279,43 +1282,66 @@ def LineBotv1(company):
 							# 	reserve.reserveDB.updateThreeSearchWhere("dataTime",unix_timestamp,"userId",event.uid,"status","0","company",company)
 							# 	reserve.reserveDB.TableThreeSearch('userid',event.uid,'status','ballRoll','company',company)
 							historySearchStatusUserId = reserve.reserveDB.TableThreeSearch('userid',event.uid,'status','ballRoll','company',company)
+
+
 							getReserveTimeList = [item['dataTime'] for item in historySearchStatusUserId]
 							nowTime=getDatetime()
 							nowTimeUinx=int(nowTime.timestamp())
-							print(f'getReserveTimeList:{getReserveTimeList}')
-							print(f'historySearchStatusUserId:{historySearchStatusUserId}')
+							ballRollDataList=[]
+							ballRollList=[]
+							for key,value in searchBallRollfillterTrue.items():
+								ballRollDataList.append(value['courtName'])
+								if value['courtName']==name:
+									ballRollList.append(value)
+							ballRollList=ballRollList[0]
+							if not isinstance(ballRollList,dict):
+								try:
+									ballRollList = dict(ballRollList)
+								except (TypeError, ValueError):
+									print("无法转换为字典")
 
-							count = len({x for x in getReserveTimeList if x is not None and x > int(nowTimeUinx)})
-							print(f'count{count}')
-							print(reserveCount)
-							if not reserve.reserveDB.execute_query(f"SELECT * FROM reserve WHERE userId = '{event.uid}' AND (dataTime IS NULL OR project IS NULL) AND company = '{company}'"):
-								if count< reserveCount:
-									print('------------')
-									# userReservedate=isReserveFunction.historyDBAdd()
-									userReservedate=reserve.reserveDB.rdbmsSearch(company,event.uid)[0]
-									for i in number:
-										reserve.reserveDB.Insert(("userId","company","project","dataTime","status",),(event.uid,company,name,unix_timestamp,"ballRoll",))
-
-									print(userReservedate)
-									notifyFunction=notify(NOTIFYTOKEN)
-									# print((userReservedate))
-									# print(reserve.reser)
-									unixTime=userReservedate['dataTime']
-									date_object = datetime.utcfromtimestamp(unixTime)
-									year_month_str = date_object.strftime('%Y/%m')
-
-									print(userReservedate['dataTime'])
-									notifyTime=(datetime.fromtimestamp(userReservedate["dataTime"])).strftime('%Y年%m月%d日 %H:%M')
-									notifyFunction.SendMessage(f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n球場:{userReservedate["project"]}\n球卷月份:{year_month_str}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n')
-									line.replyText(f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n球場:{userReservedate["project"]}\n球卷月份:{year_month_str}')
-								else:
-									line.replyText('系統自動判斷目前您以有預約時段,請點擊會員查詢確認時段是否預約,若無預約煩請致電～')
-								# isReserveFunction.historyDBUpdate(memberDate)
-
-								# isReserveFunction.shortDBDelete()
-								# print("確認預約")
+								
+							isBallRollSearch=(reserve.reserveDB.TableFiveSearch('userid',event.uid,'status','ballRoll','company',company,'dataTime',unix_timestamp,'project',name))
+							isBallRollHistoryNumber = 0 if isBallRollSearch == '' else len(isBallRollSearch)	
+							print(type(ballRollList))
+							print((ballRollList['monthNumber']['1704038400']))
+							unix_timestamp_str=str(unix_timestamp)
+							print(unix_timestamp_str)
+							print('----unix_timestamp---1704038400----')
+							configsNumber=ballRollList['monthNumber'][unix_timestamp_str]
+							configsNumber=int(configsNumber)
+							if (isBallRollHistoryNumber+int(number)) > configsNumber:
+								line.replyText(f'球場：{name}\n球卷數量不足\n剩餘數量：{configsNumber-isBallRollHistoryNumber}\n您選擇數量{number}')
 							else:
-								line.replyText('目前系統尚無預約資料，請從新預約！！！')
+								count = len({x for x in getReserveTimeList if x is not None and x > int(nowTimeUinx)})
+								if reserve.reserveDB.execute_query(f"SELECT * FROM reserve WHERE userId = '{event.uid}' AND (dataTime IS NULL AND project IS NOT NULL AND status='0') AND company = '{company}'") and name in ballRollDataList:
+									if count< reserveCount:
+										# userReservedate=isReserveFunction.historyDBAdd()
+										for i in range(int(number)):
+											reserve.reserveDB.Insert(("userId","company","project","dataTime","status",),(event.uid,company,name,unix_timestamp,"ballRoll",))
+										userReservedate=reserve.reserveDB.ballRollrdbmsSearch(company,event.uid)[0]
+										reserve.reserveDB.updateThreeSearchWhere("project",None,"userId",event.uid,"status","0","company",company)
+
+										notifyFunction=notify(NOTIFYTOKEN)
+										# print((userReservedate))
+										# print(reserve.reser)
+										unixTime=int(userReservedate['dataTime'])+8*60*60
+										date_object = datetime.utcfromtimestamp(unixTime)
+										year_month_str = date_object.strftime('%Y/%m')
+
+										notifyTime=(datetime.fromtimestamp(userReservedate["dataTime"])).strftime('%Y年%m月%d日 %H:%M')
+										notifyFunction.SendMessage(f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n球場:{userReservedate["project"]}\n球卷月份:{year_month_str}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n張數:{number}')
+										line.replyText(f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n球場:{userReservedate["project"]}\n球卷月份:{year_month_str}\n張數:{number}')
+									else:
+
+										line.replyText('系統自動判斷目前您以有預約時段,請點擊會員查詢確認時段是否預約,若無預約煩請致電～')
+									# isReserveFunction.historyDBUpdate(memberDate)
+
+									# isReserveFunction.shortDBDelete()
+									# print("確認預約")
+								else:
+
+									line.replyText('目前系統尚無預約資料，請從新預約！！！')
 						case data if (user_status!=True) and (data.startswith('postReserveProject:') or data.startswith('buyBallRoll:')):
 								template = line.flexTemplate('first')
 								line.doubleReplyFlexMessageText('您尚未註冊會員下方功能無法使用',template,'註冊訊息')
@@ -1342,6 +1368,8 @@ def getIsProject(phone):
 			publicBlackTimeList = [item["deniedDates"] for item in publicData_dict if item["status"] == 0]
 		
 		searchBallRoll_dict = botConfigsSearchAll[0]['ballRoll']
+
+
 		if not isinstance(searchBallRoll_dict,list) and searchBallRoll_dict is not None:searchBallRoll_dict = json.loads(searchBallRoll_dict)
 
 		if (searchBallRoll_dict):
@@ -1412,7 +1440,7 @@ getIsProject("0912345678")
 def posDB():
 	posOrderDb = MYSQLDB(
 		table='customers',
-        host="172.18.0.12",
+        host="172.19.0.4",
 		# host = "pos-db.alpaca.tw",
 		# port=3316,
 		user="root",

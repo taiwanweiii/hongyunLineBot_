@@ -13,7 +13,7 @@ def isMember(userId,client):
     posCustomerDb = MYSQLDB(
 		table='customers',
 		# host = "pos-db.alpaca.tw",
-        host="172.18.0.12",
+        host="172.19.0.4",
 		# port=3316,
 		user="root",
 		# password="=?michi_pos/=!",

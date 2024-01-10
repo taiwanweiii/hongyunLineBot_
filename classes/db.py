@@ -14,7 +14,7 @@ class DB:
         self.all=db.all
 
 class MYSQLDB:
-    def __init__(self,table,host='172.18.0.12',user="root",password='root',database='hongyun-line',port=3306):
+    def __init__(self,table,host='172.19.0.2',user="root",password='root',database='line_bot_configs',port=3306):
         self.connection = self.openConnection(host=host,user=user,password=password,database=database,port=port)
         self.cursor = self.connection.cursor(dictionary=True)
         self.table= table
@@ -43,7 +43,19 @@ class MYSQLDB:
             return self.cursor.fetchall()
         except Exception as e:
             print('class.db.TableTwoSearch is Error:'+str(e))
-    
+    def TableFourSearch(self,oneWhereTable,oneWhereValue,twoWhereTable,twoWhereValue,threeWhereTable,threeWhereValue,fourWhereTable,fourWhereValue):
+        try:
+            self.cursor.execute(f"SELECT * FROM {self.table} WHERE {oneWhereTable} = %s AND {twoWhereTable} = %s AND {threeWhereTable} = %s AND {fourWhereTable}=%s" ,(oneWhereValue,twoWhereValue,threeWhereValue,fourWhereValue))
+            return self.cursor.fetchall()
+        except Exception as e:
+            print('class.db.TableTwoSearch is Error:'+str(e))
+    def TableFiveSearch(self,oneWhereTable,oneWhereValue,twoWhereTable,twoWhereValue,threeWhereTable,threeWhereValue,fourWhereTable,fourWhereValue,fiveWhereTable,fiveWhereValue):
+        try:
+            self.cursor.execute(f"SELECT * FROM {self.table} WHERE {oneWhereTable} = %s AND {twoWhereTable} = %s AND {threeWhereTable} = %s AND {fourWhereTable}=%s AND {fiveWhereTable}=%s" ,(oneWhereValue,twoWhereValue,threeWhereValue,fourWhereValue,fiveWhereValue))
+            return self.cursor.fetchall()
+        except Exception as e:
+            print('class.db.TableTwoSearch is Error:'+str(e))
+        
     def rdbmsSearch(self,company,userId):
         try:
             self.cursor.execute(f"""
@@ -51,6 +63,19 @@ class MYSQLDB:
                                     FROM {self.table} 
                                     JOIN member ON {self.table}.userId = member.userId 
                                     Where status=0 AND reserve.company='{company}' and member.userId='{userId}'
+                                """)
+            return self.cursor.fetchall()
+        except Exception as e:
+            print('class.db.rdbmsSearch is Error:'+str(e))
+    def ballRollrdbmsSearch(self,company,userId):
+        try:
+            self.cursor.execute(f"""
+                                    SELECT member.name, member.phone, member.userId, reserve.dataTime, reserve.project, reserve.auto_updae_time 
+                                    FROM {self.table} 
+                                    JOIN member ON {self.table}.userId = member.userId 
+                                    Where status='ballRoll' AND reserve.company='{company}' and member.userId='{userId}'
+                                    ORDER BY reserve.id DESC
+                                    LIMIT 1
                                 """)
             return self.cursor.fetchall()
         except Exception as e:
@@ -155,7 +180,7 @@ class MYSQLDB:
     #DB ROOT
 
     #DB connection
-    def openConnection(self, host='172.18.0.12',user="root",password='root',database='hongyun-line',port=3306):
+    def openConnection(self, host='172.19.0.2',user="root",password='root',database='line_bot_configs',port=3306):
         return mysql.connector.connect(
             host=host,
             user=user,
