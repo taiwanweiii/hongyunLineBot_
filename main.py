@@ -445,9 +445,9 @@ def LineBotv1(company):
 					if memberBasicInformation:
 						memberBasicInformation=memberBasicInformation[0]
 						if memberBasicInformation['name']:
-							memberRegistertemplate['hero']['contents'][1]['contents'][0]["contents"][0]["contents"][1]['text']=memberBasicInformation['name']
+							memberRegistertemplate['hero']['contents'][1]['contents'][0]["contents"][0]["contents"][1]['text']=memberBasicInformation['phone']
 						if memberBasicInformation['phone']:
-							memberRegistertemplate['hero']['contents'][1]['contents'][0]["contents"][1]["contents"][1]['text']=memberBasicInformation['phone']
+							memberRegistertemplate['hero']['contents'][1]['contents'][0]["contents"][1]["contents"][1]['text']=memberBasicInformation['name']
 						if memberBasicInformation['sex']:
 							memberRegistertemplate['hero']['contents'][1]['contents'][0]["contents"][2]["contents"][1]['text']=memberBasicInformation['sex']
 
@@ -457,6 +457,7 @@ def LineBotv1(company):
 						line.replyFlex(template)
 					if user_status == 'phone':
 						if member.isPhone(event.message) == False:
+							print('---------------')
 							line.replyText("電話號碼格式錯誤，請再輸入1次(Ex:0987654321)")
 						else:
 							histroyPhones=member.isPhoneRepeat(company)
@@ -972,7 +973,9 @@ def LineBotv1(company):
 								todayTimestamp=nowtimestamp+projectsDay+86400
 								projectNameIdx = projectNameList.index(reserveProjectName)
 								nextTimestamp=todayTimestamp+projectsoffset
+								print("===========print(nextTimestamp)")
 
+								print(nextTimestamp)
 								dayList=[]
 								ranges = [(start, start + 86400 - 1) for start in publicBlackTimeList]
 

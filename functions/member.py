@@ -53,7 +53,7 @@ def isPhoneRepeat(client):
 #     return True
     # else
 def isPhone(phone):
-	if re.match(r'^0[1-9][0-9]{7,7}$', phone):
+	if re.match(r'^0[1-9][0-9]{8}$', phone):
 		return True
 	else:
 		return False

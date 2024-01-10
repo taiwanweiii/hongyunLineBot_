@@ -36,7 +36,7 @@
                                 "contents": [
                                     {
                                         "type": "text",
-                                        "text": "會員名稱:",
+                                        "text": "會員電話:",
                                         "margin": "md",
                                         "offsetStart": "0px",
                                         "contents": [],
@@ -59,7 +59,7 @@
                                 "contents": [
                                     {
                                         "type": "text",
-                                        "text": "會員電話:",
+                                        "text": "會員名稱:",
                                         "margin": "md",
                                         "offsetStart": "0px",
                                         "contents": [],
