@@ -50,7 +50,7 @@ from linebot import (
 # richMenuID='richmenu-06613611845f14bb1db2a1ff7aef7162'
 token='ubNXeiTb/ckQXAQaemiRTVjsfNJ+t21QVNnY4XoAZrzZAYbz+mshUzFktAHhLgkE1kKq3/Gf8YBYNwVEAOjP1E/8DNKG6cwwpTuq4o1Vyfw7NrPyDSSTtV/s69mBH9BTzC9fyWKOooAK6P5bl7jmHwdB04t89/1O/w1cDnyilFU='
 # 鴻運token
-# token='kb5hOYOK202buXWQ0xycThJSdDNO2onGAKrg9DBAjNFLl9HzBEk6hEa9wZI9GT/1jPDs18aBTXl+g5KRCwSWD42M2HL9FB2CHNYy/PS+haU69ZnPupo1J42evPsfkuq76SgyyTB6Sgz5oKXmHpo98wdB04t89/1O/w1cDnyilFU='
+# token='nC8KEvZ7uN5aZOQE7DiqXmauvGcP9nzYwEk3sYKMrPtX6YKstpSAHTl/ec8uEp7od/pZ2lQ0TT6U6PXaifFatcVJiDXDLzvwO6m3my/2fNfnQxkiDtt7uavw7xL0PJme/DpsEATb9hCaGlQrdaLsxQdB04t89/1O/w1cDnyilFU='
 ##---------------列印richmenuId-----------------
 line_bot_api = LineBotApi(token)
 rich_menu_list = line_bot_api.get_rich_menu_list()
@@ -65,9 +65,9 @@ for rich_menu in rich_menu_list:
 ##---------------加入圖片-----------------
 headers = {'Authorization':'Bearer ubNXeiTb/ckQXAQaemiRTVjsfNJ+t21QVNnY4XoAZrzZAYbz+mshUzFktAHhLgkE1kKq3/Gf8YBYNwVEAOjP1E/8DNKG6cwwpTuq4o1Vyfw7NrPyDSSTtV/s69mBH9BTzC9fyWKOooAK6P5bl7jmHwdB04t89/1O/w1cDnyilFU='}
 
-req = requests.request('POST', 'https://api.line.me/v2/bot/user/all/richmenu/richmenu-06613611845f14bb1db2a1ff7aef7162', headers=headers)
+# req = requests.request('POST', 'https://api.line.me/v2/bot/user/all/richmenu/richmenu-06613611845f14bb1db2a1ff7aef7162', headers=headers)
 
-print(req.text)
+# print(req.text)
 
 
 # rich_menu_list = line_bot_api.get_rich_menu_list("richmenu-6a63d37de83d49ad015f44e79431a5ac")

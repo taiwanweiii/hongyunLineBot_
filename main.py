@@ -18,7 +18,6 @@ from functions import reserve
 
 from admin import webhook
 
-import schedule
 import time
 TZ = pytz.timezone('Asia/Taipei')
 def getDatetime(): return datetime.now(TZ)
@@ -471,7 +470,7 @@ def LineBotv1(company):
 								line.replyText("電話號碼更新完成")
 								
 							elif member.isMember(event.uid,company)=='name':
-								memberRegistertemplate['hero']['contents'][1]['contents'][0]["contents"][1]["contents"][1]['text']=event.message
+								memberRegistertemplate['hero']['contents'][1]['contents'][0]["contents"][0]["contents"][1]['text']=event.message
 								line.doubleReplyFlexMessageText('請於下方小鍵盤，輸入會員姓名',memberRegistertemplate,'會員姓名輸入')
 
 
@@ -482,14 +481,13 @@ def LineBotv1(company):
 							member.memberDB.updateTwoSearchWhere("name",event.message,"userId",event.uid,"company",company)
 							# member.update(event.uid,{'name': event.message})
 							user_status = member.isMember(event.uid,company)
-							if user_status == 'phone':
+							if user_status == 'sex':
 								# memberRegistertemplate = line.flexTemplate('memberRegister')
-								memberRegistertemplate['hero']['contents'][1]['contents'][0]["contents"][0]["contents"][1]['text']=event.message
+								memberRegistertemplate['hero']['contents'][1]['contents'][0]["contents"][1]["contents"][1]['text']=event.message
 								template=functionTemplate.buttonTemplate(["🙋🏻‍♂️男性","🙋🏻‍♀️女性"],['男','女'],"請輸入性別\n🙋🏻‍♂️男性請輸入男\n🙋🏻‍♀️女性請輸入女")
 								line.doubleReplyTwoFlex(memberRegistertemplate,template)
-							elif user_status=='sex':
+							elif user_status=='phone':
 								memberRegistertemplate['hero']['contents'][1]['contents'][0]["contents"][0]["contents"][1]['text']=event.message
-
 								template=functionTemplate.buttonTemplate(["🙋🏻‍♂️男性","🙋🏻‍♀️女性"],['男','女'],"🥰請輸入性別\n🙋🏻‍♂️男性請輸入男\n🙋🏻‍♀️女性請輸入女")
 								line.doubleReplyTwoFlex(memberRegistertemplate,template)
 							else:
@@ -790,7 +788,6 @@ def LineBotv1(company):
 							line.replyText('☎️請點此致電｜0919-102-803')
 				# postback
 				case 'postback':
-
 					match event.postback:
 						#選擇小時
 						case data if data.startswith('appointment_confirm_reserve:'):
@@ -840,6 +837,10 @@ def LineBotv1(company):
 							if result:
 								if count< reserveCount:
 									# userReservedate=isReserveFunction.historyDBAdd()
+									print('----reserve.reserveDB.rdbmsSearch(company,event.uid)----')
+									print(reserve.reserveDB.rdbmsSearch(company,event.uid))
+									print('----reserve.reserveDB.rdbmsSearch(company,event.uid)----')
+
 									userReservedate=reserve.reserveDB.rdbmsSearch(company,event.uid)[0]
 
 									reserve.reserveDB.updateThreeSearchWhere('status','1','userId',event.uid,'status','0','company',company)
@@ -959,7 +960,9 @@ def LineBotv1(company):
 							# reserve.reserveDB.updateThreeSearchWhere('project',reserveProjectName,'userId',event.uid,'status','0',"company",company)
 							reserve.reserveDB.updateThreeSearchWhere("dataTime",None,"userId",event.uid,"status","0","company",company)
 							reserve.reserveDB.updateThreeSearchWhere("project",None,"userId",event.uid,"status","0","company",company)
+							print(reserveProjectName)
 							print(f"projectNameList$$${projectNameList}")
+							print(type (projectNameList))
 							if reserveProjectName in projectNameList:
 								projectNameIdx = projectNameList.index(reserveProjectName)
 								projectName=projectNameList[projectNameIdx]
@@ -970,12 +973,9 @@ def LineBotv1(company):
 								current_datetime = datetime.now()
 								current = current_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
 								nowtimestamp = current.timestamp()
-								todayTimestamp=nowtimestamp+projectsDay+86400
+								todayTimestamp=nowtimestamp+projectsDay
 								projectNameIdx = projectNameList.index(reserveProjectName)
 								nextTimestamp=todayTimestamp+projectsoffset
-								print("===========print(nextTimestamp)")
-
-								print(nextTimestamp)
 								dayList=[]
 								ranges = [(start, start + 86400 - 1) for start in publicBlackTimeList]
 
@@ -1031,7 +1031,10 @@ def LineBotv1(company):
 								projectsoffset=projectsoffsetList[projectNameIdx]
 								projectsinterval=projectsintervalList[projectNameIdx]
 								projectSumberOfAppointments=projectSnumberOfAppointmentsList[projectNameIdx]#群組數量
+								print('--------projectGroupReserveStatusList---------')
+								print(projectGroupReserveStatusList)
 								projectGroupReserveStatus=projectGroupReserveStatusList[projectNameIdx]
+
 								ALLprojectList = configsSearchDBProjectList[1:-1].split(',')
 
 								AllProjectIndex=ALLprojectList.index(projectName)
@@ -1068,7 +1071,8 @@ def LineBotv1(company):
 								dt = datetime.fromtimestamp(int(timeUnix))
 								print(f"{dt.year}/{dt.month}/{dt.day} ({weekday_chinese[dt.weekday()]})")
 								unixActive=convert_to_timestamps(projectsActive)
-			
+								print(unixActive)
+								print('---unixActive----')
 								unixTimeActive=[]
 								if((unixActive[dt.weekday()])[1][0]==None):
 									while (unixActive[dt.weekday()][0][0])<(unixActive[dt.weekday()][0][1]):
@@ -1451,7 +1455,7 @@ def posDB():
 		password="root",
 		database="hongyun_pos"
 	)
-posDB()
+
 def memberData(phone,userId):
 	memberDB=MYSQLDB('member')
 	memberData=memberDB.TableTwoSearch('company',phone,'userId',userId)
