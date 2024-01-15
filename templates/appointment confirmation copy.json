@@ -1,26 +1,24 @@
 {
   "type": "bubble",
-  "header": {
+  "body": {
     "type": "box",
     "layout": "vertical",
     "contents": [
       {
         "type": "text",
+        "text": "RECEIPT",
+        "weight": "bold",
+        "color": "#1DB446",
+        "size": "sm"
+      },
+      {
+        "type": "text",
         "text": "預約確認單",
         "weight": "bold",
         "size": "xxl",
-        "margin": "none",
-        "align": "center",
-        "color": "#ffffff"
-      }
-    ],
-    "backgroundColor": "#194051",
-    "paddingAll": "7px"
-  },
-  "body": {
-    "type": "box",
-    "layout": "vertical",
-    "contents": [
+        "margin": "md",
+        "align": "center"
+      },
       {
         "type": "box",
         "layout": "vertical",
@@ -35,14 +33,14 @@
                 "type": "text",
                 "text": "姓名",
                 "size": "lg",
-                "color": "#194051",
+                "color": "#F3533A",
                 "flex": 0
               },
               {
                 "type": "text",
                 "text": "小偉",
                 "size": "lg",
-                "color": "#194051",
+                "color": "#F3533A",
                 "align": "end"
               }
             ],
@@ -61,13 +59,13 @@
                 "type": "text",
                 "text": "電話",
                 "size": "lg",
-                "color": "#194051"
+                "color": "#FA9F42"
               },
               {
                 "type": "text",
                 "text": "0932533333",
                 "size": "lg",
-                "color": "#194051",
+                "color": "#FA9F42",
                 "align": "end"
               }
             ],
@@ -86,14 +84,14 @@
                 "type": "text",
                 "text": "項目",
                 "size": "lg",
-                "color": "#194051",
+                "color": "#8AD879",
                 "flex": 0
               },
               {
                 "type": "text",
                 "text": "尚未填寫",
                 "size": "lg",
-                "color": "#194051",
+                "color": "#8AD879",
                 "align": "end"
               }
             ],
@@ -112,14 +110,14 @@
                 "type": "text",
                 "text": "時間",
                 "size": "lg",
-                "color": "#194051",
+                "color": "#5ACFC9",
                 "flex": 0
               },
               {
                 "type": "text",
                 "text": "上午 10:25",
                 "size": "lg",
-                "color": "#194051",
+                "color": "#5ACFC9",
                 "align": "end"
               }
             ]
@@ -140,35 +138,29 @@
             "type": "button",
             "action": {
               "type": "postback",
-              "label": "取消預約",
-              "data": "CancelReservation",
-              "displayText": "取消預約"
+              "label": "確認預約",
+              "data": "ConfirmReservation",
+              "displayText": "確認預約"
             },
-            "color": "#de021c",
-            "style": "primary"
+            "color": "#228B22",
+            "style": "primary",
+            "margin": "none"
           },
           {
             "type": "button",
             "action": {
               "type": "postback",
-              "label": "確認預約",
-              "data": "ConfirmReservation",
-              "displayText": "確認預約"
+              "label": "取消預約",
+              "data": "CancelReservation",
+              "displayText": "取消預約"
             },
-            "color": "#3B579D",
+            "color": "#F28500",
             "style": "primary"
           }
         ],
         "spacing": "xxl"
       }
-    ],
-    "paddingTop": "2px"
-  },
-  "footer": {
-    "type": "box",
-    "layout": "vertical",
-    "contents": [],
-    "backgroundColor": "#194051"
+    ]
   },
   "styles": {
     "footer": {

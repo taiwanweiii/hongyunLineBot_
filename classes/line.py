@@ -66,6 +66,15 @@ class Line:
         ]
         self.replyMessage(messages)
 
+    def doubleMessageTextReplyFlex(self, text1, flex_contents,alt_text='-'):
+        messages = [
+            FlexSendMessage(contents=flex_contents,alt_text=alt_text),
+            TextSendMessage(text=text1)
+
+            
+        ]
+        self.replyMessage(messages)
+
     def replyTextAndImage(self, text, image_url):
         # 回覆文字訊息
         text_message = TextSendMessage(text=text)

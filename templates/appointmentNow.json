@@ -12,10 +12,17 @@
             "text": "預約 - 請選擇日期",
             "size": "xl",
             "weight": "bold",
-            "decoration": "underline",
-            "align": "center"
+            "align": "center",
+            "color": "#ffffff"
           }
-        ]
+        ],
+        "backgroundColor": "#163846",
+        "paddingAll": "7px"
+      },
+      "hero": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": []
       },
       "body": {
         "type": "box",
@@ -46,7 +53,8 @@
                 "margin": "none",
                 "height": "sm",
                 "scaling": true,
-                "flex": 0
+                "flex": 0,
+                "color": "#163846"
               }
             ],
             "margin": "md"
@@ -56,7 +64,14 @@
             "margin": "md",
             "color": "#999999"
           }
-        ]
+        ],
+        "paddingTop": "0px"
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [],
+        "backgroundColor": "#163846"
       }
     }
   ]

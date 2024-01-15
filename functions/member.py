@@ -14,6 +14,7 @@ def isMember(userId,client):
 		table='customers',
 		# host = "pos-db.alpaca.tw",
         host="172.19.0.4",
+        # host="127.0.0.1",
 		# port=3316,
 		user="root",
 		# password="=?michi_pos/=!",

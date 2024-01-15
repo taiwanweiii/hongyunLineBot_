@@ -406,8 +406,6 @@ def LineBotv1(company):
 		print('===============data==================')
 		print(data)
 		print('===============data==================')
-
-
 		# try:
 		# start
 		if 'events' not in data: return print('events not exists.')
@@ -416,9 +414,8 @@ def LineBotv1(company):
 			event = line.setEvent(event)
 			
 			user_status = member.isMember(event.uid,company)
-			# 
+			print(event)
 			match event.type:
-				# message
 				case "follow":
 					template = line.flexTemplate('first')
 					# member.memberDB.insertMember(event.uid,company)
@@ -450,6 +447,10 @@ def LineBotv1(company):
 						if memberBasicInformation['sex']:
 							memberRegistertemplate['hero']['contents'][1]['contents'][0]["contents"][2]["contents"][1]['text']=memberBasicInformation['sex']
 
+					if event.message =='#測試':
+						template = line.flexTemplate('first')
+						line.replyFlex(template)
+
 
 					if user_status=='nouser':
 						template = line.flexTemplate('first')
@@ -471,7 +472,7 @@ def LineBotv1(company):
 								
 							elif member.isMember(event.uid,company)=='name':
 								memberRegistertemplate['hero']['contents'][1]['contents'][0]["contents"][0]["contents"][1]['text']=event.message
-								line.doubleReplyFlexMessageText('請於下方小鍵盤，輸入會員姓名',memberRegistertemplate,'會員姓名輸入')
+								line.doubleMessageTextReplyFlex('請於下方小鍵盤，輸入會員姓名',memberRegistertemplate,'會員姓名輸入')
 
 
 					elif user_status == 'name' :
@@ -479,12 +480,14 @@ def LineBotv1(company):
 							line.replyText("使用者名稱過長,請嘗試重新輸入")
 						else:
 							member.memberDB.updateTwoSearchWhere("name",event.message,"userId",event.uid,"company",company)
+							
 							# member.update(event.uid,{'name': event.message})
 							user_status = member.isMember(event.uid,company)
 							if user_status == 'sex':
 								# memberRegistertemplate = line.flexTemplate('memberRegister')
+								memberRegistertemplate['hero']['contents'][1]['contents'][0]["contents"][0]["contents"][1]['text']=memberBasicInformation['phone']
 								memberRegistertemplate['hero']['contents'][1]['contents'][0]["contents"][1]["contents"][1]['text']=event.message
-								template=functionTemplate.buttonTemplate(["🙋🏻‍♂️男性","🙋🏻‍♀️女性"],['男','女'],"請輸入性別\n🙋🏻‍♂️男性請輸入男\n🙋🏻‍♀️女性請輸入女")
+								template=functionTemplate.buttonTemplate(["🙋🏻‍♂️男性","🙋🏻‍♀️女性"],['男','女'],"🥰請輸入性別\n🙋🏻‍♂️男性請輸入男\n🙋🏻‍♀️女性請輸入女")
 								line.doubleReplyTwoFlex(memberRegistertemplate,template)
 							elif user_status=='phone':
 								memberRegistertemplate['hero']['contents'][1]['contents'][0]["contents"][0]["contents"][1]['text']=event.message
@@ -505,7 +508,7 @@ def LineBotv1(company):
 
 							# line.replyText("會員資料更新完成")
 						else:
-							template=functionTemplate.buttonTemplate(["🙋🏻‍♂️男性","🙋🏻‍♀️女性"],['男','女'],"請輸入性別\n🙋🏻‍♂️男性請輸入男\n🙋🏻‍♀️女性請輸入女")
+							template=functionTemplate.buttonTemplate(["🙋🏻‍♂️男性","🙋🏻‍♀️女性"],['男','女'],"🥰請輸入性別\n🙋🏻‍♂️男性請輸入男\n🙋🏻‍♀️女性請輸入女")
 							# templateTwo = line.flexTemplate('memberRegister')
 							line.doubleReplyTwoFlex(memberRegistertemplate,template)
 					elif user_status ==True:
@@ -527,7 +530,7 @@ def LineBotv1(company):
 								templateAdd['hero']['contents'][2]["contents"][1]['contents'][0]['text']=f'點擊查看{projectlist[i]}'
 								# templateAdd['hero']['action']['data']=f'ReserveProject:{projectlist[i]}'
 								templateAdd['hero']['action']['data']=f'personalData:{projectlist[i]}'
-								templateAdd['hero']['action']['displayText']=f'選擇預約{projectlist[i]}'
+								templateAdd['hero']['action']['displayText']=f'{projectlist[i]}查詢'
 								template['contents'].append(copy.deepcopy(templateAdd))
 								i+=1
 							print("underButtonSendMessageList")
@@ -802,8 +805,8 @@ def LineBotv1(company):
 							if reserve.isReserveDBState(event.uid,company) == True:
 								memberSearchData=member.dbSearch(event.uid,company)
 								template = copy.deepcopy(line.flexTemplate('appointment confirmation'))
-								template['body']['contents'][2]['contents'][0]['contents'][1]['text']=memberSearchData['name']
-								template['body']['contents'][2]['contents'][2]['contents'][1]['text']=memberSearchData['phone']
+								template['body']['contents'][0]['contents'][0]['contents'][1]['text']=memberSearchData['name']
+								template['body']['contents'][0]['contents'][2]['contents'][1]['text']=memberSearchData['phone']
 
 								# timeFormatYYYYMMDDhhmm=(datetime.fromtimestamp(isReserveFunction.shortDBSearch()[0]['dataTime'],TZ)).strftime("%Y年%m月%d日 %H:%M")
 								timeFormatYYYYMMDDhhmm=(datetime.fromtimestamp(reserve.reserveDB.TableThreeSearch('userId',event.uid,'status','0',"company",company)[0]['dataTime'],TZ)).strftime("%Y年%m月%d日 %H:%M")
@@ -811,16 +814,16 @@ def LineBotv1(company):
 								print(timeFormatYYYYMMDDhhmm)
 								# template['body']['contents'][2]['contents'][4]['contents'][1]['text']=isReserveFunction.shortDBSearch()[0]['project']
 								reserveProjectName=reserve.reserveDB.TableThreeSearch('userId',event.uid,'status','0','company',company)[0]['project']
-								template['body']['contents'][2]['contents'][4]['contents'][1]['text']=reserveProjectName
-								template['body']['contents'][3]['contents'][0]['action']['data']=f'ConfirmReservation:{projectName}'
+								template['body']['contents'][0]['contents'][4]['contents'][1]['text']=reserveProjectName
+								template['body']['contents'][1]['contents'][1]['action']['data']=f'ConfirmReservation:{projectName}'
 
-								template['body']['contents'][2]['contents'][6]['contents'][1]['text']=timeFormatYYYYMMDDhhmm
+								template['body']['contents'][0]['contents'][6]['contents'][1]['text']=timeFormatYYYYMMDDhhmm
 								line.replyFlex(template)
 
 								# template_item = copy.deepcopy(template["contents"][0]['body']['contents'])
 								# template['contents'][0]['header']['contents'][0]['text']=dateFormatYYYYMMDD
 								# template['contents'][0]['body']['contents'] = []
-#預約單確認專案
+						#預約單確認專案
 						case data if data.startswith('ConfirmReservation:'):
 							reserveCount= configs.appointment.reserveCount
 							# isReserveFunction=reserve.ShortAndHistoryReserveFunction(event.uid)
@@ -832,14 +835,9 @@ def LineBotv1(company):
 							nowTimeUinx=int(nowTime.timestamp())
 							count = len({x for x in getReserveTimeList if x is not None and x > int(nowTimeUinx)})
 							result = reserve.reserveDB.execute_query(f"SELECT * FROM reserve WHERE userId = '{event.uid}' AND status='0' AND dataTime IS NOT NULL AND project IS NOT NULL AND company = '{company}'")
-							print('000d00d0d0d0d0d0d0d0d0d0d0d0d0d00dd00d')
-							print(result)
 							if result:
 								if count< reserveCount:
 									# userReservedate=isReserveFunction.historyDBAdd()
-									print('----reserve.reserveDB.rdbmsSearch(company,event.uid)----')
-									print(reserve.reserveDB.rdbmsSearch(company,event.uid))
-									print('----reserve.reserveDB.rdbmsSearch(company,event.uid)----')
 
 									userReservedate=reserve.reserveDB.rdbmsSearch(company,event.uid)[0]
 
@@ -905,7 +903,7 @@ def LineBotv1(company):
 								memberDB.insertMember(event.uid,company)
 								template = line.flexTemplate('memberRegister')
 
-								line.doubleReplyFlexMessageText('請於下方小鍵盤，輸入會員電話',template,'使用者電話輸入')
+								line.doubleMessageTextReplyFlex('請於下方小鍵盤，輸入會員電話',template,'使用者電話輸入')
 
 							else:
 								user_status=member.isMember(event.uid,company)
@@ -917,12 +915,13 @@ def LineBotv1(company):
 									line.replyText("請輸入性別\n🙋🏻‍♂️男性請輸入男\n🙋🏻‍♀️女性請輸入女")
 						case data if data.startswith('personalData:'):
 							personalData = (data.split(":"))[1]
-
+							isData=False
+							print(f'00000isData{isData}')
 							if personalData=='揮桿數據':
 								clubDataDB=MYSQLDB('clubData')
-								print(event.uid)
 								clubDataSearch=(clubDataDB.clubTableSearch('clubData.ballHead,clubData.clubHead,clubData.shaftWeightStiffness,clubData.gripWeight,clubData.swingWeight,clubData.clubfaceAngle,clubData.lieAngle,clubData.remark','clubData',event.uid))
-								print(clubDataSearch)
+								if clubDataSearch:
+									isData=True
 								template=copy.deepcopy(line.flexTemplate('carousel'))
 								templateAdd = copy.deepcopy(line.flexTemplate('clubInformation'))
 								#球桿名稱
@@ -936,11 +935,11 @@ def LineBotv1(company):
 									templateAdd['body']['contents'][0]['contents'][1]['contents'][4]['contents'][0]['contents'][1]['text']=value['lieAngle']
 									templateAdd['body']['contents'][0]['contents'][1]['contents'][5]['contents'][0]['contents'][1]['text']=value['remark']
 									template['contents'].append(copy.deepcopy(templateAdd))
-
 							if personalData=='球桿數據':
 								playclubDB=MYSQLDB('playclubData')
 								playclubSearch=(playclubDB.clubTableSearch('playclubData.name,playclubData.speed,playclubData.averageToTalDistance,playclubData.averageFlightDistance,playclubData.takeoffAngle,playclubData.ballSpeed,playclubData.remark','playclubData',event.uid))
-								print(playclubSearch)
+								if playclubSearch:
+									isData=True
 								template=copy.deepcopy(line.flexTemplate('carousel'))
 								templateAdd = copy.deepcopy(line.flexTemplate('playclubInformation'))
 								for index, value in enumerate(playclubSearch):
@@ -952,17 +951,17 @@ def LineBotv1(company):
 									templateAdd['body']['contents'][0]['contents'][1]['contents'][3]['contents'][0]['contents'][1]['text']=f"{value['ballSpeed']}"
 									templateAdd['body']['contents'][0]['contents'][1]['contents'][4]['contents'][0]['contents'][1]['text']=value['remark']
 									template['contents'].append(copy.deepcopy(templateAdd))
-
-							line.replyFlex(template)					
+							print(f'isData::{isData}')
+							if (isData):
+								line.replyFlex(template)				
+							else:	
+								line.replyText(f'Sorry🙇‍♂️\n{personalData}尚未有資料')
 
 						case data if data.startswith('postReserveProject:') and (user_status==True):
 							reserveProjectName = (data.split(":"))[1]
 							# reserve.reserveDB.updateThreeSearchWhere('project',reserveProjectName,'userId',event.uid,'status','0',"company",company)
 							reserve.reserveDB.updateThreeSearchWhere("dataTime",None,"userId",event.uid,"status","0","company",company)
 							reserve.reserveDB.updateThreeSearchWhere("project",None,"userId",event.uid,"status","0","company",company)
-							print(reserveProjectName)
-							print(f"projectNameList$$${projectNameList}")
-							print(type (projectNameList))
 							if reserveProjectName in projectNameList:
 								projectNameIdx = projectNameList.index(reserveProjectName)
 								projectName=projectNameList[projectNameIdx]
@@ -1011,7 +1010,7 @@ def LineBotv1(company):
 										template["contents"][typePage-1]['body']['contents'].append(copy.deepcopy(template_item[0]))
 										template["contents"][typePage-1]['body']['contents'].append(copy.deepcopy(template_item[1]))
 										idex+=1
-										print(int(ts))
+										# print(int(ts))
 									else:
 										print(weekday_chinese[dt.weekday()])
 								line.replyFlex(template)
@@ -1031,8 +1030,8 @@ def LineBotv1(company):
 								projectsoffset=projectsoffsetList[projectNameIdx]
 								projectsinterval=projectsintervalList[projectNameIdx]
 								projectSumberOfAppointments=projectSnumberOfAppointmentsList[projectNameIdx]#群組數量
-								print('--------projectGroupReserveStatusList---------')
-								print(projectGroupReserveStatusList)
+								# print('--------projectGroupReserveStatusList---------')
+								# print(projectGroupReserveStatusList)
 								projectGroupReserveStatus=projectGroupReserveStatusList[projectNameIdx]
 
 								ALLprojectList = configsSearchDBProjectList[1:-1].split(',')
@@ -1071,117 +1070,145 @@ def LineBotv1(company):
 								dt = datetime.fromtimestamp(int(timeUnix))
 								print(f"{dt.year}/{dt.month}/{dt.day} ({weekday_chinese[dt.weekday()]})")
 								unixActive=convert_to_timestamps(projectsActive)
-								print(unixActive)
-								print('---unixActive----')
+
 								unixTimeActive=[]
-								if((unixActive[dt.weekday()])[1][0]==None):
-									while (unixActive[dt.weekday()][0][0])<(unixActive[dt.weekday()][0][1]):
-										unixTimeActive.append((unixActive[dt.weekday()][0][0])+(int(dt.timestamp())))
-										unixActive[dt.weekday()][0][0]+=projectsinterval
-									# timestamp = datetime.strptime(date_string, date_format).timestamp()
+								print(timeUnix)
+								#8 * 60 * 60
+								current_time = datetime.now()
+								current_date = current_time.date()
+								currentUnixTime=int(current_time.timestamp())+projectsinterval
+								midnight = datetime.combine(current_date, datetime.min.time())
+								# midnight_utc = midnight.replace(tzinfo=timezone.utc)
+								todayhourminZeroUnixTimestamp = str(int(midnight.timestamp()))
+								print(f'one:{currentUnixTime-projectsinterval}')
+								print(f'currentUnixTime:{currentUnixTime}')
+								print(f'projectsinterval:{projectsinterval}')
+
+								if (timeUnix == todayhourminZeroUnixTimestamp):
+									if((unixActive[dt.weekday()])[1][0]==None):
+										while (unixActive[dt.weekday()][0][0])<(unixActive[dt.weekday()][0][1]):
+											if ((unixActive[dt.weekday()][0][0])+(int(dt.timestamp()))>currentUnixTime):
+												unixTimeActive.append((unixActive[dt.weekday()][0][0])+(int(dt.timestamp())))
+											unixActive[dt.weekday()][0][0]+=projectsinterval
+										# timestamp = datetime.strptime(date_string, date_format).timestamp()
+											print((unixActive[dt.weekday()][0][0])+(int(dt.timestamp())))
+									else:
+										while (unixActive[dt.weekday()][0][0])<(unixActive[dt.weekday()][0][1]):
+											if ((unixActive[dt.weekday()][0][0])+(int(dt.timestamp()))>currentUnixTime):
+												unixTimeActive.append((unixActive[dt.weekday()][0][0])+(int(dt.timestamp())))
+											unixActive[dt.weekday()][0][0]+=projectsinterval
+										while(unixActive[dt.weekday()][1][0])<(unixActive[dt.weekday()][1][1]):
+											if ((unixActive[dt.weekday()][1][0])+(int(dt.timestamp()))>currentUnixTime):
+												unixTimeActive.append((unixActive[dt.weekday()][1][0])+(int(dt.timestamp())))
+											unixActive[dt.weekday()][1][0]+=projectsinterval
 								else:
-									while (unixActive[dt.weekday()][0][0])<(unixActive[dt.weekday()][0][1]):
-										unixTimeActive.append((unixActive[dt.weekday()][0][0])+(int(dt.timestamp())))
-										unixActive[dt.weekday()][0][0]+=projectsinterval
-									while(unixActive[dt.weekday()][1][0])<(unixActive[dt.weekday()][1][1]):
-										unixTimeActive.append((unixActive[dt.weekday()][1][0])+(int(dt.timestamp())))
-										unixActive[dt.weekday()][1][0]+=projectsinterval
+									if((unixActive[dt.weekday()])[1][0]==None):
+										while (unixActive[dt.weekday()][0][0])<(unixActive[dt.weekday()][0][1]):
+											unixTimeActive.append((unixActive[dt.weekday()][0][0])+(int(dt.timestamp())))
+											unixActive[dt.weekday()][0][0]+=projectsinterval
+										# timestamp = datetime.strptime(date_string, date_format).timestamp()
+									else:
+										while (unixActive[dt.weekday()][0][0])<(unixActive[dt.weekday()][0][1]):
+											unixTimeActive.append((unixActive[dt.weekday()][0][0])+(int(dt.timestamp())))
+											unixActive[dt.weekday()][0][0]+=projectsinterval
+										while(unixActive[dt.weekday()][1][0])<(unixActive[dt.weekday()][1][1]):
+											unixTimeActive.append((unixActive[dt.weekday()][1][0])+(int(dt.timestamp())))
+											unixActive[dt.weekday()][1][0]+=projectsinterval
 								uniqueUnixTimeActive = list(set(unixTimeActive))
 								sortedUnixTimeActive = sorted(uniqueUnixTimeActive)
 
 
-								# print(f'projectsblockTime{projectsblockTime}')
-
 								filterBlackTimeUnix = [timestamp for timestamp in sortedUnixTimeActive if not any(range_item[0] <= timestamp <= range_item[1] for range_item in projectsblockTime)]
+								if filterBlackTimeUnix :
+									if (projectGroupReserveStatus=='own'):
+										historydate = reserve.reserveDB.TableThreeSearch('project',projectName,'status','1','company',company)
+										historyDataTime = [item['dataTime'] for item in historydate]
+										# historyDataTimeFormatYYYYMMDD=(datetime.fromtimestamp(int(historyDataTime),TZ)).strftime('20%y年%m月%d日')
+										# if 
+										# print('-----x-x--xx--x-x')
+										# print(historyDataTime)
+										for x in historyDataTime:
+											element_count[x] = element_count.get(x, 0) + 1
+										print(element_count)
+										filterTimeUnix = [x for x in filterBlackTimeUnix if element_count.get(x, 0) < projectSumberOfAppointments]
 
+									if (projectGroupReserveStatus=='groupReserve'):
+										groupProjectList = []
+										# numberAppointments=''
+										for group, details in projectGroupNameList.items():
+											if f'project{AllProjectIndex+1}' in details['projectList']:
+												for item in details['projectList']:
+													groupProjectList.append(item)
+												# print(f"project{projectNameIdx+1} is in group {group}")
+												numberAppointments=details['numberAppointments']
+										# print(f'groupProjectList:{groupProjectList}')
+										# print('projectDetails------')
+										# print(projectDetails)
+										# print(projectDetails[groupProjectList[0]])
+										groupProjectName=[]
 
-								if (projectGroupReserveStatus=='own'):
-									historydate = reserve.reserveDB.TableThreeSearch('project',projectName,'status','1','company',company)
-									historyDataTime = [item['dataTime'] for item in historydate]
-									# historyDataTimeFormatYYYYMMDD=(datetime.fromtimestamp(int(historyDataTime),TZ)).strftime('20%y年%m月%d日')
-									# if 
-									print('-----x-x--xx--x-x')
-									print(historyDataTime)
-									for x in historyDataTime:
-										element_count[x] = element_count.get(x, 0) + 1
-									print(element_count)
-									filterTimeUnix = [x for x in filterBlackTimeUnix if element_count.get(x, 0) < projectSumberOfAppointments]
+										for projectNumber in groupProjectList:
+											groupProjectName.append({projectDetails[projectNumber]['name']:projectDetails[projectNumber]['numberOfAppointments']})
+										print(groupProjectName)
+										# groupProjectUnixNumber={}
+										for item in groupProjectName:
+											for projectOneName , number in item.items():
+												# print('=-----------projectOneName-----')
+												# print(projectOneName)
+												searchGroupHistoryUnixTime=reserve.reserveDB.TableThreeSearch('project',projectOneName,'status','1','company',company)
+												if searchGroupHistoryUnixTime:
+													for data in searchGroupHistoryUnixTime:
+														found = False
+														# print("測試")
+														for entryTime,entryNummber in element_count.items():
+															# print('---entry')
+															# print(entryTime, entryNummber)
+															# print(data['dataTime'])
+															if data['dataTime'] == entryTime:
+																element_count[data['dataTime']] += number
+																found = True
 
-								if (projectGroupReserveStatus=='groupReserve'):
-									groupProjectList = []
-									# numberAppointments=''
-									for group, details in projectGroupNameList.items():
-										if f'project{AllProjectIndex+1}' in details['projectList']:
-											for item in details['projectList']:
-												groupProjectList.append(item)
-											print(f"project{projectNameIdx+1} is in group {group}")
-											numberAppointments=details['numberAppointments']
-									print(f'groupProjectList:{groupProjectList}')
-									print('projectDetails------')
-									# print(projectDetails)
-									# print(projectDetails[groupProjectList[0]])
-									groupProjectName=[]
+																break
+														if not found:
+															element_count[data['dataTime']]=number
 
-									for projectNumber in groupProjectList:
-										groupProjectName.append({projectDetails[projectNumber]['name']:projectDetails[projectNumber]['numberOfAppointments']})
-									print(groupProjectName)
-									# groupProjectUnixNumber={}
-									for item in groupProjectName:
-										for projectOneName , number in item.items():
-											print('=-----------projectOneName-----')
-											print(projectOneName)
-											searchGroupHistoryUnixTime=reserve.reserveDB.TableThreeSearch('project',projectOneName,'status','1','company',company)
-											if searchGroupHistoryUnixTime:
-												for data in searchGroupHistoryUnixTime:
-													found = False
-													print("測試")
-													for entryTime,entryNummber in element_count.items():
-														print('---entry')
-														print(entryTime, entryNummber)
-														print(data['dataTime'])
-														if data['dataTime'] == entryTime:
-															element_count[data['dataTime']] += number
-															found = True
+														# for key,value in groupProjectUnixNumber.items():
+															# if key in 
+														
 
-															break
-													if not found:
-														element_count[data['dataTime']]=number
+										filterTimeUnix = [x for x in filterBlackTimeUnix if element_count.get(x, 0) <= int(numberAppointments)-int(projectSumberOfAppointments)]
+									# filterTimeUnix = [x for x in filterBlackTimeUnix if x not in historyDataTime]
+									filterTimeYYYYDDList=[]
+									# print(f'filterTimeUnix:{filterTimeUnix}')
+									dateFormatYYYYMMDD=(datetime.fromtimestamp(int(filterTimeUnix[0]),TZ)).strftime('20%y年%m月%d日')
 
-													# for key,value in groupProjectUnixNumber.items():
-														# if key in 
-													
-
-									filterTimeUnix = [x for x in filterBlackTimeUnix if element_count.get(x, 0) <= int(numberAppointments)-int(projectSumberOfAppointments)]
-								# filterTimeUnix = [x for x in filterBlackTimeUnix if x not in historyDataTime]
-								filterTimeYYYYDDList=[]
-								# print(f'filterTimeUnix:{filterTimeUnix}')
-								dateFormatYYYYMMDD=(datetime.fromtimestamp(int(filterTimeUnix[0]),TZ)).strftime('20%y年%m月%d日')
-
-								for filterTimeYYYYDD in filterTimeUnix:
-									dt = datetime.fromtimestamp(filterTimeYYYYDD,TZ).strftime('%H:%M')
-									filterTimeYYYYDDList.append(dt)
-		
-								# if len(filterTimeYYYYDDList)<1:
-									# line.replyText(f'({})當日預約已滿請上方從選擇日期')
-								# else:
-								template = copy.deepcopy(line.flexTemplate('appointmentNow'))
-								template_item = copy.deepcopy(template["contents"][0]['body']['contents'])
-								template['contents'][0]['header']['contents'][0]['text']=dateFormatYYYYMMDD
-								template['contents'][0]['body']['contents'] = []
-								timepage= configs.appointment.timepage
-								for idx,ts in enumerate(filterTimeYYYYDDList):
-									idx+=1
-									typePage = (idx / timepage) + 1 if idx % timepage > 0 else (idx / timepage)
-									typePage = int(typePage)
-									if len(template['contents'])<typePage:
-										template['contents'].append(copy.deepcopy(template['contents'][0]))
-										template['contents'][typePage-1]['body']['contents'] = []
-									template_item[0]['contents'][0]['text'] = ts
-									template_item[0]['contents'][1]['action']['data'] = f"appointment_confirm_reserve:{filterTimeUnix[idx-1]}:projectName:{projectName}"
-									template["contents"][typePage-1]['body']['contents'].append(copy.deepcopy(template_item[0]))
-									template["contents"][typePage-1]['body']['contents'].append(copy.deepcopy(template_item[1]))
-								# print(template)
-								line.replyFlex(template)
+									for filterTimeYYYYDD in filterTimeUnix:
+										dt = datetime.fromtimestamp(filterTimeYYYYDD,TZ).strftime('%H:%M')
+										filterTimeYYYYDDList.append(dt)
+			
+									# if len(filterTimeYYYYDDList)<1:
+										# line.replyText(f'({})當日預約已滿請上方從選擇日期')
+									# else:
+									template = copy.deepcopy(line.flexTemplate('appointmentNow'))
+									template_item = copy.deepcopy(template["contents"][0]['body']['contents'])
+									template['contents'][0]['header']['contents'][0]['text']=dateFormatYYYYMMDD
+									template['contents'][0]['body']['contents'] = []
+									timepage= configs.appointment.timepage
+									for idx,ts in enumerate(filterTimeYYYYDDList):
+										idx+=1
+										typePage = (idx / timepage) + 1 if idx % timepage > 0 else (idx / timepage)
+										typePage = int(typePage)
+										if len(template['contents'])<typePage:
+											template['contents'].append(copy.deepcopy(template['contents'][0]))
+											template['contents'][typePage-1]['body']['contents'] = []
+										template_item[0]['contents'][0]['text'] = ts
+										template_item[0]['contents'][1]['action']['data'] = f"appointment_confirm_reserve:{filterTimeUnix[idx-1]}:projectName:{projectName}"
+										template["contents"][typePage-1]['body']['contents'].append(copy.deepcopy(template_item[0]))
+										template["contents"][typePage-1]['body']['contents'].append(copy.deepcopy(template_item[1]))
+									# print(template)
+									line.replyFlex(template)
+								else : 
+									line.replyText(f'👷項目:{projectName}\n⌚時間：{dt.year}/{dt.month}/{dt.day} ({weekday_chinese[dt.weekday()]})\n✉️提醒訊息:預約時段已滿')
 
 						case data if data.startswith('buyBallRoll:') and (user_status==True):
 							reserve.reserveDB.updateThreeSearchWhere("dataTime",None,"userId",event.uid,"status","0","company",company)
@@ -1259,15 +1286,15 @@ def LineBotv1(company):
 
 							memberSearchData=member.dbSearch(event.uid,company)
 							template = copy.deepcopy(line.flexTemplate('appointment confirmation'))
-							template['body']['contents'][2]['contents'][0]['contents'][1]['text']=memberSearchData['name']
-							template['body']['contents'][2]['contents'][2]['contents'][1]['text']=memberSearchData['phone']
-							template['body']['contents'][3]['contents'][0]['action']['data']=f'ballRollConfirmf:ballRollunixTime:{unixTime}:number:{number}:ballRollName:{name}'
+							template['body']['contents'][0]['contents'][0]['contents'][1]['text']=memberSearchData['name']
+							template['body']['contents'][0]['contents'][2]['contents'][1]['text']=memberSearchData['phone']
+							template['body']['contents'][1]['contents'][1]['action']['data']=f'ballRollConfirmf:ballRollunixTime:{unixTime}:number:{number}:ballRollName:{name}'
 							# timeFormatYYYYMMDDhhmm=(datetime.fromtimestamp(isReserveFunction.shortDBSearch()[0]['dataTime'],TZ)).strftime("%Y年%m月%d日 %H:%M")
 							# timeFormatYYYYMMDDhhmm=(datetime.fromtimestamp(reserve.reserveDB.TableThreeSearch('userId',event.uid,'status','0',"company",company)[0]['dataTime'],TZ)).strftime("%Y年%m月%d日 %H:%M")
 							reserveProjectName=reserve.reserveDB.TableThreeSearch('userId',event.uid,'status','0','company',company)[0]['project']
-							template['body']['contents'][2]['contents'][4]['contents'][1]['text']=name
+							template['body']['contents'][0]['contents'][4]['contents'][1]['text']=name
 
-							template['body']['contents'][2]['contents'][6]['contents'][1]['text']=unixTime
+							template['body']['contents'][0]['contents'][6]['contents'][1]['text']=unixTime
 							template['body']['contents'][1]['text']='球卷確認單'
 							line.replyFlex(template)
 
@@ -1310,11 +1337,10 @@ def LineBotv1(company):
 								
 							isBallRollSearch=(reserve.reserveDB.TableFiveSearch('userid',event.uid,'status','ballRoll','company',company,'dataTime',unix_timestamp,'project',name))
 							isBallRollHistoryNumber = 0 if isBallRollSearch == '' else len(isBallRollSearch)	
-							print(type(ballRollList))
-							print((ballRollList['monthNumber']['1704038400']))
 							unix_timestamp_str=str(unix_timestamp)
 							print(unix_timestamp_str)
 							print('----unix_timestamp---1704038400----')
+							print(ballRollList)
 							configsNumber=ballRollList['monthNumber'][unix_timestamp_str]
 							configsNumber=int(configsNumber)
 							if (isBallRollHistoryNumber+int(number)) > configsNumber:
@@ -1406,8 +1432,8 @@ def getIsProject(phone):
 
 		#專案預約時間
 		projectsinterval = [details.get('interval') for project, details in result_dict.items() if details.get('status') == 1 and details.get('interval')]
-		print('--=-----c-----')
-		print(projectsinterval)
+		# print('--=-----c-----')
+		# print(projectsinterval)
 		projectsoffset = [details.get('offset') for project, details in result_dict.items() if details.get('status') == 1 and details.get('offset')]
 		# print('=======result_dict======')
 		# print(result_dict)
@@ -1448,6 +1474,8 @@ def posDB():
 	posOrderDb = MYSQLDB(
 		table='customers',
         host="172.19.0.4",
+    	# host= '127.0.0.1',
+
 		# host = "pos-db.alpaca.tw",
 		# port=3316,
 		user="root",
