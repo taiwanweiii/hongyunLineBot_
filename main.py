@@ -838,20 +838,18 @@ def LineBotv1(company):
 							if result:
 								if count< reserveCount:
 									# userReservedate=isReserveFunction.historyDBAdd()
-
 									userReservedate=reserve.reserveDB.rdbmsSearch(company,event.uid)[0]
-
-									reserve.reserveDB.updateThreeSearchWhere('status','1','userId',event.uid,'status','0','company',company)
-									reserve.reserveDB.Insert(("userId","company",),(event.uid,company,))
-
-									print(userReservedate)
 									notifyFunction=notify(NOTIFYTOKEN)
+									print((userReservedate["dataTime"]))
+									print(type(userReservedate))
 									print('-datetime.fromtimestamp(userReservedate["dataTime"])----')
 									# print((userReservedate))
 									# print(reserve.reser)
 									notifyTime=(datetime.fromtimestamp(userReservedate["dataTime"])).strftime('%Y年%m月%d日 %H:%M')
 									notifyFunction.SendMessage(f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n')
-									line.replyText(f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}\n')
+									line.replyText(f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}')
+									reserve.reserveDB.updateThreeSearchWhere('status','1','userId',event.uid,'status','0','company',company)
+									reserve.reserveDB.Insert(("userId","company",),(event.uid,company,))
 								else:
 									line.replyText('系統自動判斷目前您以有預約時段,請點擊會員查詢確認時段是否預約,若無預約煩請致電～')
 								# isReserveFunction.historyDBUpdate(memberDate)
@@ -1473,8 +1471,8 @@ getIsProject("0912345678")
 def posDB():
 	posOrderDb = MYSQLDB(
 		table='customers',
-        host="172.19.0.4",
-    	# host= '127.0.0.1',
+        # host="172.19.0.4",
+    	host= '127.0.0.1',
 
 		# host = "pos-db.alpaca.tw",
 		# port=3316,
