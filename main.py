@@ -1471,8 +1471,8 @@ getIsProject("0912345678")
 def posDB():
 	posOrderDb = MYSQLDB(
 		table='customers',
-        # host="172.19.0.4",
-    	host= '127.0.0.1',
+        host="172.19.0.4",
+    	# host= '127.0.0.1',
 
 		# host = "pos-db.alpaca.tw",
 		# port=3316,
