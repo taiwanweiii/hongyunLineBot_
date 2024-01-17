@@ -715,8 +715,8 @@ def LineBotv1(company):
 						elif event.message == '#會員查詢':
 							template = copy.deepcopy(line.flexTemplate('mebersearch'))
 							templateAdd=copy.deepcopy(line.flexTemplate('memberAddtemplates'))
-							template['hero']['contents'][1]['contents'][0]['contents'][1]['contents'][1]['text']=member.memberDB.TableTwoSearch('userId',event.uid,'company',company)[0]['name']
-							template['hero']['contents'][1]['contents'][0]['contents'][2]['contents'][1]['text']=member.memberDB.TableTwoSearch('userId',event.uid,'company',company)[0]['phone']
+							template['hero']['contents'][1]['contents'][0]['contents'][1]['contents'][1]['text']=member.memberDB.dynamicTableSearch({'userId':event.uid,'company':company})[0]['name']
+							template['hero']['contents'][1]['contents'][0]['contents'][2]['contents'][1]['text']=member.memberDB.dynamicTableSearch({'userId':event.uid,'company':company})[0]['phone']
 							# # isReserveFunction=reserve.ShortAndHistoryReserveFunction(event.uid)
 							# template = copy.deepcopy(line.flexTemplate('memberSearch'))
 							# # template['body']['contents'][1]['contents'][1]['contents'][1]['text']=member.search(event.uid)[0]['name']
@@ -724,10 +724,13 @@ def LineBotv1(company):
 							# template['body']['contents'][1]['contents'][1]['contents'][1]['text']=member.memberDB.TableTwoSearch('userId',event.uid,'company',company)[0]['name']
 							# template['body']['contents'][1]['contents'][2]['contents'][1]['text']=member.memberDB.TableTwoSearch('userId',event.uid,'company',company)[0]['phone']
 							# # historySearchStatusUserId=isReserveFunction.historyDBSearchStatusUserId()
-							memberdate = member.memberDB.TableTwoSearch('userId',event.uid,'company',company)
+							try :
+								memberdate = member.memberDB.dynamicTableSearch({'userId':event.uid,'company':company})
+							finally:
+								member.memberDB.closeConnection()
 							reserveDBSearch=MYSQLDB('reserve')
 
-							historySearchStatusUserId = reserveDBSearch.TableThreeSearch('userId',event.uid,'company',company,'status',1)
+							historySearchStatusUserId = reserveDBSearch.dynamicTableSearch({'userId':event.uid,'company':company,'status':1})
 							nowTimeUnix = datetime.timestamp(datetime.now())
 			
 							filtered_data = [item for item in historySearchStatusUserId if item['dataTime'] > nowTimeUnix]
@@ -809,11 +812,11 @@ def LineBotv1(company):
 								template['body']['contents'][0]['contents'][2]['contents'][1]['text']=memberSearchData['phone']
 
 								# timeFormatYYYYMMDDhhmm=(datetime.fromtimestamp(isReserveFunction.shortDBSearch()[0]['dataTime'],TZ)).strftime("%Y年%m月%d日 %H:%M")
-								timeFormatYYYYMMDDhhmm=(datetime.fromtimestamp(reserve.reserveDB.TableThreeSearch('userId',event.uid,'status','0',"company",company)[0]['dataTime'],TZ)).strftime("%Y年%m月%d日 %H:%M")
+								timeFormatYYYYMMDDhhmm=(datetime.fromtimestamp(reserve.reserveDB.dynamicTableSearch({'userId':event.uid,'status':'0',"company":company})[0]['dataTime'],TZ)).strftime("%Y年%m月%d日 %H:%M")
 
 								print(timeFormatYYYYMMDDhhmm)
 								# template['body']['contents'][2]['contents'][4]['contents'][1]['text']=isReserveFunction.shortDBSearch()[0]['project']
-								reserveProjectName=reserve.reserveDB.TableThreeSearch('userId',event.uid,'status','0','company',company)[0]['project']
+								reserveProjectName=reserve.reserveDB.dynamicTableSearch({'userId':event.uid,'status':'0','company':company})[0]['project']
 								template['body']['contents'][0]['contents'][4]['contents'][1]['text']=reserveProjectName
 								template['body']['contents'][1]['contents'][1]['action']['data']=f'ConfirmReservation:{projectName}'
 
@@ -829,7 +832,7 @@ def LineBotv1(company):
 							# isReserveFunction=reserve.ShortAndHistoryReserveFunction(event.uid)
 							NOTIFYTOKEN=configs.appointment.NOTIFYTOKEN
 							# historySearchStatusUserId=isReserveFunction.historyDBSearchStatusUserId()
-							historySearchStatusUserId = reserve.reserveDB.TableThreeSearch('userid',event.uid,'status','1','company',company)
+							historySearchStatusUserId = reserve.reserveDB.dynamicTableSearch({'userid':event.uid,'status':'1','company':company})
 							getReserveTimeList = [item['dataTime'] for item in historySearchStatusUserId]
 							nowTime=getDatetime()
 							nowTimeUinx=int(nowTime.timestamp())
@@ -862,7 +865,7 @@ def LineBotv1(company):
 						case 'CancelReservation':
 							# isReserveFunction=reserve.ShortAndHistoryReserveFunction(event.uid)
 							try:
-								if (reserve.reserveDB.TableThreeSearch('userId',event.uid,'status','0','company',company)):
+								if (reserve.reserveDB.TableThreeSearch({'userId':event.uid,'status':'0','company':company})):
 									reserve.reserveDB.updateThreeSearchWhere("dataTime",None,"userId",event.uid,"status","0","company",company)
 									reserve.reserveDB.updateThreeSearchWhere("project",None,"userId",event.uid,"status","0","company",company)
 							# if isReserveFunction.shortDBcontains():
@@ -915,7 +918,7 @@ def LineBotv1(company):
 							personalData = (data.split(":"))[1]
 							isData=False
 							print(f'00000isData{isData}')
-							if personalData=='揮桿數據':
+							if personalData=='球桿數據':
 								clubDataDB=MYSQLDB('clubData')
 								clubDataSearch=(clubDataDB.clubTableSearch('clubData.ballHead,clubData.clubHead,clubData.shaftWeightStiffness,clubData.gripWeight,clubData.swingWeight,clubData.clubfaceAngle,clubData.lieAngle,clubData.remark','clubData',event.uid))
 								if clubDataSearch:
@@ -933,7 +936,7 @@ def LineBotv1(company):
 									templateAdd['body']['contents'][0]['contents'][1]['contents'][4]['contents'][0]['contents'][1]['text']=value['lieAngle']
 									templateAdd['body']['contents'][0]['contents'][1]['contents'][5]['contents'][0]['contents'][1]['text']=value['remark']
 									template['contents'].append(copy.deepcopy(templateAdd))
-							if personalData=='球桿數據':
+							if personalData=='揮桿數據':
 								playclubDB=MYSQLDB('playclubData')
 								playclubSearch=(playclubDB.clubTableSearch('playclubData.name,playclubData.speed,playclubData.averageToTalDistance,playclubData.averageFlightDistance,playclubData.takeoffAngle,playclubData.ballSpeed,playclubData.remark','playclubData',event.uid))
 								if playclubSearch:
@@ -1119,7 +1122,7 @@ def LineBotv1(company):
 								filterBlackTimeUnix = [timestamp for timestamp in sortedUnixTimeActive if not any(range_item[0] <= timestamp <= range_item[1] for range_item in projectsblockTime)]
 								if filterBlackTimeUnix :
 									if (projectGroupReserveStatus=='own'):
-										historydate = reserve.reserveDB.TableThreeSearch('project',projectName,'status','1','company',company)
+										historydate = reserve.reserveDB.dynamicTableSearch({'project':projectName,'status':'1','company':company})
 										historyDataTime = [item['dataTime'] for item in historydate]
 										# historyDataTimeFormatYYYYMMDD=(datetime.fromtimestamp(int(historyDataTime),TZ)).strftime('20%y年%m月%d日')
 										# if 
@@ -1153,7 +1156,7 @@ def LineBotv1(company):
 											for projectOneName , number in item.items():
 												# print('=-----------projectOneName-----')
 												# print(projectOneName)
-												searchGroupHistoryUnixTime=reserve.reserveDB.TableThreeSearch('project',projectOneName,'status','1','company',company)
+												searchGroupHistoryUnixTime=reserve.reserveDB.dynamicTableSearch({'project':projectOneName,'status':'1','company':company})
 												if searchGroupHistoryUnixTime:
 													for data in searchGroupHistoryUnixTime:
 														found = False
@@ -1172,39 +1175,43 @@ def LineBotv1(company):
 
 														# for key,value in groupProjectUnixNumber.items():
 															# if key in 
-														
 
 										filterTimeUnix = [x for x in filterBlackTimeUnix if element_count.get(x, 0) <= int(numberAppointments)-int(projectSumberOfAppointments)]
-									# filterTimeUnix = [x for x in filterBlackTimeUnix if x not in historyDataTime]
-									filterTimeYYYYDDList=[]
-									# print(f'filterTimeUnix:{filterTimeUnix}')
-									dateFormatYYYYMMDD=(datetime.fromtimestamp(int(filterTimeUnix[0]),TZ)).strftime('20%y年%m月%d日')
+										print('----filterTimeUnix----')
+									if (filterTimeUnix)	:
+										# filterTimeUnix = [x for x in filterBlackTimeUnix if x not in historyDataTime]
+										filterTimeYYYYDDList=[]
+										# print(f'filterTimeUnix:{filterTimeUnix}')
+										dateFormatYYYYMMDD=(datetime.fromtimestamp(int(filterTimeUnix[0]),TZ)).strftime('20%y年%m月%d日')
 
-									for filterTimeYYYYDD in filterTimeUnix:
-										dt = datetime.fromtimestamp(filterTimeYYYYDD,TZ).strftime('%H:%M')
-										filterTimeYYYYDDList.append(dt)
-			
-									# if len(filterTimeYYYYDDList)<1:
-										# line.replyText(f'({})當日預約已滿請上方從選擇日期')
-									# else:
-									template = copy.deepcopy(line.flexTemplate('appointmentNow'))
-									template_item = copy.deepcopy(template["contents"][0]['body']['contents'])
-									template['contents'][0]['header']['contents'][0]['text']=dateFormatYYYYMMDD
-									template['contents'][0]['body']['contents'] = []
-									timepage= configs.appointment.timepage
-									for idx,ts in enumerate(filterTimeYYYYDDList):
-										idx+=1
-										typePage = (idx / timepage) + 1 if idx % timepage > 0 else (idx / timepage)
-										typePage = int(typePage)
-										if len(template['contents'])<typePage:
-											template['contents'].append(copy.deepcopy(template['contents'][0]))
-											template['contents'][typePage-1]['body']['contents'] = []
-										template_item[0]['contents'][0]['text'] = ts
-										template_item[0]['contents'][1]['action']['data'] = f"appointment_confirm_reserve:{filterTimeUnix[idx-1]}:projectName:{projectName}"
-										template["contents"][typePage-1]['body']['contents'].append(copy.deepcopy(template_item[0]))
-										template["contents"][typePage-1]['body']['contents'].append(copy.deepcopy(template_item[1]))
-									# print(template)
-									line.replyFlex(template)
+										for filterTimeYYYYDD in filterTimeUnix:
+											dt = datetime.fromtimestamp(filterTimeYYYYDD,TZ).strftime('%H:%M')
+											filterTimeYYYYDDList.append(dt)
+				
+										# if len(filterTimeYYYYDDList)<1:
+											# line.replyText(f'({})當日預約已滿請上方從選擇日期')
+										# else:
+										template = copy.deepcopy(line.flexTemplate('appointmentNow'))
+										template_item = copy.deepcopy(template["contents"][0]['body']['contents'])
+										template['contents'][0]['header']['contents'][0]['text']=dateFormatYYYYMMDD
+										template['contents'][0]['body']['contents'] = []
+										timepage= configs.appointment.timepage
+										for idx,ts in enumerate(filterTimeYYYYDDList):
+											idx+=1
+											typePage = (idx / timepage) + 1 if idx % timepage > 0 else (idx / timepage)
+											typePage = int(typePage)
+											if len(template['contents'])<typePage:
+												template['contents'].append(copy.deepcopy(template['contents'][0]))
+												template['contents'][typePage-1]['body']['contents'] = []
+											template_item[0]['contents'][0]['text'] = ts
+											template_item[0]['contents'][1]['action']['data'] = f"appointment_confirm_reserve:{filterTimeUnix[idx-1]}:projectName:{projectName}"
+											template["contents"][typePage-1]['body']['contents'].append(copy.deepcopy(template_item[0]))
+											template["contents"][typePage-1]['body']['contents'].append(copy.deepcopy(template_item[1]))
+										# print(template)
+										line.replyFlex(template)
+									else : 
+										line.replyText('預約時間已滿\n請改期預約!!!')
+
 								else : 
 									line.replyText(f'👷項目:{projectName}\n⌚時間：{dt.year}/{dt.month}/{dt.day} ({weekday_chinese[dt.weekday()]})\n✉️提醒訊息:預約時段已滿')
 
@@ -1289,7 +1296,7 @@ def LineBotv1(company):
 							template['body']['contents'][1]['contents'][1]['action']['data']=f'ballRollConfirmf:ballRollunixTime:{unixTime}:number:{number}:ballRollName:{name}'
 							# timeFormatYYYYMMDDhhmm=(datetime.fromtimestamp(isReserveFunction.shortDBSearch()[0]['dataTime'],TZ)).strftime("%Y年%m月%d日 %H:%M")
 							# timeFormatYYYYMMDDhhmm=(datetime.fromtimestamp(reserve.reserveDB.TableThreeSearch('userId',event.uid,'status','0',"company",company)[0]['dataTime'],TZ)).strftime("%Y年%m月%d日 %H:%M")
-							reserveProjectName=reserve.reserveDB.TableThreeSearch('userId',event.uid,'status','0','company',company)[0]['project']
+							reserveProjectName=reserve.reserveDB.dynamicTableSearch({'userId':event.uid,'status':'0','company':company})[0]['project']
 							template['body']['contents'][0]['contents'][4]['contents'][1]['text']=name
 
 							template['body']['contents'][0]['contents'][6]['contents'][1]['text']=unixTime
@@ -1313,7 +1320,7 @@ def LineBotv1(company):
 							# 	reserve.reserveDB.updateThreeSearchWhere("project",name,"userId",event.uid,"status","0","company",company)
 							# 	reserve.reserveDB.updateThreeSearchWhere("dataTime",unix_timestamp,"userId",event.uid,"status","0","company",company)
 							# 	reserve.reserveDB.TableThreeSearch('userid',event.uid,'status','ballRoll','company',company)
-							historySearchStatusUserId = reserve.reserveDB.TableThreeSearch('userid',event.uid,'status','ballRoll','company',company)
+							historySearchStatusUserId = reserve.reserveDB.dynamicTableSearch({'userid':event.uid,'status':'ballRoll','company':company})
 
 
 							getReserveTimeList = [item['dataTime'] for item in historySearchStatusUserId]
@@ -1333,7 +1340,7 @@ def LineBotv1(company):
 									print("无法转换为字典")
 
 								
-							isBallRollSearch=(reserve.reserveDB.TableFiveSearch('userid',event.uid,'status','ballRoll','company',company,'dataTime',unix_timestamp,'project',name))
+							isBallRollSearch=(reserve.reserveDB.dynamicTableSearch({'userid':event.uid,'status':'ballRoll','company':company,'dataTime':unix_timestamp,'project':name}))
 							isBallRollHistoryNumber = 0 if isBallRollSearch == '' else len(isBallRollSearch)	
 							unix_timestamp_str=str(unix_timestamp)
 							print(unix_timestamp_str)
@@ -1385,7 +1392,7 @@ def LineBotv1(company):
 	else:return print('無此公司')
 def getIsProject(phone):
 	testDb = MYSQLDB('bot_configs')
-	botConfigsSearchAll=testDb.TableOneSearch("companyphone",phone)
+	botConfigsSearchAll=testDb.dynamicTableSearch({"companyphone":phone})
 	if isinstance(botConfigsSearchAll,list)and botConfigsSearchAll is not None:
 		LineToken = botConfigsSearchAll[0]['lineConfig']
 		if not isinstance(LineToken,list):LineToken_dict = json.loads(LineToken)
@@ -1471,8 +1478,8 @@ getIsProject("0912345678")
 def posDB():
 	posOrderDb = MYSQLDB(
 		table='customers',
-        host="172.19.0.4",
-    	# host= '127.0.0.1',
+        # host="172.19.0.4",
+    	host= '127.0.0.1',
 
 		# host = "pos-db.alpaca.tw",
 		# port=3316,
@@ -1484,7 +1491,7 @@ def posDB():
 
 def memberData(phone,userId):
 	memberDB=MYSQLDB('member')
-	memberData=memberDB.TableTwoSearch('company',phone,'userId',userId)
+	memberData=memberDB.dynamicTableSearch({'company':phone,'userId':userId})
 	if memberData:
 		memberData[0]
 	return memberData
@@ -1500,7 +1507,7 @@ def pushRemindMessage():
 	current_unix_time = int(time.time())
 	template = copy.deepcopy(line.flexTemplate('reserveRemind'))
 	# if reserve.reserveDB.TableTwoSearch('dataTime',current_unix_time,'status','1'):
-	reserveList=reserve.reserveDB.TableOneSearch('status','1')
+	reserveList=reserve.reserveDB.dynamicTableSearch({'status':'1'})
 	print(start_unix_timestamp)
 	print(end_unix_timestamp)
 	for index,item in enumerate(reserveList):

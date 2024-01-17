@@ -75,7 +75,7 @@ reserveDB=MYSQLDB('reserve')
 
 def isReserveDBState(userid,company):
 
-	isReserveDBState=reserveDB.TableThreeSearch('userId',userid,'status','0','company',company)
+	isReserveDBState=reserveDB.dynamicTableSearch({'userId':userid,'status':'0','company':company})
 	if (isReserveDBState):
 		isReserveDBState=isReserveDBState[0]
 	# isReserveDBState = isReserveDBState[0]

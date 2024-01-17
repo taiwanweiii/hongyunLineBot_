@@ -3,7 +3,7 @@ import re
 
 def dbSearch(userId,client):
     memberDB= MYSQLDB('member')
-    user = memberDB.TableTwoSearch("userId",userId,"company",client)
+    user = memberDB.dynamicTableSearch({"userId":userId,"company":client})
     if user:
           user=user[0]
     return user
@@ -13,8 +13,8 @@ def isMember(userId,client):
     posCustomerDb = MYSQLDB(
 		table='customers',
 		# host = "pos-db.alpaca.tw",
-        host="172.19.0.4",
-        # host="127.0.0.1",
+        # host="172.19.0.4",
+        host="127.0.0.1",
 		# port=3316,
 		user="root",
 		# password="=?michi_pos/=!",
@@ -23,7 +23,7 @@ def isMember(userId,client):
 	)
 
     memberDB= MYSQLDB('member')
-    user = memberDB.TableTwoSearch("userId",userId,"company",client)
+    user = memberDB.dynamicTableSearch({"userId":userId,"company":client})
 
     if len(user) < 1 : return 'nouser'
     user = user[0]
@@ -40,7 +40,7 @@ def isMember(userId,client):
 def isPhoneRepeat(client):
     memberDB= MYSQLDB('member')
 
-    phoneData=memberDB.memberPhone("company",client)
+    phoneData=memberDB.dynamicTableSearch({"company":client})
     phones = [entry['phone'] for entry in phoneData if entry['phone'] is not None]
     return phones
 # memberDB = DB('members')
