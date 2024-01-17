@@ -3,7 +3,6 @@ from functions import member
 import datetime
 import copy
 
-reserveDB=MYSQLDB('reserve')
 # reserveDB = DB('reserve')
 
 
@@ -73,6 +72,8 @@ reserveDB=MYSQLDB('reserve')
 # 	return True
 
 def isReserveDBState(userid,company):
+	reserveDB=MYSQLDB('reserve')
+
 	isReserveDBState=reserveDB.TableThreeSearch('userId',userid,'status','0','company',company)
 	if (isReserveDBState):
 		isReserveDBState=isReserveDBState[0]
