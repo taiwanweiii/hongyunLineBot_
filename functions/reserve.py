@@ -71,8 +71,9 @@ import copy
 # 	if shortReserveDBState['dataTime']==None  : return 'noDataTime'
 # 	return True
 
+reserveDB=MYSQLDB('reserve')
+
 def isReserveDBState(userid,company):
-	reserveDB=MYSQLDB('reserve')
 
 	isReserveDBState=reserveDB.TableThreeSearch('userId',userid,'status','0','company',company)
 	if (isReserveDBState):
