@@ -1,11 +1,12 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify,Blueprint
 import requests
 from datetime import datetime, timedelta, time,timezone
 import pytz
 import copy
 import json
 import configs.line
-import configs.appointment
+import configs.appointment 
+import api.preOrder
 
 # from classes.event import *
 from classes.db import *
@@ -32,6 +33,7 @@ def getDatetime(): return datetime.now(TZ)
 appointmentsDB = DB('appointments')
 
 app = Flask(__name__)
+app.register_blueprint(api.preOrder.PreOrderBlueprint, url_prefix='/api')
 
 @app.route('/')
 def hello():
@@ -395,10 +397,7 @@ print('-------clientWebhook------')
 @app.route('/Linebotv1/<company>', methods=['POST'])
 def LineBotv1(company):
 	configsSearchDBProjectList,LineToken,ballRollNumber,searchBallRollfillterTrue,projectDetails,projectList,projectNameList,projectsActiveList,projectsDayList,projectsintervalList,publicBlackTimeList,projectsoffsetList,projectsblockTimeList,projectSnumberOfAppointmentsList,projectGroupReserveStatusList,projectGroupNameList=getIsProject(company)
-	line = Line(
-		CHANNEL_ACCESS_TOKEN = LineToken['CHANNEL_ACCESS_TOKEN'],
-		CHANNEL_SECRET = LineToken['CHANNEL_SECRET']
-	)
+	line = LineToken
 
 	configs.appointment.getUserName(company)
 	if company in clientWebhook:
@@ -414,7 +413,7 @@ def LineBotv1(company):
 			event = line.setEvent(event)
 			
 			user_status = member.isMember(event.uid,company)
-			print(event)
+			
 			match event.type:
 				case "follow":
 					template = line.flexTemplate('first')
@@ -1396,7 +1395,13 @@ def getIsProject(phone):
 	if isinstance(botConfigsSearchAll,list)and botConfigsSearchAll is not None:
 		LineToken = botConfigsSearchAll[0]['lineConfig']
 		if not isinstance(LineToken,list):LineToken_dict = json.loads(LineToken)
+		line = Line(
+			CHANNEL_ACCESS_TOKEN = LineToken_dict['CHANNEL_ACCESS_TOKEN'],
+			CHANNEL_SECRET = LineToken_dict['CHANNEL_SECRET']
+		)
 
+		print('-----LineToken----')
+		print(LineToken)
 		publicData = botConfigsSearchAll[0]['deniedDates']
 		if not isinstance(publicData,list)and publicData is not None:publicData_dict = json.loads(publicData)
 
@@ -1471,7 +1476,7 @@ def getIsProject(phone):
 
 		projectGroupNameList=result_dict['projectGroupName']
 
-		return reserveProjectListStr,LineToken_dict,ballRollNumber,searchBallRollfillterTrue,result_dict,projects_with_status_1,projectsName,projectsActive,projectsDay,projectsinterval,publicBlackTimeList,projectsoffset,projectsblockTime,projectSnumberOfAppointments,projectGroupReserveStatus,projectGroupNameList
+		return reserveProjectListStr,line,ballRollNumber,searchBallRollfillterTrue,result_dict,projects_with_status_1,projectsName,projectsActive,projectsDay,projectsinterval,publicBlackTimeList,projectsoffset,projectsblockTime,projectSnumberOfAppointments,projectGroupReserveStatus,projectGroupNameList
 	else:
 		return "getIsProject Function Error"
 getIsProject("0912345678")
@@ -1519,7 +1524,6 @@ def pushRemindMessage():
 			line.pushFlexMessage(item['userId'],template)
 
 	# reserve.reserveDB.TableOneSearch('dataTime')
-
 
 # while True:
 #     schedule.run_pending()
