@@ -11,7 +11,7 @@
                 "contents": [
                     {
                         "type": "text",
-                        "text": "團體/比賽專區",
+                        "text": "團練/比賽專區",
                         "color": "#ffffff",
                         "align": "center",
                         "size": "md"
@@ -55,7 +55,7 @@
                                 "action": {
                                     "type": "uri",
                                     "label": "點我報名",
-                                    "uri": "http://localhost:3000/houngyunGroup"
+                                    "uri": "https://hongyun-line.mctech.tw/houngyunGroup"
                                 }
                             }
                         ]
@@ -129,9 +129,9 @@
                                 "action": {
                                     "type": "uri",
                                     "label": "點我報名",
-                                    "uri": "http://localhost:3000/houngyunpk",
+                                    "uri": "https://hongyun-line.mctech.tw/houngyunpk",
                                     "altUri": {
-                                        "desktop": "http://localhost:3000/houngyunpk"
+                                        "desktop": "https://hongyun-line.mctech.tw/houngyunpk"
                                     }
                                 }
                             }
