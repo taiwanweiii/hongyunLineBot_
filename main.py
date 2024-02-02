@@ -791,13 +791,14 @@ def LineBotv1(company):
 													""",
 														"https://i.imgur.com/KTOITqS.png")
 
-						elif event.message =='#團體/比賽專區暫時':
+						elif event.message =='#團體/比賽專區':
 							template=copy.deepcopy(line.flexTemplate('houngyunPKAndGroup'))
 
 							line.replyFlex(template)
-						elif event.message=='#團體/比賽專區':
+						elif event.message=='#購買紀錄':
 							template = copy.deepcopy(line.flexTemplate('buysellHistory'))
 							templateAdd=copy.deepcopy(template['body']['contents'][1]['contents'][0])
+							template['body']['contents'][1]['contents']=[]
 							nameList=[]
 							end_time = datetime.now().strftime('%Y-%m-%d')
 							#前三十天
@@ -830,15 +831,20 @@ def LineBotv1(company):
 										# nameList.append({nameItems.get('name')})
 							print(len(nameList))
 							i=0
-							nameListReverse=nameList[::-1]
-							while i<len(nameList):
-								templateAdd['contents'][0]['text']=nameListReverse[i][0]
-								templateAdd['contents'][0]['text']=nameListReverse[i][1]
-								template['body']['contents'][1]['contents'].append(copy.deepcopy(templateAdd))
-								print(nameListReverse)
-								i=i+1
-
-							line.replyFlex(template)
+							if (len(nameList)>0):
+								nameListReverse=nameList[::-1]
+								while i<len(nameList):
+									print(i)
+									templateAdd['contents'][0]['text']=nameListReverse[i-1][0]
+									templateAdd['contents'][1]['text']=nameListReverse[i-1][1]
+									template['body']['contents'][1]['contents'].append(copy.deepcopy(templateAdd))
+									print('----nameListReverse----')
+									print(nameListReverse[i-1][0])
+									print('----nameListReverse----')
+									i=i+1
+								line.replyFlex(template)
+							else:
+								line.replyText('尚無購買紀錄😉')
 
 				# postback
 				case 'postback':
