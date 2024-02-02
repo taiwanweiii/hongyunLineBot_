@@ -791,7 +791,7 @@ def LineBotv1(company):
 													""",
 														"https://i.imgur.com/KTOITqS.png")
 
-						elif event.message =='#團體/比賽專區':
+						elif event.message =='#團練/比賽專區':
 							template=copy.deepcopy(line.flexTemplate('houngyunPKAndGroup'))
 
 							line.replyFlex(template)
