@@ -30,12 +30,14 @@ def getDatetime(): return datetime.now(TZ)
 # 	CHANNEL_SECRET = configs.line.CHANNEL_SECRET
 # )
 
+prefix = "/Linebotv1"
+
 appointmentsDB = DB('appointments')
 
 app = Flask(__name__)
-app.register_blueprint(api.preOrder.PreOrderBlueprint, url_prefix='/api')
+app.register_blueprint(api.preOrder.PreOrderBlueprint, url_prefix=f'{prefix}/api')
 
-@app.route('/')
+@app.route(prefix)
 def hello():
     return "Hello, World!"
 """
@@ -789,8 +791,52 @@ def LineBotv1(company):
 													""",
 														"https://i.imgur.com/KTOITqS.png")
 
-						elif event.message =='#團體/比賽專區':
+						elif event.message =='#團體/比賽專區暫時':
 							template=copy.deepcopy(line.flexTemplate('houngyunPKAndGroup'))
+
+							line.replyFlex(template)
+						elif event.message=='#團體/比賽專區':
+							template = copy.deepcopy(line.flexTemplate('buysellHistory'))
+							templateAdd=copy.deepcopy(template['body']['contents'][1]['contents'][0])
+							nameList=[]
+							end_time = datetime.now().strftime('%Y-%m-%d')
+							#前三十天
+							start_time = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
+							timeRange=[start_time,end_time]
+							print('--start_time--')
+							print(start_time)
+							phone = member.memberDB.dynamicTableSearch({'userId':event.uid,'company':company})[0]['phone']
+							posMember=posDB('customers')
+							posMemberId=posMember.dynamicTableSearch({'phone':phone})[0]['id']
+							ordersDb=posDB('orders')
+							ordersDataList=ordersDb.sellBuyHistory(posMemberId,timeRange)
+							for item in ordersDataList:
+								content=(item.get('content'))
+								datetimeItem=item.get('datetime')
+								formatted_date = datetimeItem.strftime("%Y/%m/%d")
+
+								if not isinstance(content, dict):
+									try:
+										content = json.loads(content)
+										content=content['products']
+									except ValueError:
+										print("content 無法將變量轉換為字典")
+								else:
+									content=content['products']
+								for nameItems in content:
+									if ((nameItems.get('price'))>0):
+										projectName=nameItems.get('name')
+										nameList.append([projectName,formatted_date])
+										# nameList.append({nameItems.get('name')})
+							print(len(nameList))
+							i=0
+							nameListReverse=nameList[::-1]
+							while i<len(nameList):
+								templateAdd['contents'][0]['text']=nameListReverse[i][0]
+								templateAdd['contents'][0]['text']=nameListReverse[i][1]
+								template['body']['contents'][1]['contents'].append(copy.deepcopy(templateAdd))
+								print(nameListReverse)
+								i=i+1
 
 							line.replyFlex(template)
 

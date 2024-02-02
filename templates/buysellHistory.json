@@ -1,0 +1,89 @@
+{
+    "type": "bubble",
+    "size": "kilo",
+    "direction": "ltr",
+    "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+            {
+                "type": "text",
+                "text": "消費歷史紀錄",
+                "size": "md",
+                "color": "#ffffff",
+                "align": "center"
+            }
+        ],
+        "height": "40px",
+        "backgroundColor": "#194051",
+        "justifyContent": "space-evenly",
+        "alignItems": "center"
+    },
+    "body": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+            {
+                "type": "box",
+                "layout": "vertical",
+                "margin": "md",
+                "spacing": "sm",
+                "contents": [
+                    {
+                        "type": "box",
+                        "layout": "horizontal",
+                        "contents": [
+                            {
+                                "type": "text",
+                                "text": "購買品名",
+                                "align": "start",
+                                "color": "#000000"
+                            },
+                            {
+                                "type": "text",
+                                "text": "時間",
+                                "align": "end",
+                                "color": "#000000"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "box",
+                "layout": "vertical",
+                "margin": "sm",
+                "spacing": "sm",
+                "contents": [
+                    {
+                        "type": "box",
+                        "layout": "horizontal",
+                        "contents": [
+                            {
+                                "type": "text",
+                                "text": "產品名",
+                                "size": "sm",
+                                "color": "#000000",
+                                "position": "absolute"
+                            },
+                            {
+                                "type": "text",
+                                "text": "$0.69",
+                                "size": "sm",
+                                "color": "#111111",
+                                "align": "end"
+                            }
+                        ]
+                    }
+                ],
+                "borderColor": "#000000"
+            }
+        ],
+        "paddingTop": "0px"
+    },
+    "styles": {
+        "footer": {
+            "separator": true
+        }
+    }
+}

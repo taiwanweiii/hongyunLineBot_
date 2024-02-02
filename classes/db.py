@@ -42,6 +42,9 @@ class MYSQLDB:
         where_clause = " AND ".join([f"{key} = %s" for key in conditions.keys()])
         query += where_clause
         return self.executeQuery(query, tuple(conditions.values()))
+    def sellBuyHistory(self,MemberId,timeRange):
+        query = f"SELECT * FROM {self.table} WHERE target = %s AND datetime BETWEEN %s AND %s"
+        return self.executeQuery(query, (MemberId, timeRange[0], timeRange[1]))
 
         # try:
         #     self.cursor.execute(f"SELECT * FROM {self.table} WHERE {whereTable} = %s",(whereValue,))
