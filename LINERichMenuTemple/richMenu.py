@@ -48,9 +48,9 @@ from linebot import (
     LineBotApi, WebhookHandler
 )
 # richMenuID='richmenu-06613611845f14bb1db2a1ff7aef7162'
-# token='ubNXeiTb/ckQXAQaemiRTVjsfNJ+t21QVNnY4XoAZrzZAYbz+mshUzFktAHhLgkE1kKq3/Gf8YBYNwVEAOjP1E/8DNKG6cwwpTuq4o1Vyfw7NrPyDSSTtV/s69mBH9BTzC9fyWKOooAK6P5bl7jmHwdB04t89/1O/w1cDnyilFU='
+token='ubNXeiTb/ckQXAQaemiRTVjsfNJ+t21QVNnY4XoAZrzZAYbz+mshUzFktAHhLgkE1kKq3/Gf8YBYNwVEAOjP1E/8DNKG6cwwpTuq4o1Vyfw7NrPyDSSTtV/s69mBH9BTzC9fyWKOooAK6P5bl7jmHwdB04t89/1O/w1cDnyilFU='
 # 鴻運token
-token='nC8KEvZ7uN5aZOQE7DiqXmauvGcP9nzYwEk3sYKMrPtX6YKstpSAHTl/ec8uEp7od/pZ2lQ0TT6U6PXaifFatcVJiDXDLzvwO6m3my/2fNfnQxkiDtt7uavw7xL0PJme/DpsEATb9hCaGlQrdaLsxQdB04t89/1O/w1cDnyilFU='
+# token='nC8KEvZ7uN5aZOQE7DiqXmauvGcP9nzYwEk3sYKMrPtX6YKstpSAHTl/ec8uEp7od/pZ2lQ0TT6U6PXaifFatcVJiDXDLzvwO6m3my/2fNfnQxkiDtt7uavw7xL0PJme/DpsEATb9hCaGlQrdaLsxQdB04t89/1O/w1cDnyilFU='
 ##---------------列印richmenuId-----------------
 line_bot_api = LineBotApi(token)
 rich_menu_list = line_bot_api.get_rich_menu_list()

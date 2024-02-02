@@ -98,3 +98,10 @@ class Line:
     def pushFlexMessage(self,userId,data):
         flex_message = FlexSendMessage(alt_text='-', contents=data)
         self.api.push_message(userId,messages=flex_message)
+    
+    def pushdoubleMessageTextReplyFlex(self, userId,text1, flex_contents,alt_text='-'):
+        messages = [
+            FlexSendMessage(contents=flex_contents,alt_text=alt_text),
+            TextSendMessage(text=text1)
+        ]
+        self.api.push_message(userId,messages)

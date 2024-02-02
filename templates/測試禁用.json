@@ -1,0 +1,86 @@
+{
+    "type": "bubble",
+    "size": "kilo",
+    "direction": "ltr",
+    "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+            {
+                "type": "text",
+                "text": "預約單簽帳單",
+                "size": "md",
+                "color": "#ffffff",
+                "align": "center"
+            }
+        ],
+        "height": "40px",
+        "backgroundColor": "#194051",
+        "justifyContent": "space-evenly",
+        "alignItems": "center"
+    },
+    "body": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+            {
+                "type": "box",
+                "layout": "vertical",
+                "margin": "xxl",
+                "spacing": "sm",
+                "contents": [
+                    {
+                        "type": "box",
+                        "layout": "horizontal",
+                        "contents": [
+                            {
+                                "type": "text",
+                                "text": "MODUS3 WEDGR 105",
+                                "size": "sm",
+                                "color": "#000000"
+                            },
+                            {
+                                "type": "text",
+                                "text": 1500,
+                                "size": "sm",
+                                "color": "#111111",
+                                "align": "end"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "separator",
+                "margin": "xxl"
+            },
+            {
+                "type": "box",
+                "layout": "horizontal",
+                "margin": "md",
+                "contents": [
+                    {
+                        "type": "text",
+                        "text": "總金額",
+                        "size": "xs",
+                        "color": "#FF0000",
+                        "flex": 0
+                    },
+                    {
+                        "type": "text",
+                        "text": "#743289384279",
+                        "color": "#FF0000",
+                        "size": "xs",
+                        "align": "end"
+                    }
+                ]
+            }
+        ],
+        "paddingTop": "0px"
+    },
+    "styles": {
+        "footer": {
+            "separator": true
+        }
+    }
+}

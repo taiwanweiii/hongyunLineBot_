@@ -789,8 +789,11 @@ def LineBotv1(company):
 													""",
 														"https://i.imgur.com/KTOITqS.png")
 
-						elif event.message =='#聯絡我們':
-							line.replyText('☎️請點此致電｜0919-102-803')
+						elif event.message =='#團體/比賽專區':
+							template=copy.deepcopy(line.flexTemplate('houngyunPKAndGroup'))
+
+							line.replyFlex(template)
+
 				# postback
 				case 'postback':
 					match event.postback:
@@ -1480,12 +1483,11 @@ def getIsProject(phone):
 	else:
 		return "getIsProject Function Error"
 getIsProject("0912345678")
-def posDB():
+def posDB(tableName):
 	posOrderDb = MYSQLDB(
-		table='customers',
+		table=tableName,
         # host="172.19.0.4",
     	host= '127.0.0.1',
-
 		# host = "pos-db.alpaca.tw",
 		# port=3316,
 		user="root",
@@ -1493,6 +1495,7 @@ def posDB():
 		password="root",
 		database="hongyun_pos"
 	)
+	return posOrderDb
 
 def memberData(phone,userId):
 	memberDB=MYSQLDB('member')
