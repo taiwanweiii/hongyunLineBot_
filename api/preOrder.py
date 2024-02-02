@@ -85,7 +85,7 @@ def preOrderSendMessage(page):
                 print('----ErrorMessage-----')
                 print(bool(ErrorMessage))
                 match titleType:
-                    case "簽帳單" if not ErrorMessage:
+                    case "charge" if not ErrorMessage:
                         templateAdd=copy.deepcopy(template['body']['contents'][0]['contents'][0])
                         templateMoney=copy.deepcopy(template['body']['contents'][2])
 
@@ -111,7 +111,7 @@ def preOrderSendMessage(page):
                                 template['body']['contents'][0]['contents'].append(copy.deepcopy(templateAdd))
                         line.pushdoubleMessageTextReplyFlex(memberData['userId'],'若有疑問請致電告知\n☎️:0919102803',template,'簽帳單')
 
-                    case "預約單" if not ErrorMessage:
+                    case "preOrder" if not ErrorMessage:
                         templateAdd=copy.deepcopy(template['body']['contents'][0]['contents'][0])
                         templateMoney=copy.deepcopy(template['body']['contents'][2])
                         template['body']['contents'][0]['contents']=[]
@@ -138,7 +138,7 @@ def preOrderSendMessage(page):
                                 template['body']['contents'][0]['contents'].append(copy.deepcopy(templateAdd))
                         line.pushdoubleMessageTextReplyFlex(memberData['userId'],'若有疑問請致電告知\n☎️:0919102803',template,'簽帳單')
 
-                    case "刪除簽帳單" if not ErrorMessage:
+                    case "delCharge" if not ErrorMessage:
                         templateAdd=copy.deepcopy(template['body']['contents'][0]['contents'][0])
                         templateMoney=copy.deepcopy(template['body']['contents'][2])
                         template['body']['contents'][0]['contents']=[]
