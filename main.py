@@ -7,7 +7,9 @@ import json
 import configs.line
 import configs.appointment 
 import api.preOrder
-
+import admin.url as webUrl
+import re
+from urllib.parse import quote
 # from classes.event import *
 from classes.db import *
 from classes.line import *
@@ -398,15 +400,16 @@ print('-------clientWebhook------')
 
 @app.route('/Linebotv1/<company>', methods=['POST'])
 def LineBotv1(company):
-	configsSearchDBProjectList,LineToken,ballRollNumber,searchBallRollfillterTrue,projectDetails,projectList,projectNameList,projectsActiveList,projectsDayList,projectsintervalList,publicBlackTimeList,projectsoffsetList,projectsblockTimeList,projectSnumberOfAppointmentsList,projectGroupReserveStatusList,projectGroupNameList=getIsProject(company)
+	liffID,configsSearchDBProjectList,LineToken,ballRollNumber,searchBallRollfillterTrue,projectDetails,projectList,projectNameList,projectsActiveList,projectsDayList,projectsintervalList,publicBlackTimeList,projectsoffsetList,projectsblockTimeList,projectSnumberOfAppointmentsList,projectGroupReserveStatusList,projectGroupNameList=getIsProject(company)
 	line = LineToken
-
+	
 	configs.appointment.getUserName(company)
 	if company in clientWebhook:
 		data = request.get_json()
 		print('===============data==================')
 		print(data)
 		print('===============data==================')
+		
 		# try:
 		# start
 		if 'events' not in data: return print('events not exists.')
@@ -415,30 +418,25 @@ def LineBotv1(company):
 			event = line.setEvent(event)
 			
 			user_status = member.isMember(event.uid,company)
-			
+			memberBasicInformation=memberData(company,event.uid)
+			memberRole=''
+			memberIsCurotRecore=''
+			if (len(memberBasicInformation)>0):
+				memberRole=memberBasicInformation[0]['role']
+				memberIsCurotRecore=memberBasicInformation[0]['course_record']
+
 			match event.type:
 				case "follow":
 					template = line.flexTemplate('first')
-					# member.memberDB.insertMember(event.uid,company)
-					# line.replyFlex(template)
+					template['hero']['action']['uri']=f'https://liff.line.me/{liffID}?url=login'
 					line.doubleReplyFlexMessageText('歡迎您加入此帳號🤩',template,'註冊訊息')
 				case 'message':
-					# configs
-					# underButtonSendMessageList = configs.appointment.underButtonSendMessageList
-
-					# underButtonSendMessageListStr = configs.appointment.underButtonSendMessageList(company)
-
-					# underButtonSendMessageList=eval(underButtonSendMessageListStr)
-
-					# underButtonLableList = configs.appointment.underButtonLableList
-					# underButtonSendMessageList = configs.appointment.underButtonSendMessageList
 					underButtonLableList=projectNameList
 					reserved_items = ['預約' + item for item in projectNameList]
 
 					underButtonSendMessageList=reserved_items
-					memberBasicInformation=memberData(company,event.uid)
+					# memberBasicInformation=memberData(company,event.uid)
 					memberRegistertemplate = line.flexTemplate('memberRegister')
-					
 					if memberBasicInformation:
 						memberBasicInformation=memberBasicInformation[0]
 						if memberBasicInformation['name']:
@@ -452,9 +450,9 @@ def LineBotv1(company):
 						template = line.flexTemplate('first')
 						line.replyFlex(template)
 
-
 					if user_status=='nouser':
 						template = line.flexTemplate('first')
+						template['hero']['action']['uri']=f'https://liff.line.me/{liffID}?url=login'
 						line.replyFlex(template)
 					if user_status == 'phone':
 						if member.isPhone(event.message) == False:
@@ -517,28 +515,26 @@ def LineBotv1(company):
 						# isReserveFunction=reserve.ShortAndHistoryReserveFunction(event.uid)
 						# before
 						if event.message =='#個人狀況':
-							template=copy.deepcopy(line.flexTemplate('carousel'))
-							reserveList = copy.deepcopy(line.flexTemplate('reserveList'))
-							templateAdd=copy.deepcopy(reserveList['contents'][0])
-							print('---underButtonLableList---')
-							projectlist=['球桿數據','揮桿數據']
-							imageUrl=['https://i.imgur.com/nIByphE.png','https://i.imgur.com/3PgjXM1.png']
+							if memberRole>=2:
+								template=copy.deepcopy(line.flexTemplate('carousel'))
+								reserveList = copy.deepcopy(line.flexTemplate('reserveList'))
+								templateAdd=copy.deepcopy(reserveList['contents'][0])
+								print('---underButtonLableList---')
+								projectlist=['球桿數據','揮桿數據']
+								imageUrl=['https://i.imgur.com/nIByphE.png','https://i.imgur.com/3PgjXM1.png']
 
-							i=0
-							while i <len(projectlist):
-								templateAdd['hero']['contents'][0]["url"]=imageUrl[i]
-								templateAdd['hero']['contents'][1]["contents"][0]['text']='鴻運高爾夫工坊'
-								templateAdd['hero']['contents'][2]["contents"][1]['contents'][0]['text']=f'點擊查看{projectlist[i]}'
-								# templateAdd['hero']['action']['data']=f'ReserveProject:{projectlist[i]}'
-								templateAdd['hero']['action']['data']=f'personalData:{projectlist[i]}'
-								templateAdd['hero']['action']['displayText']=f'{projectlist[i]}查詢'
-								template['contents'].append(copy.deepcopy(templateAdd))
-								i+=1
-							print("underButtonSendMessageList")
-							# template=functionTemplate.buttonTemplate(underButtonLableList,underButtonSendMessageList)
-
-							line.replyFlex(template)
-							# line.replyMessage(template)
+								i=0
+								while i <len(projectlist):
+									templateAdd['hero']['contents'][0]["url"]=imageUrl[i]
+									templateAdd['hero']['contents'][1]["contents"][0]['text']='鴻運高爾夫工坊'
+									templateAdd['hero']['contents'][2]["contents"][1]['contents'][0]['text']=f'點擊查看{projectlist[i]}'
+									templateAdd['hero']['action']['data']=f'personalData:{projectlist[i]}'
+									templateAdd['hero']['action']['displayText']=f'{projectlist[i]}查詢'
+									template['contents'].append(copy.deepcopy(templateAdd))
+									i+=1
+								line.replyFlex(template)
+							else:
+								line.doubleReplyMessageText(f'🙇‍♂️權限不足！！','☎️如有疑問請致電｜0919-102-803')	
 
 						elif event.message in underButtonSendMessageList and reserve.isReserveDBState(event.uid,company)=='noProject':
 							event.message=str(event.message)
@@ -714,17 +710,27 @@ def LineBotv1(company):
 							"""
 							line.replyFlex(template)
 						elif event.message == '#會員查詢':
+							urlList=["https://i.imgur.com/HD83R4p.png","https://i.imgur.com/ekSGB7U.png","https://i.imgur.com/HYbdtoZ.png"]
+							template=copy.deepcopy(line.flexTemplate('carousel'))
+							flex = copy.deepcopy(line.flexTemplate('otherFlexText'))
+							i=0
+							nameList=['會員資料','購買紀錄']
+							if nameList:
+								for key,value in enumerate(nameList):
+									k=i%3
+									flex['hero']['contents'][0]['contents'][0]['url']=urlList[k]
+									flex['hero']['contents'][0]['contents'][1]['text']=value
+									flex['hero']['contents'][1]['contents'][0]['action']['text']=f"#{value}"
+									template['contents'].append(copy.deepcopy(flex))
+									i+=1
+								line.replyFlex(template)
+							else:
+								line.doubleReplyMessageText(f'👨‍💻尚未開放','☎️如有疑問請致電｜0919-102-803')	
+						elif event.message == '#會員資料':
 							template = copy.deepcopy(line.flexTemplate('mebersearch'))
 							templateAdd=copy.deepcopy(line.flexTemplate('memberAddtemplates'))
 							template['hero']['contents'][1]['contents'][0]['contents'][1]['contents'][1]['text']=member.memberDB.dynamicTableSearch({'userId':event.uid,'company':company})[0]['name']
 							template['hero']['contents'][1]['contents'][0]['contents'][2]['contents'][1]['text']=member.memberDB.dynamicTableSearch({'userId':event.uid,'company':company})[0]['phone']
-							# # isReserveFunction=reserve.ShortAndHistoryReserveFunction(event.uid)
-							# template = copy.deepcopy(line.flexTemplate('memberSearch'))
-							# # template['body']['contents'][1]['contents'][1]['contents'][1]['text']=member.search(event.uid)[0]['name']
-							# # template['body']['contents'][1]['contents'][2]['contents'][1]['text']=member.search(event.uid)[0]['phone']
-							# template['body']['contents'][1]['contents'][1]['contents'][1]['text']=member.memberDB.TableTwoSearch('userId',event.uid,'company',company)[0]['name']
-							# template['body']['contents'][1]['contents'][2]['contents'][1]['text']=member.memberDB.TableTwoSearch('userId',event.uid,'company',company)[0]['phone']
-							# # historySearchStatusUserId=isReserveFunction.historyDBSearchStatusUserId()
 							try :
 								memberdate = member.memberDB.dynamicTableSearch({'userId':event.uid,'company':company})
 							finally:
@@ -845,6 +851,114 @@ def LineBotv1(company):
 								line.replyFlex(template)
 							else:
 								line.replyText('尚無購買紀錄😉')
+						elif event.message == '#培訓專區':
+							if memberRole>=2:
+								photoList=["https://i.imgur.com/HD83R4p.png","https://i.imgur.com/ekSGB7U.png","https://i.imgur.com/HYbdtoZ.png"]
+								webUrlList=webUrl.training
+								template=copy.deepcopy(line.flexTemplate('carousel'))
+								flex = copy.deepcopy(line.flexTemplate('otherFlexUrl'))
+								i=0
+								nameList=['團練專區','比賽專區','個人成績紀錄','比賽成績紀錄']
+								if nameList:
+									for key,value in enumerate(nameList):
+										k=i%3
+										flex['hero']['contents'][0]['contents'][0]['url']=photoList[k]
+										flex['hero']['contents'][0]['contents'][1]['text']=value
+										flex['hero']['contents'][1]['contents'][0]['action']['uri']=f"{webUrlList[key]}"
+										template['contents'].append(copy.deepcopy(flex))
+										i+=1
+									line.replyFlex(template)
+							else:
+								line.doubleReplyMessageText(f'🙇‍♂️權限不足！！','☎️如有疑問請致電｜0919-102-803')	
+						elif event.message == '#教練課程':
+							photoList=["https://i.imgur.com/HD83R4p.png","https://i.imgur.com/ekSGB7U.png","https://i.imgur.com/HYbdtoZ.png"]
+							webUrlList=webUrl.training
+							template=copy.deepcopy(line.flexTemplate('carousel'))
+							flex = copy.deepcopy(line.flexTemplate('otherFlexPostback'))
+							i=0
+							nameList=['單人教練預約','團體教練預約']
+							print('----webUrlList----')
+							if nameList:
+								for key,value in enumerate(nameList):
+									k=i%3
+									flex['hero']['contents'][0]['contents'][0]['url']=photoList[k]
+									flex['hero']['contents'][0]['contents'][1]['text']=value
+									flex['hero']['contents'][1]['contents'][0]['action']['data']=f"postReserveProject:{value}"
+									template['contents'].append(copy.deepcopy(flex))
+									i+=1
+								line.replyFlex(template)
+							else:
+								line.doubleReplyMessageText(f'👨‍💻尚未開放','☎️如有疑問請致電｜0919-102-803')	
+						elif event.message == '#球具維修預約':
+							photoList=["https://i.imgur.com/HD83R4p.png","https://i.imgur.com/ekSGB7U.png","https://i.imgur.com/HYbdtoZ.png"]
+							webUrlList=webUrl.training
+							template=copy.deepcopy(line.flexTemplate('carousel'))
+							flex = copy.deepcopy(line.flexTemplate('otherFlexPostback'))
+							i=0
+							nameList=['維修調整預約','握把更換預約']
+							nameShowList=['維修/調整','握把更換預約']
+							print('----webUrlList----')
+							if nameList:
+								for key,value in enumerate(nameList):
+									k=i%3
+									flex['hero']['contents'][0]['contents'][0]['url']=photoList[k]
+									flex['hero']['contents'][0]['contents'][1]['text']=nameShowList[key]
+									flex['hero']['contents'][1]['contents'][0]['action']['data']=f"postReserveProject:{value}"
+									template['contents'].append(copy.deepcopy(flex))
+									i+=1
+								line.replyFlex(template)
+						elif event.message.startswith('#球場預約:'):
+							if memberRole >=2:	
+								pattern = r'球場:(.*?)\n日期:(.*?)\n時間:(.*)'
+								matches = re.search(pattern, event.message)
+								
+								if matches:
+									place = matches.group(1)
+									date = matches.group(2)
+									time = matches.group(3)
+									given_datetime = datetime.strptime(f'{date} {time}', '%Y-%m-%d %H:%M')
+									current_datetime =((datetime.now())+timedelta(weeks=1)).replace(hour=0, minute=0, second=0)
+									courtList=courtPlaceDB(company)
+									if len(courtList)>0:
+										filtered_courts = [court for court in courtList if court['place'] == place and court['status'] == 0]
+										if len(filtered_courts)>0:
+											if given_datetime > current_datetime:
+												memberList=member.memberDB.dynamicTableSearch({'userId':event.uid,'company':company})
+												memberList=memberList[0]
+												filtered_courts=filtered_courts[0]
+												notifyFunction=notify(filtered_courts['notify'])
+												notifyFunction.SendMessage(f'\n姓名:{memberList["name"]}\n電話:{memberList["phone"]}\n日期:{date}\n時間:{time}')
+												line.replyText(f'{place}已預約')
+											else:
+												given_formatted_datetime = given_datetime.strftime('%Y-%m-%d %H:%M')
+												current_formatted_datetime = current_datetime.strftime('%Y-%m-%d %H:%M')
+												line.replyText(f'可預約時間:{given_formatted_datetime}\n預約時間:{current_formatted_datetime}\n預約僅開放一個禮拜後')
+							else:
+								line.doubleReplyMessageText(f'🙇‍♂️權限不足！！','☎️如有疑問請致電｜0919-102-803')	
+
+						elif event.message=='#球場預約':
+							photoList=["https://i.imgur.com/HD83R4p.png","https://i.imgur.com/ekSGB7U.png","https://i.imgur.com/HYbdtoZ.png"]
+							courtList=courtPlaceDB(company)
+							if len(courtList)>0:
+								webUrlstr=webUrl.courtReserve
+								nameList = [court['place'] for court in courtList if court['status'] == 0]
+								notifyList = [court['notify'] for court in courtList if court['status'] == 0]
+								urlList = [webUrlstr+quote(court['place']) for court in courtList if court['status'] == 0]
+								template=copy.deepcopy(line.flexTemplate('carousel'))
+								flex = copy.deepcopy(line.flexTemplate('otherFlexUrl'))
+								i=0
+								if nameList:
+									for key,value in enumerate(nameList):
+										k=i%3
+										flex['hero']['contents'][0]['contents'][0]['url']=photoList[k]
+										flex['hero']['contents'][0]['contents'][1]['text']=value
+										flex['hero']['contents'][1]['contents'][0]['action']['uri']=urlList[key]
+										template['contents'].append(copy.deepcopy(flex))
+										i+=1
+									line.replyFlex(template)
+							
+							else:
+								line.doubleReplyMessageText(f'👨‍💻尚未開放','☎️如有疑問請致電｜0919-102-803')	
 
 				# postback
 				case 'postback':
@@ -882,39 +996,63 @@ def LineBotv1(company):
 								# template['contents'][0]['body']['contents'] = []
 						#預約單確認專案
 						case data if data.startswith('ConfirmReservation:'):
-							reserveCount= configs.appointment.reserveCount
-							# isReserveFunction=reserve.ShortAndHistoryReserveFunction(event.uid)
-							NOTIFYTOKEN=configs.appointment.NOTIFYTOKEN
-							# historySearchStatusUserId=isReserveFunction.historyDBSearchStatusUserId()
-							historySearchStatusUserId = reserve.reserveDB.dynamicTableSearch({'userid':event.uid,'status':'1','company':company})
-							getReserveTimeList = [item['dataTime'] for item in historySearchStatusUserId]
-							nowTime=getDatetime()
-							nowTimeUinx=int(nowTime.timestamp())
-							count = len({x for x in getReserveTimeList if x is not None and x > int(nowTimeUinx)})
-							result = reserve.reserveDB.execute_query(f"SELECT * FROM reserve WHERE userId = '{event.uid}' AND status='0' AND dataTime IS NOT NULL AND project IS NOT NULL AND company = '{company}'")
-							if result:
-								if count< reserveCount:
-									# userReservedate=isReserveFunction.historyDBAdd()
-									userReservedate=reserve.reserveDB.rdbmsSearch(company,event.uid)[0]
-									notifyFunction=notify(NOTIFYTOKEN)
-									print((userReservedate["dataTime"]))
-									print(type(userReservedate))
-									print('-datetime.fromtimestamp(userReservedate["dataTime"])----')
-									# print((userReservedate))
-									# print(reserve.reser)
-									notifyTime=(datetime.fromtimestamp(userReservedate["dataTime"])).strftime('%Y年%m月%d日 %H:%M')
-									notifyFunction.SendMessage(f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n')
-									line.replyText(f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}')
-									reserve.reserveDB.updateThreeSearchWhere('status','1','userId',event.uid,'status','0','company',company)
-									reserve.reserveDB.Insert(("userId","company",),(event.uid,company,))
-								else:
-									line.replyText('系統自動判斷目前您以有預約時段,請點擊會員查詢確認時段是否預約,若無預約煩請致電～')
-								# isReserveFunction.historyDBUpdate(memberDate)
+							if memberRole>=1:
+								reserveCount= configs.appointment.reserveCount
+								# isReserveFunction=reserve.ShortAndHistoryReserveFunction(event.uid)
+								NOTIFYTOKEN=configs.appointment.NOTIFYTOKEN
+								# historySearchStatusUserId=isReserveFunction.historyDBSearchStatusUserId()
+								historySearchStatusUserId = reserve.reserveDB.dynamicTableSearch({'userid':event.uid,'status':'1','company':company})
+								getReserveTimeList = [item['dataTime'] for item in historySearchStatusUserId]
+								nowTime=getDatetime()
+								nowTimeUinx=int(nowTime.timestamp())
+								count = len({x for x in getReserveTimeList if x is not None and x > int(nowTimeUinx)})
+								result = reserve.reserveDB.execute_query(f"SELECT * FROM reserve WHERE userId = '{event.uid}' AND status='0' AND dataTime IS NOT NULL AND project IS NOT NULL AND company = '{company}'")
+								if result:
+									if count< reserveCount:
+										# userReservedate=isReserveFunction.historyDBAdd()
+										userReservedate=reserve.reserveDB.rdbmsSearch(company,event.uid)[0]
+										notifyFunction=notify(NOTIFYTOKEN)
+										print((userReservedate["dataTime"]))
+										print(type(userReservedate))
+										print('-datetime.fromtimestamp(userReservedate["dataTime"])----')
+										# print((userReservedate))
+										# print(reserve.reser)
+										lnumber=reserve.reserveDB.dynamicTableSearch({'project':'模擬器預約','status':'1','company':company,'dataTime':userReservedate['dataTime']})
+										lnumber=len(lnumber)
 
-								# isReserveFunction.shortDBDelete()
-								# print("確認預約")
+										if userReservedate["project"]=='模擬器預約':
+											lnumber=reserve.reserveDB.dynamicTableSearch({'project':'模擬器預約','status':'1','company':company,'dataTime':userReservedate['dataTime']})
+											tnumber=reserve.reserveDB.dynamicTableSearch({'project':'單人教練預約','status':'1','company':company,'dataTime':userReservedate['dataTime']})
+											onumber=reserve.reserveDB.dynamicTableSearch({'project':'團體教練預約','status':'1','company':company,'dataTime':userReservedate['dataTime']})
+											onumber=len(onumber)
+											tnumber=len(tnumber)
+
+											lnumber=len(lnumber)
+											sumNumber=onumber+(tnumber*2)+lnumber
+											if sumNumber>=2:
+												line.replyText(f'此確認無效，目前時段預約已滿，請從新預約')
+											else:
+												notifyTime=(datetime.fromtimestamp(userReservedate["dataTime"])).strftime('%Y年%m月%d日 %H:%M')
+												notifyFunction.SendMessage(f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n')
+												line.replyText(f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}')
+												reserve.reserveDB.updateThreeSearchWhere('status','1','userId',event.uid,'status','0','company',company)
+												reserve.reserveDB.Insert(("userId","company",),(event.uid,company,))
+										else:
+											notifyTime=(datetime.fromtimestamp(userReservedate["dataTime"])).strftime('%Y年%m月%d日 %H:%M')
+											notifyFunction.SendMessage(f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n')
+											line.replyText(f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}')
+											reserve.reserveDB.updateThreeSearchWhere('status','1','userId',event.uid,'status','0','company',company)
+											reserve.reserveDB.Insert(("userId","company",),(event.uid,company,))
+									else:
+										line.replyText('系統自動判斷目前您以有預約時段,請點擊會員查詢確認時段是否預約,若無預約煩請致電～')
+									# isReserveFunction.historyDBUpdate(memberDate)
+
+									# isReserveFunction.shortDBDelete()
+									# print("確認預約")
+								else:
+									line.replyText('目前系統尚無預約資料，請從新預約！！！')
 							else:
-								line.replyText('目前系統尚無預約資料，請從新預約！！！')
+								line.doubleReplyMessageText(f'🙇‍♂️權限不足！！','☎️如有疑問請致電｜0919-102-803')	
 
 						case 'CancelReservation':
 							# isReserveFunction=reserve.ShortAndHistoryReserveFunction(event.uid)
@@ -971,7 +1109,6 @@ def LineBotv1(company):
 						case data if data.startswith('personalData:'):
 							personalData = (data.split(":"))[1]
 							isData=False
-							print(f'00000isData{isData}')
 							if personalData=='球桿數據':
 								clubDataDB=MYSQLDB('clubData')
 								clubDataSearch=(clubDataDB.clubTableSearch('clubData.ballHead,clubData.clubHead,clubData.shaftWeightStiffness,clubData.gripWeight,clubData.swingWeight,clubData.clubfaceAngle,clubData.lieAngle,clubData.remark','clubData',event.uid))
@@ -1013,64 +1150,67 @@ def LineBotv1(company):
 								line.replyText(f'Sorry🙇‍♂️\n{personalData}尚未有資料')
 
 						case data if data.startswith('postReserveProject:') and (user_status==True):
-							reserveProjectName = (data.split(":"))[1]
-							# reserve.reserveDB.updateThreeSearchWhere('project',reserveProjectName,'userId',event.uid,'status','0',"company",company)
-							reserve.reserveDB.updateThreeSearchWhere("dataTime",None,"userId",event.uid,"status","0","company",company)
-							reserve.reserveDB.updateThreeSearchWhere("project",None,"userId",event.uid,"status","0","company",company)
-							if reserveProjectName in projectNameList:
-								projectNameIdx = projectNameList.index(reserveProjectName)
-								projectName=projectNameList[projectNameIdx]
-								projectsDay=projectsDayList[projectNameIdx]
-								projectsActive=projectsActiveList[projectNameIdx]
-								projectsoffset=projectsoffsetList[projectNameIdx]
-								projectsinterval=projectsintervalList[projectNameIdx]
-								current_datetime = datetime.now()
-								current = current_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
-								nowtimestamp = current.timestamp()
-								todayTimestamp=nowtimestamp+projectsDay
-								projectNameIdx = projectNameList.index(reserveProjectName)
-								nextTimestamp=todayTimestamp+projectsoffset
-								dayList=[]
-								ranges = [(start, start + 86400 - 1) for start in publicBlackTimeList]
+							if memberRole>=1:
+								reserveProjectName = (data.split(":"))[1]
+								# reserve.reserveDB.updateThreeSearchWhere('project',reserveProjectName,'userId',event.uid,'status','0',"company",company)
+								reserve.reserveDB.updateThreeSearchWhere("dataTime",None,"userId",event.uid,"status","0","company",company)
+								reserve.reserveDB.updateThreeSearchWhere("project",None,"userId",event.uid,"status","0","company",company)
+								if reserveProjectName in projectNameList:
+									projectNameIdx = projectNameList.index(reserveProjectName)
+									projectName=projectNameList[projectNameIdx]
+									projectsDay=projectsDayList[projectNameIdx]
+									projectsActive=projectsActiveList[projectNameIdx]
+									projectsoffset=projectsoffsetList[projectNameIdx]
+									projectsinterval=projectsintervalList[projectNameIdx]
+									current_datetime = datetime.now()
+									current = current_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
+									nowtimestamp = current.timestamp()
+									todayTimestamp=nowtimestamp+projectsDay
+									projectNameIdx = projectNameList.index(reserveProjectName)
+									nextTimestamp=todayTimestamp+projectsoffset
+									dayList=[]
+									ranges = [(start, start + 86400 - 1) for start in publicBlackTimeList]
 
-								while todayTimestamp < nextTimestamp:
-									if not any(start <= todayTimestamp <= end for start, end in ranges):
-										dayList.append(todayTimestamp)
-									todayTimestamp += 86400
-								template = copy.deepcopy(line.flexTemplate('appointmentNow'))
-								template_item = copy.deepcopy(template["contents"][0]['body']['contents'])
-								template_page_item=copy.deepcopy(template['contents'][0])
-								template['contents'][0]['body']['contents'] = []
-								datapage = configs.appointment.datapage
-								blackweekday=[]
-								weekday_chinese = ['一', '二', '三', '四', '五', '六', '日']
-								template['contents'][0]['header']['contents'][0]['text']=f'{reserveProjectName}-請選擇日期'
-								for i in range(7):
-									if (projectsActive[i][0][0]=="00:00" and projectsActive[i][0][1]=="00:00"):
-										blackweekday.append(weekday_chinese[i])
-								idex=1
-								for idx,ts in enumerate(dayList):
-									dt = datetime.fromtimestamp(ts)
-									year = dt.year
-									month = dt.month
-									day = dt.day
-									if not weekday_chinese[dt.weekday()] in blackweekday:
-										typePage = (idex / datapage) + 1 if idex % datapage > 0 else (idex / datapage)
-										typePage = int(typePage)
-										if len(template['contents'])<typePage:
-											template['contents'].append(copy.deepcopy(template['contents'][0]))
-											template['contents'][typePage-1]['body']['contents'] = []
-										template_item[0]['contents'][0]['text'] = f"{dt.month}/{dt.day} ({weekday_chinese[dt.weekday()]})"
-										template_item[0]['contents'][1]['action']['data'] = f"appointment_choose_time:{int(ts)}:project:{projectName}"
-										template["contents"][typePage-1]['body']['contents'].append(copy.deepcopy(template_item[0]))
-										template["contents"][typePage-1]['body']['contents'].append(copy.deepcopy(template_item[1]))
-										idex+=1
-										# print(int(ts))
-									else:
-										print(weekday_chinese[dt.weekday()])
-								line.replyFlex(template)
+									while todayTimestamp < nextTimestamp:
+										if not any(start <= todayTimestamp <= end for start, end in ranges):
+											dayList.append(todayTimestamp)
+										todayTimestamp += 86400
+									template = copy.deepcopy(line.flexTemplate('appointmentNow'))
+									template_item = copy.deepcopy(template["contents"][0]['body']['contents'])
+									template_page_item=copy.deepcopy(template['contents'][0])
+									template['contents'][0]['body']['contents'] = []
+									datapage = configs.appointment.datapage
+									blackweekday=[]
+									weekday_chinese = ['一', '二', '三', '四', '五', '六', '日']
+									template['contents'][0]['header']['contents'][0]['text']=f'{reserveProjectName}-請選擇日期'
+									for i in range(7):
+										if (projectsActive[i][0][0]=="00:00" and projectsActive[i][0][1]=="00:00"):
+											blackweekday.append(weekday_chinese[i])
+									idex=1
+									for idx,ts in enumerate(dayList):
+										dt = datetime.fromtimestamp(ts)
+										year = dt.year
+										month = dt.month
+										day = dt.day
+										if not weekday_chinese[dt.weekday()] in blackweekday:
+											typePage = (idex / datapage) + 1 if idex % datapage > 0 else (idex / datapage)
+											typePage = int(typePage)
+											if len(template['contents'])<typePage:
+												template['contents'].append(copy.deepcopy(template['contents'][0]))
+												template['contents'][typePage-1]['body']['contents'] = []
+											template_item[0]['contents'][0]['text'] = f"{dt.month}/{dt.day} ({weekday_chinese[dt.weekday()]})"
+											template_item[0]['contents'][1]['action']['data'] = f"appointment_choose_time:{int(ts)}:project:{projectName}"
+											template["contents"][typePage-1]['body']['contents'].append(copy.deepcopy(template_item[0]))
+											template["contents"][typePage-1]['body']['contents'].append(copy.deepcopy(template_item[1]))
+											idex+=1
+											# print(int(ts))
+										else:
+											print(weekday_chinese[dt.weekday()])
+									line.replyFlex(template)
+								else:
+									line.doubleReplyMessageText(f'👨‍💻{reserveProjectName}尚未開放','☎️如有疑問請致電｜0919-102-803')				
 							else:
-								line.doubleReplyMessageText(f'👨‍💻{reserveProjectName}尚未開放','☎️如有疑問請致電｜0919-102-803')				
+								line.doubleReplyMessageText(f'🙇‍♂️權限不足！！','☎️如有疑問請致電｜0919-102-803')	
 						case data if data.startswith('appointment_choose_time:') and 'project:'in data:
 							parts = data.split(":")
 							timeUnix=parts[1]
@@ -1270,24 +1410,28 @@ def LineBotv1(company):
 									line.replyText(f'👷項目:{projectName}\n⌚時間：{dt.year}/{dt.month}/{dt.day} ({weekday_chinese[dt.weekday()]})\n✉️提醒訊息:預約時段已滿')
 
 						case data if data.startswith('buyBallRoll:') and (user_status==True):
-							reserve.reserveDB.updateThreeSearchWhere("dataTime",None,"userId",event.uid,"status","0","company",company)
-							reserve.reserveDB.updateThreeSearchWhere("project",None,"userId",event.uid,"status","0","company",company)
-							urlList=["https://i.imgur.com/HD83R4p.png","https://i.imgur.com/ekSGB7U.png","https://i.imgur.com/HYbdtoZ.png"]
-							template=copy.deepcopy(line.flexTemplate('carousel'))
-							ballRoll = copy.deepcopy(line.flexTemplate('ballRoll'))
-							i=0
-							if searchBallRollfillterTrue:
-								for key,value in searchBallRollfillterTrue.items():
-									k=i%3
-									ballRoll['hero']['contents'][0]['contents'][0]['url']=urlList[k]
-									ballRoll['hero']['contents'][0]['contents'][1]['text']=value['courtName']
-									ballRoll['hero']['contents'][1]['contents'][0]['action']['data']=f"chooseBallRoll:{value['courtName']}"
+							if memberRole >=2:
+								reserve.reserveDB.updateThreeSearchWhere("dataTime",None,"userId",event.uid,"status","0","company",company)
+								reserve.reserveDB.updateThreeSearchWhere("project",None,"userId",event.uid,"status","0","company",company)
+								urlList=["https://i.imgur.com/HD83R4p.png","https://i.imgur.com/ekSGB7U.png","https://i.imgur.com/HYbdtoZ.png"]
+								template=copy.deepcopy(line.flexTemplate('carousel'))
+								ballRoll = copy.deepcopy(line.flexTemplate('ballRoll'))
+								i=0
+								if searchBallRollfillterTrue:
+									for key,value in searchBallRollfillterTrue.items():
+										k=i%3
+										ballRoll['hero']['contents'][0]['contents'][0]['url']=urlList[k]
+										ballRoll['hero']['contents'][0]['contents'][1]['text']=value['courtName']
+										ballRoll['hero']['contents'][1]['contents'][0]['action']['data']=f"chooseBallRoll:{value['courtName']}"
 
-									template['contents'].append(copy.deepcopy(ballRoll))
-									i+=1
-								line.replyFlex(template)
+										template['contents'].append(copy.deepcopy(ballRoll))
+										i+=1
+									line.replyFlex(template)
+								else:
+									line.doubleReplyMessageText(f'👨‍💻球卷尚未開放','☎️如有疑問請致電｜0919-102-803')				
 							else:
-								line.doubleReplyMessageText(f'👨‍💻球卷尚未開放','☎️如有疑問請致電｜0919-102-803')				
+								line.doubleReplyMessageText(f'🙇‍♂️權限不足！！','☎️如有疑問請致電｜0919-102-803')	
+
 
 						case data if data.startswith('chooseBallRoll:'):
 							currentDate=datetime.now()
@@ -1358,84 +1502,88 @@ def LineBotv1(company):
 							line.replyFlex(template)
 
 						case data if data.startswith('ballRollConfirmf:ballRollunixTime:') and ('number:' in data) and ('ballRollName:' in data):
-							reserveCount= configs.appointment.reserveCount
-							# isReserveFunction=reserve.ShortAndHistoryReserveFunction(event.uid)
-							NOTIFYTOKEN=configs.appointment.NOTIFYTOKEN
-							# historySearchStatusUserId=isReserveFunction.historyDBSearchStatusUserId()
-							parts = data.split(":")
-							unixTime=parts[2]
-							number=parts[4]
-							name=parts[6]
-							
-							date_object = datetime.strptime(unixTime, "%Y/%m")
-							first_day_of_month = date_object.replace(day=1, hour=0, minute=0, second=0)
-							unix_timestamp = int(first_day_of_month.timestamp())
-							# for i in number:
-							# 	reserve.reserveDB.updateThreeSearchWhere("project",name,"userId",event.uid,"status","0","company",company)
-							# 	reserve.reserveDB.updateThreeSearchWhere("dataTime",unix_timestamp,"userId",event.uid,"status","0","company",company)
-							# 	reserve.reserveDB.TableThreeSearch('userid',event.uid,'status','ballRoll','company',company)
-							historySearchStatusUserId = reserve.reserveDB.dynamicTableSearch({'userid':event.uid,'status':'ballRoll','company':company})
-
-
-							getReserveTimeList = [item['dataTime'] for item in historySearchStatusUserId]
-							nowTime=getDatetime()
-							nowTimeUinx=int(nowTime.timestamp())
-							ballRollDataList=[]
-							ballRollList=[]
-							for key,value in searchBallRollfillterTrue.items():
-								ballRollDataList.append(value['courtName'])
-								if value['courtName']==name:
-									ballRollList.append(value)
-							ballRollList=ballRollList[0]
-							if not isinstance(ballRollList,dict):
-								try:
-									ballRollList = dict(ballRollList)
-								except (TypeError, ValueError):
-									print("无法转换为字典")
-
+							if memberRole>=2:
+								reserveCount= configs.appointment.reserveCount
+								# isReserveFunction=reserve.ShortAndHistoryReserveFunction(event.uid)
+								NOTIFYTOKEN=configs.appointment.NOTIFYTOKEN
+								# historySearchStatusUserId=isReserveFunction.historyDBSearchStatusUserId()
+								parts = data.split(":")
+								unixTime=parts[2]
+								number=parts[4]
+								name=parts[6]
 								
-							isBallRollSearch=(reserve.reserveDB.dynamicTableSearch({'userid':event.uid,'status':'ballRoll','company':company,'dataTime':unix_timestamp,'project':name}))
-							isBallRollHistoryNumber = 0 if isBallRollSearch == '' else len(isBallRollSearch)	
-							unix_timestamp_str=str(unix_timestamp)
-							print(unix_timestamp_str)
-							print('----unix_timestamp---1704038400----')
-							print(ballRollList)
-							configsNumber=ballRollList['monthNumber'][unix_timestamp_str]
-							configsNumber=int(configsNumber)
-							if (isBallRollHistoryNumber+int(number)) > configsNumber:
-								line.replyText(f'球場：{name}\n球卷數量不足\n剩餘數量：{configsNumber-isBallRollHistoryNumber}\n您選擇數量{number}')
-							else:
-								count = len({x for x in getReserveTimeList if x is not None and x > int(nowTimeUinx)})
-								if reserve.reserveDB.execute_query(f"SELECT * FROM reserve WHERE userId = '{event.uid}' AND (dataTime IS NULL AND project IS NOT NULL AND status='0') AND company = '{company}'") and name in ballRollDataList:
-									if count< reserveCount:
-										# userReservedate=isReserveFunction.historyDBAdd()
-										for i in range(int(number)):
-											reserve.reserveDB.Insert(("userId","company","project","dataTime","status",),(event.uid,company,name,unix_timestamp,"ballRoll",))
-										userReservedate=reserve.reserveDB.ballRollrdbmsSearch(company,event.uid)[0]
-										reserve.reserveDB.updateThreeSearchWhere("project",None,"userId",event.uid,"status","0","company",company)
+								date_object = datetime.strptime(unixTime, "%Y/%m")
+								first_day_of_month = date_object.replace(day=1, hour=0, minute=0, second=0)
+								unix_timestamp = int(first_day_of_month.timestamp())
+								# for i in number:
+								# 	reserve.reserveDB.updateThreeSearchWhere("project",name,"userId",event.uid,"status","0","company",company)
+								# 	reserve.reserveDB.updateThreeSearchWhere("dataTime",unix_timestamp,"userId",event.uid,"status","0","company",company)
+								# 	reserve.reserveDB.TableThreeSearch('userid',event.uid,'status','ballRoll','company',company)
+								historySearchStatusUserId = reserve.reserveDB.dynamicTableSearch({'userid':event.uid,'status':'ballRoll','company':company})
 
-										notifyFunction=notify(NOTIFYTOKEN)
-										# print((userReservedate))
-										# print(reserve.reser)
-										unixTime=int(userReservedate['dataTime'])+8*60*60
-										date_object = datetime.utcfromtimestamp(unixTime)
-										year_month_str = date_object.strftime('%Y/%m')
 
-										notifyTime=(datetime.fromtimestamp(userReservedate["dataTime"])).strftime('%Y年%m月%d日 %H:%M')
-										notifyFunction.SendMessage(f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n球場:{userReservedate["project"]}\n球卷月份:{year_month_str}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n張數:{number}')
-										line.replyText(f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n球場:{userReservedate["project"]}\n球卷月份:{year_month_str}\n張數:{number}')
+								getReserveTimeList = [item['dataTime'] for item in historySearchStatusUserId]
+								nowTime=getDatetime()
+								nowTimeUinx=int(nowTime.timestamp())
+								ballRollDataList=[]
+								ballRollList=[]
+								for key,value in searchBallRollfillterTrue.items():
+									ballRollDataList.append(value['courtName'])
+									if value['courtName']==name:
+										ballRollList.append(value)
+								ballRollList=ballRollList[0]
+								if not isinstance(ballRollList,dict):
+									try:
+										ballRollList = dict(ballRollList)
+									except (TypeError, ValueError):
+										print("无法转换为字典")
+
+									
+								isBallRollSearch=(reserve.reserveDB.dynamicTableSearch({'userid':event.uid,'status':'ballRoll','company':company,'dataTime':unix_timestamp,'project':name}))
+								isBallRollHistoryNumber = 0 if isBallRollSearch == '' else len(isBallRollSearch)	
+								unix_timestamp_str=str(unix_timestamp)
+								print(unix_timestamp_str)
+								print('----unix_timestamp---1704038400----')
+								print(ballRollList)
+								configsNumber=ballRollList['monthNumber'][unix_timestamp_str]
+								configsNumber=int(configsNumber)
+								if (isBallRollHistoryNumber+int(number)) > configsNumber:
+									line.replyText(f'球場：{name}\n球卷數量不足\n剩餘數量：{configsNumber-isBallRollHistoryNumber}\n您選擇數量{number}')
+								else:
+									count = len({x for x in getReserveTimeList if x is not None and x > int(nowTimeUinx)})
+									if reserve.reserveDB.execute_query(f"SELECT * FROM reserve WHERE userId = '{event.uid}' AND (dataTime IS NULL AND project IS NOT NULL AND status='0') AND company = '{company}'") and name in ballRollDataList:
+										if count< reserveCount:
+											# userReservedate=isReserveFunction.historyDBAdd()
+											for i in range(int(number)):
+												reserve.reserveDB.Insert(("userId","company","project","dataTime","status",),(event.uid,company,name,unix_timestamp,"ballRoll",))
+											userReservedate=reserve.reserveDB.ballRollrdbmsSearch(company,event.uid)[0]
+											reserve.reserveDB.updateThreeSearchWhere("project",None,"userId",event.uid,"status","0","company",company)
+
+											notifyFunction=notify(NOTIFYTOKEN)
+											# print((userReservedate))
+											# print(reserve.reser)
+											unixTime=int(userReservedate['dataTime'])+8*60*60
+											date_object = datetime.utcfromtimestamp(unixTime)
+											year_month_str = date_object.strftime('%Y/%m')
+
+											notifyTime=(datetime.fromtimestamp(userReservedate["dataTime"])).strftime('%Y年%m月%d日 %H:%M')
+											notifyFunction.SendMessage(f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n球場:{userReservedate["project"]}\n球卷月份:{year_month_str}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n張數:{number}')
+											line.replyText(f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n球場:{userReservedate["project"]}\n球卷月份:{year_month_str}\n張數:{number}')
+										else:
+
+											line.replyText('系統自動判斷目前您以有預約時段,請點擊會員查詢確認時段是否預約,若無預約煩請致電～')
+										# isReserveFunction.historyDBUpdate(memberDate)
+
+										# isReserveFunction.shortDBDelete()
+										# print("確認預約")
 									else:
 
-										line.replyText('系統自動判斷目前您以有預約時段,請點擊會員查詢確認時段是否預約,若無預約煩請致電～')
-									# isReserveFunction.historyDBUpdate(memberDate)
-
-									# isReserveFunction.shortDBDelete()
-									# print("確認預約")
-								else:
-
-									line.replyText('目前系統尚無預約資料，請從新預約！！！')
+										line.replyText('目前系統尚無預約資料，請從新預約！！！')
+							else:
+								line.doubleReplyMessageText(f'🙇‍♂️權限不足！！','☎️如有疑問請致電｜0919-102-803')	
 						case data if (user_status!=True) and (data.startswith('postReserveProject:') or data.startswith('buyBallRoll:')):
 								template = line.flexTemplate('first')
+								template['hero']['action']['uri']=f'https://liff.line.me/{liffID}?url=login'
 								line.doubleReplyFlexMessageText('您尚未註冊會員下方功能無法使用',template,'註冊訊息')
 		# when error
 		# except Exception as error:
@@ -1446,6 +1594,9 @@ def LineBotv1(company):
 	else:return print('無此公司')
 def getIsProject(phone):
 	testDb = MYSQLDB('bot_configs')
+	company_dataDb = MYSQLDB('company_data')
+	company_dataSearchAll=company_dataDb.dynamicTableSearch({"company_phone":phone})
+	liffID=company_dataSearchAll[0]['liffID']
 	botConfigsSearchAll=testDb.dynamicTableSearch({"companyphone":phone})
 	if isinstance(botConfigsSearchAll,list)and botConfigsSearchAll is not None:
 		LineToken = botConfigsSearchAll[0]['lineConfig']
@@ -1531,7 +1682,7 @@ def getIsProject(phone):
 
 		projectGroupNameList=result_dict['projectGroupName']
 
-		return reserveProjectListStr,line,ballRollNumber,searchBallRollfillterTrue,result_dict,projects_with_status_1,projectsName,projectsActive,projectsDay,projectsinterval,publicBlackTimeList,projectsoffset,projectsblockTime,projectSnumberOfAppointments,projectGroupReserveStatus,projectGroupNameList
+		return liffID,reserveProjectListStr,line,ballRollNumber,searchBallRollfillterTrue,result_dict,projects_with_status_1,projectsName,projectsActive,projectsDay,projectsinterval,publicBlackTimeList,projectsoffset,projectsblockTime,projectSnumberOfAppointments,projectGroupReserveStatus,projectGroupNameList
 	else:
 		return "getIsProject Function Error"
 getIsProject("0912345678")
@@ -1548,6 +1699,10 @@ def posDB(tableName):
 		database="hongyun_pos"
 	)
 	return posOrderDb
+def courtPlaceDB(phone):
+	company_dataDb = MYSQLDB('court_place_reserve')
+	companyDataList=company_dataDb.dynamicTableSearch({"company_phone":phone})
+	return companyDataList
 
 def memberData(phone,userId):
 	memberDB=MYSQLDB('member')

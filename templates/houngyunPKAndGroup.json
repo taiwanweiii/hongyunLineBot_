@@ -55,7 +55,7 @@
                                 "action": {
                                     "type": "uri",
                                     "label": "點我報名",
-                                    "uri": "https://hongyun-line.mctech.tw/houngyunGroup"
+                                    "uri": "https://aef4-106-104-100-159.ngrok-free.app/houngyunpk"
                                 }
                             }
                         ]
@@ -129,9 +129,9 @@
                                 "action": {
                                     "type": "uri",
                                     "label": "點我報名",
-                                    "uri": "https://hongyun-line.mctech.tw/houngyunpk",
+                                    "uri": "https://aef4-106-104-100-159.ngrok-free.app/houngyunpk",
                                     "altUri": {
-                                        "desktop": "https://hongyun-line.mctech.tw/houngyunpk"
+                                        "desktop": "https://aef4-106-104-100-159.ngrok-free.app/houngyunpk"
                                     }
                                 }
                             }

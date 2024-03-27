@@ -9,10 +9,9 @@
     "aspectRatio": "20:13",
     "aspectMode": "cover",
     "action": {
-      "type": "postback",
-      "label": "action",
-      "data": "register",
-      "displayText": "🔥立馬註冊！！！"
+      "type": "uri",
+      "label": "🔥點擊註冊🔥",
+      "uri": "http://linecorp.com/"
     }
   }
 }

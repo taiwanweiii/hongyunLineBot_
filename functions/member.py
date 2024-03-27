@@ -33,9 +33,7 @@ def isMember(userId,client):
     if not posCustomerDb.TableOneSearch('phone',user['phone']):
         sex_mapping = {"男": 1, "女": 0}
         sex_value = sex_mapping.get(user['sex'], None)
-
         posCustomerDb.Insert(('line_id','name','phone','sex'),(user['userId'],user['name'],user['phone'],sex_value))
-
     return True
 def isPhoneRepeat(client):
     memberDB= MYSQLDB('member')
