@@ -12,8 +12,10 @@ import re
 from urllib.parse import quote
 # from classes.event import *
 from classes.db import *
+from classes.posdb import *
 from classes.line import *
 from classes.notify import *
+
 
 from functions import member
 from functions import functionTemplate
@@ -854,7 +856,12 @@ def LineBotv1(company):
 						elif event.message == '#培訓專區':
 							if memberRole>=2:
 								photoList=["https://i.imgur.com/HD83R4p.png","https://i.imgur.com/ekSGB7U.png","https://i.imgur.com/HYbdtoZ.png"]
-								webUrlList=webUrl.training
+								webUrlList=webUrl.training(liffID)
+								print('---webUrlList----')
+								print(webUrlList)
+
+								print('---webUrlList----')
+
 								template=copy.deepcopy(line.flexTemplate('carousel'))
 								flex = copy.deepcopy(line.flexTemplate('otherFlexUrl'))
 								i=0
@@ -1685,20 +1692,20 @@ def getIsProject(phone):
 		return liffID,reserveProjectListStr,line,ballRollNumber,searchBallRollfillterTrue,result_dict,projects_with_status_1,projectsName,projectsActive,projectsDay,projectsinterval,publicBlackTimeList,projectsoffset,projectsblockTime,projectSnumberOfAppointments,projectGroupReserveStatus,projectGroupNameList
 	else:
 		return "getIsProject Function Error"
-getIsProject("0912345678")
-def posDB(tableName):
-	posOrderDb = MYSQLDB(
-		table=tableName,
-        # host="172.19.0.4",
-    	host= '127.0.0.1',
-		# host = "pos-db.alpaca.tw",
-		# port=3316,
-		user="root",
-		# password="=?michi_pos/=!",
-		password="root",
-		database="hongyun_pos"
-	)
-	return posOrderDb
+# getIsProject("0912345678")
+# def posDB(tableName):
+# 	posOrderDb = MYSQLDB(
+# 		table=tableName,
+#         # host="172.19.0.4",
+#     	host= '127.0.0.1',
+# 		# host = "pos-db.alpaca.tw",
+# 		# port=3316,
+# 		user="root",
+# 		# password="=?michi_pos/=!",
+# 		password="root",
+# 		database="hongyun_pos"
+# 	)
+# 	return posOrderDb
 def courtPlaceDB(phone):
 	company_dataDb = MYSQLDB('court_place_reserve')
 	companyDataList=company_dataDb.dynamicTableSearch({"company_phone":phone})
@@ -1734,7 +1741,6 @@ def pushRemindMessage():
 			line.pushFlexMessage(item['userId'],template)
 
 	# reserve.reserveDB.TableOneSearch('dataTime')
-
 # while True:
 #     schedule.run_pending()
 #     time.sleep(1)

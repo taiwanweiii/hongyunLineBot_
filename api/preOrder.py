@@ -26,7 +26,7 @@ def preOrderSendMessage(page):
 
     if apiKey and apiKey == 'mctech' :
         memberDB=MYSQLDB('member')
-        if request.method=='GET' and page=='preOrderSendMessage':
+        if request.method=='GET' and page=='sendMessage':
             #使用者電話
             userPhone=''
             #產品名稱
@@ -39,7 +39,7 @@ def preOrderSendMessage(page):
             titleType=request.args.get('type')
 
             orderData=(posOrderlDb.TableOneSearch('id',orderId))
-
+            print(companyPhone)
             if (orderData):
                 orderData=orderData[0]
                 contentList = orderData.get('content')
@@ -47,7 +47,8 @@ def preOrderSendMessage(page):
                 allPrice = orderData.get('price')
                 allPay=orderData.get('revenue')
                 allBalance=allPrice-allPay
-                configsSearchDBProjectList,LineToken,ballRollNumber,searchBallRollfillterTrue,projectDetails,projectList,projectNameList,projectsActiveList,projectsDayList,projectsintervalList,publicBlackTimeList,projectsoffsetList,projectsblockTimeList,projectSnumberOfAppointmentsList,projectGroupReserveStatusList,projectGroupNameList=getIsProject(companyPhone)
+                liffID,configsSearchDBProjectList,LineToken,ballRollNumber,searchBallRollfillterTrue,projectDetails,projectList,projectNameList,projectsActiveList,projectsDayList,projectsintervalList,publicBlackTimeList,projectsoffsetList,projectsblockTimeList,projectSnumberOfAppointmentsList,projectGroupReserveStatusList,projectGroupNameList=getIsProject(companyPhone)
+
                 line=LineToken
                 template = copy.deepcopy(line.flexTemplate('posOrderMessage'))
                 ErrorMessage=''
@@ -57,7 +58,8 @@ def preOrderSendMessage(page):
                         userPhone=memberList.get('phone') 
                         userPhone=re.sub(r'\D', '', userPhone)
                         memberData=memberDB.dynamicTableSearch({'company':companyPhone,'phone':userPhone})
-
+                        print(companyPhone)
+                        print(userPhone)
                         if memberData:
                             memberData=memberData[0]
                         else:
@@ -75,15 +77,12 @@ def preOrderSendMessage(page):
                         countList = [item['count'] for item in productsDataList]
                         productPrice=[item['price'] for item in productsDataList]
                         countxProductPrice = [x * y for x, y in zip(countList, productPrice)]
-
- 
                     except ValueError:
                         print("contentList 無法將變量轉換為字典")
                 else:
                     productsDataList=contentList.get('products')
                     productsNamesList = [item['name'] for item in productsDataList]
-                print('----ErrorMessage-----')
-                print(bool(ErrorMessage))
+
                 match titleType:
                     case "charge" if not ErrorMessage:
                         templateAdd=copy.deepcopy(template['body']['contents'][0]['contents'][0])
@@ -136,7 +135,7 @@ def preOrderSendMessage(page):
                                 templateAdd['contents'][0]['text']='折扣'
                                 templateAdd['contents'][1]['text']=f'-{item}$'
                                 template['body']['contents'][0]['contents'].append(copy.deepcopy(templateAdd))
-                        line.pushdoubleMessageTextReplyFlex(memberData['userId'],'若有疑問請致電告知\n☎️:0919102803',template,'簽帳單')
+                        line.pushdoubleMessageTextReplyFlex(memberData['userId'],'若有疑問請致電告知\n☎️:0919102803',template,'預定單')
 
                     case "delCharge" if not ErrorMessage:
                         templateAdd=copy.deepcopy(template['body']['contents'][0]['contents'][0])
@@ -155,12 +154,23 @@ def preOrderSendMessage(page):
                                 templateAdd['contents'][0]['text']='折扣'
                                 templateAdd['contents'][1]['text']=f'-{item}$'
                                 template['body']['contents'][0]['contents'].append(copy.deepcopy(templateAdd))
-                        line.pushdoubleMessageTextReplyFlex(memberData['userId'],'若有疑問請致電告知\n☎️:0919102803',template,'簽帳單')
+                        line.pushdoubleMessageTextReplyFlex(memberData['userId'],'若有疑問請致電告知\n☎️:0919102803',template,'刪除簽帳單')
+                    case "reserveCheckout" if not ErrorMessage:
+                        productNameList=[]
+                        for index,item in enumerate(countxProductPrice):
+                            productNameList.append(productsNamesList[index])
+                        print(contentList)
+                        line.pushMessage(memberData['userId'],f'您預定的 {productNameList} 商品已到貨，請記得來店取貨，謝謝😆。')
+                        print('----------s--s-s-s-----')
                     case _:
                         return ErrorMessage
 
 
             return 'ok'
+        # if request.method == 'GET' and page=='reserveCheckout':
+        #     companyPhone=request.args.get('companyPhone')
+        #     orderId=request.args.get('orderId')
+        #     userPhone=request.args.get('userPhone')
 
 
         elif request.method=='POST' and page=='preOrderSendMessage' and all(key in value for key in requiredKeys):
