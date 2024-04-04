@@ -91,10 +91,12 @@ class Line:
     # /reply message functions
     #push Message
     def pushMessage(self,userId,messageText):
-        message = TextSendMessage(text=messageText)
-
-        self.api.push_message(userId,messages=message)
-
+        try :
+            message = TextSendMessage(text=messageText)
+            self.api.push_message(userId,messages=message)
+        except (SyntaxError, ValueError) as e:
+            print('傳訊息失敗',userId,e)
+            pass
     def pushFlexMessage(self,userId,data):
         flex_message = FlexSendMessage(alt_text='-', contents=data)
         self.api.push_message(userId,messages=flex_message)
