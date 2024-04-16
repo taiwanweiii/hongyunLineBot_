@@ -1463,8 +1463,8 @@ def LineBotv1(company):
 							print('-----underButtonTextList----')
 							print(underButtonTextList)
 							print(type(underButtonData))
-							template=functionTemplate.postUnderTemplate(underButtonTextList,underButtonData,f"目前已選擇{ballRollName}\n請於下方選擇月份")
-							line.replyMessage(template)
+							# template=functionTemplate.postUnderTemplate(underButtonTextList,underButtonData,f"目前已選擇{ballRollName}\n請於下方選擇月份")
+							# line.replyMessage(template)
 
 							# reserve.reserveDB.updateThreeSearchWhere("project",ballRollName,"userId",event.uid,"status","0","company",company)
 						case data if data.startswith('ballRollunixTime:') and ('ballRollnumber:' in data) and ('ballRollName:' in data):
