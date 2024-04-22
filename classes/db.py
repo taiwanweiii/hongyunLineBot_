@@ -15,8 +15,8 @@ class DB:
         self.all=db.all
 
 class MYSQLDB:
-    # def __init__(self,table,host='172.19.0.2',user="root",password='root',database='line_bot_configs',port=3306):
-    def __init__(self,table,host='127.0.0.1',user="root",password='root',database='line_bot_configs',port=3306):
+    def __init__(self,table,host='172.18.0.12',user="root",password='root',database='hongyun_line',port=3306):
+    # def __init__(self,table,host='127.0.0.1',user="root",password='root',database='line_bot_configs',port=3306):
         self.host =host
         self.user = user 
         self.password=password
