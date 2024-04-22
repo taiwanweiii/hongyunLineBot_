@@ -98,7 +98,7 @@ def callback():
 						reserve.reserveDB.Insert(("userId",),(event.uid,))
 						line.replyText("會員資料更新完成")
 					else:
-						line.replyText("輸入錯誤請從新輸入性別，🙋🏻‍♂️男性請輸入男，🙋🏻‍♀️女性請輸入女")
+						line.replyText("輸入錯誤請重新輸入性別，🙋🏻‍♂️男性請輸入男，🙋🏻‍♀️女性請輸入女")
 				elif user_status ==True:
 					# before
 					# isReserveFunction=reserve.ShortAndHistoryReserveFunction(event.uid)
@@ -340,13 +340,13 @@ def callback():
 								notifyFunction.SendMessage(f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n')
 								line.replyText(f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}\n')
 							else:
-								line.replyText('系統自動判斷目前您以有預約時段,請點擊會員查詢確認時段是否預約,若無預約煩請致電～')
+								line.replyText('系統自動判斷目前您已有預約時段,請點擊會員查詢確認時段是否預約,若無預約煩請致電～')
 							# isReserveFunction.historyDBUpdate(memberDate)
 
 							# isReserveFunction.shortDBDelete()
 							# print("確認預約")
 						else:
-							line.replyText('目前系統尚無預約資料，請從新預約！！！')
+							line.replyText('目前系統尚無預約資料，請重新預約！！！')
 
 					case 'CancelReservation':
 						# isReserveFunction=reserve.ShortAndHistoryReserveFunction(event.uid)
@@ -1037,7 +1037,7 @@ def LineBotv1(company):
 											lnumber=len(lnumber)
 											sumNumber=onumber+(tnumber*2)+lnumber
 											if sumNumber>=2:
-												line.replyText(f'此確認無效，目前時段預約已滿，請從新預約')
+												line.replyText(f'此確認無效，目前時段預約已滿，請重新預約')
 											else:
 												notifyTime=(datetime.fromtimestamp(userReservedate["dataTime"])).strftime('%Y年%m月%d日 %H:%M')
 												notifyFunction.SendMessage(f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n')
@@ -1051,27 +1051,29 @@ def LineBotv1(company):
 											reserve.reserveDB.updateThreeSearchWhere('status','1','userId',event.uid,'status','0','company',company)
 											reserve.reserveDB.Insert(("userId","company",),(event.uid,company,))
 									else:
-										line.replyText('系統自動判斷目前您以有預約時段,請點擊會員查詢確認時段是否預約,若無預約煩請致電～')
+										line.replyText('系統自動判斷目前您已有預約時段,請點擊會員查詢確認時段是否預約,若無預約煩請致電～')
 									# isReserveFunction.historyDBUpdate(memberDate)
 
 									# isReserveFunction.shortDBDelete()
 									# print("確認預約")
 								else:
-									line.replyText('目前系統尚無預約資料，請從新預約！！！')
+									line.replyText('目前系統尚無預約資料，請重新預約！！！')
 							else:
 								line.doubleReplyMessageText(f'🙇‍♂️權限不足！！','☎️如有疑問請致電｜0919-102-803')	
 
 						case 'CancelReservation':
+							line.doubleReplyMessageText(f'取消請聯絡我們','☎️請致電｜0919-102-803')	
+
 							# isReserveFunction=reserve.ShortAndHistoryReserveFunction(event.uid)
-							try:
-								if (reserve.reserveDB.TableThreeSearch({'userId':event.uid,'status':'0','company':company})):
-									reserve.reserveDB.updateThreeSearchWhere("dataTime",None,"userId",event.uid,"status","0","company",company)
-									reserve.reserveDB.updateThreeSearchWhere("project",None,"userId",event.uid,"status","0","company",company)
+							# try:
+							# 	if (reserve.reserveDB.TableThreeSearch({'userId':event.uid,'status':'0','company':company})):
+							# 		reserve.reserveDB.updateThreeSearchWhere("dataTime",None,"userId",event.uid,"status","0","company",company)
+							# 		reserve.reserveDB.updateThreeSearchWhere("project",None,"userId",event.uid,"status","0","company",company)
 							# if isReserveFunction.shortDBcontains():
 							# 	isReserveFunction.shortDBDelete()
 							# 	reserve.add(event.uid)
-							except:print()
-							pass
+							# except:print()
+							# pass
 						case 'updateuserId':
 							memberDB= MYSQLDB('member')
 
@@ -1578,14 +1580,14 @@ def LineBotv1(company):
 											line.replyText(f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n球場:{userReservedate["project"]}\n球卷月份:{year_month_str}\n張數:{number}')
 										else:
 
-											line.replyText('系統自動判斷目前您以有預約時段,請點擊會員查詢確認時段是否預約,若無預約煩請致電～')
+											line.replyText('系統自動判斷目前您已有預約時段,請點擊會員查詢確認時段是否預約,若無預約煩請致電～')
 										# isReserveFunction.historyDBUpdate(memberDate)
 
 										# isReserveFunction.shortDBDelete()
 										# print("確認預約")
 									else:
 
-										line.replyText('目前系統尚無預約資料，請從新預約！！！')
+										line.replyText('目前系統尚無預約資料，請重新預約！！！')
 							else:
 								line.doubleReplyMessageText(f'🙇‍♂️權限不足！！','☎️如有疑問請致電｜0919-102-803')	
 						case data if (user_status!=True) and (data.startswith('postReserveProject:') or data.startswith('buyBallRoll:')):
