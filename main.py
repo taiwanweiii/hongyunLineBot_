@@ -1343,7 +1343,7 @@ def LineBotv1(company):
                             template['body']['contents'][0]['contents'][4]['contents'][1]['text'] = name
 
                             template['body']['contents'][0]['contents'][6]['contents'][1]['text'] = unixTime
-                            template['body']['contents'][0]['text'] = '球卷確認單'
+                            template['header']['contents'][0]['text'] = '球卷確認單'
                             line.replyFlex(template)
                         case data if data.startswith('ballRollConfirmf:ballRollunixTime:') and ('number:' in data) and ('ballRollName:' in data):
                             if memberRole >= 2:
