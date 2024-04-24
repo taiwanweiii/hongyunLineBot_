@@ -1275,7 +1275,7 @@ def LineBotv1(company):
                             filtered_month_number = {
                                 key: value for key, value in monthNumber.items() if int(key) >= unix_timestamp}
                             # 新增只顯示球卷數量大於0的月份
-                            filtered_month_number = {key: value for key, value in filtered_month_number.items() if value > 0}
+                            # filtered_month_number = {key: value for key, value in filtered_month_number.items() if value > 0}
                             yearMonthDict = [datetime.utcfromtimestamp(
                                 (int(timestamp)+86400)).strftime('%Y/%m') for timestamp in filtered_month_number.keys()]
                             yearMonthValueDict = []
