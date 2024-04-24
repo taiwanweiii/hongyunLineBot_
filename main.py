@@ -86,7 +86,8 @@ def LineBotv1(company):
             match event.type:
                 case "follow":
                     template = line.flexTemplate('first')
-                    template['hero']['action']['uri'] = f'https://liff.line.me/{liffID}?url=login'
+                    template['hero']['action']['uri'] = f'https://liff.line.me/{
+                        liffID}?url=login'
                     line.doubleReplyFlexMessageText(
                         '歡迎您加入此帳號🤩', template, '註冊訊息')
                 case 'message':
@@ -213,7 +214,8 @@ def LineBotv1(company):
                                         'contents'][0]['text'] = f'點擊查看{projectlist[i]}'
                                     templateAdd['hero']['action'][
                                         'data'] = f'personalData:{projectlist[i]}'
-                                    templateAdd['hero']['action']['displayText'] = f'{projectlist[i]}查詢'
+                                    templateAdd['hero']['action']['displayText'] = f'{
+                                        projectlist[i]}查詢'
                                     template['contents'].append(
                                         copy.deepcopy(templateAdd))
                                     i += 1
@@ -1336,6 +1338,8 @@ def LineBotv1(company):
                             template['body']['contents'][0]['contents'][2]['contents'][1]['text'] = memberSearchData['phone']
                             template['body']['contents'][1]['contents'][1]['action'][
                                 'data'] = f'ballRollConfirmf:ballRollunixTime:{unixTime}:number:{number}:ballRollName:{name}'
+                            template['body']['contents'][1]['contents'][0]['action'][
+                                'data'] = 'CancelBallRollReservation'
                             # timeFormatYYYYMMDDhhmm=(datetime.fromtimestamp(isReserveFunction.shortDBSearch()[0]['dataTime'],TZ)).strftime("%Y年%m月%d日 %H:%M")
                             # timeFormatYYYYMMDDhhmm=(datetime.fromtimestamp(reserve.reserveDB.TableThreeSearch('userId',event.uid,'status','0',"company",company)[0]['dataTime'],TZ)).strftime("%Y年%m月%d日 %H:%M")
                             reserveProjectName = reserve.reserveDB.dynamicTableSearch(
