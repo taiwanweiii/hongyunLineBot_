@@ -1,0 +1,178 @@
+{
+    "type": "bubble",
+    "header": {
+      "type": "box",
+      "layout": "vertical",
+      "contents": [
+        {
+          "type": "text",
+          "text": "球卷購買確認單",
+          "weight": "bold",
+          "size": "xxl",
+          "margin": "none",
+          "align": "center",
+          "color": "#ffffff"
+        }
+      ],
+      "backgroundColor": "#194051",
+      "paddingAll": "7px"
+    },
+    "body": {
+      "type": "box",
+      "layout": "vertical",
+      "contents": [
+        {
+          "type": "box",
+          "layout": "vertical",
+          "margin": "none",
+          "spacing": "sm",
+          "contents": [
+            {
+              "type": "box",
+              "layout": "horizontal",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "姓名",
+                  "size": "lg",
+                  "color": "#194051",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "小偉",
+                  "size": "lg",
+                  "color": "#194051",
+                  "align": "end"
+                }
+              ],
+              "margin": "md"
+            },
+            {
+              "type": "separator",
+              "margin": "md",
+              "color": "#000000"
+            },
+            {
+              "type": "box",
+              "layout": "horizontal",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "電話",
+                  "size": "lg",
+                  "color": "#194051"
+                },
+                {
+                  "type": "text",
+                  "text": "0932533333",
+                  "size": "lg",
+                  "color": "#194051",
+                  "align": "end"
+                }
+              ],
+              "margin": "md"
+            },
+            {
+              "type": "separator",
+              "color": "#000000",
+              "margin": "md"
+            },
+            {
+              "type": "box",
+              "layout": "horizontal",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "項目",
+                  "size": "lg",
+                  "color": "#194051",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "尚未填寫",
+                  "size": "lg",
+                  "color": "#194051",
+                  "align": "end"
+                }
+              ],
+              "margin": "md"
+            },
+            {
+              "type": "separator",
+              "color": "#000000",
+              "margin": "md"
+            },
+            {
+              "type": "box",
+              "layout": "horizontal",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "時間",
+                  "size": "lg",
+                  "color": "#194051",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "上午 10:25",
+                  "size": "lg",
+                  "color": "#194051",
+                  "align": "end"
+                }
+              ]
+            },
+            {
+              "type": "separator",
+              "color": "#000000",
+              "margin": "md"
+            }
+          ]
+        },
+        {
+          "type": "box",
+          "layout": "horizontal",
+          "margin": "md",
+          "contents": [
+            {
+              "type": "button",
+              "action": {
+                "type": "postback",
+                "label": "取消購買",
+                "data": "CancelBallRollOrder",
+                "displayText": "取消購買"
+              },
+              "color": "#de021c",
+              "style": "primary"
+            },
+            {
+              "type": "button",
+              "action": {
+                "type": "postback",
+                "label": "確認購買",
+                "data": "ConfirmBallRollOrder",
+                "displayText": "確認購買"
+              },
+              "color": "#3B579D",
+              "style": "primary"
+            }
+          ],
+          "spacing": "xxl"
+        }
+      ],
+      "paddingTop": "2px"
+    },
+    "footer": {
+      "type": "box",
+      "layout": "vertical",
+      "contents": [],
+      "backgroundColor": "#194051"
+    },
+    "styles": {
+      "footer": {
+        "separator": true
+      }
+    }
+  }
