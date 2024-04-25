@@ -1275,6 +1275,28 @@ def LineBotv1(company):
                             filtered_month_number = {
                                 key: value for key, value in monthNumber.items() if int(key) >= unix_timestamp}
                             # 新增只顯示球卷數量大於0的月份
+                            historySearchStatusUserId = reserve.reserveDB.dynamicTableSearch(
+                                    {'userid': event.uid, 'status': 'ballRoll', 'company': company})
+
+                            getReserveTimeList = [item['dataTime']
+                                                    for item in historySearchStatusUserId]
+                            nowTime = getDatetime()
+                            nowTimeUinx = int(nowTime.timestamp())
+                            ballRollDataList = []
+                            ballRollList = []
+                            for key, value in searchBallRollfillterTrue.items():
+                                ballRollDataList.append(value['courtName'])
+                                if value['courtName'] == name:
+                                    ballRollList.append(value)
+                            ballRollList = ballRollList[0]
+                            if not isinstance(ballRollList, dict):
+                                try:
+                                    ballRollList = dict(ballRollList)
+                                except (TypeError, ValueError):
+                                    print("無法轉換為字典")
+                            
+                            filtered_month_number = {key: value for key, value in filtered_month_number.items() if ballRollList['monthNumber'][int(key)] > 0}
+                            
                             # filtered_month_number = {key: value for key, value in filtered_month_number.items() if value > 0}
                             yearMonthDict = [datetime.utcfromtimestamp(
                                 (int(timestamp)+86400)).strftime('%Y/%m') for timestamp in filtered_month_number.keys()]
@@ -1386,7 +1408,7 @@ def LineBotv1(company):
                                     try:
                                         ballRollList = dict(ballRollList)
                                     except (TypeError, ValueError):
-                                        print("无法转换为字典")
+                                        print("無法轉換為字典")
 
                                 isBallRollSearch = (reserve.reserveDB.dynamicTableSearch(
                                     {'userid': event.uid, 'status': 'ballRoll', 'company': company, 'dataTime': unix_timestamp, 'project': name}))
