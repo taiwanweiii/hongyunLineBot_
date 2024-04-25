@@ -1290,14 +1290,13 @@ def LineBotv1(company):
                                 ballRollDataList.append(value['courtName'])
                                 if value['courtName'] == ballRollName:
                                     ballRollList.append(value)
+                                    print(value)
                             ballRollList = ballRollList[0]
                             if not isinstance(ballRollList, dict):
                                 try:
                                     ballRollList = dict(ballRollList)
                                 except (TypeError, ValueError):
                                     print("無法轉換為字典")
-
-                            print(ballRollList)
                             
                             filtered_month_number = {key: value for key, value in filtered_month_number.items() if ballRollList['monthNumber'][int(key)] > 0}
                             
