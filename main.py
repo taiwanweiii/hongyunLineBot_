@@ -1297,7 +1297,7 @@ def LineBotv1(company):
                                 except (TypeError, ValueError):
                                     print("無法轉換為字典")
                             
-                            filtered_month_number = {key: value for key, value in monthNumber.items() if ballRollList['monthNumber'][str(int(key))] > 0 and int(key) >= unix_timestamp}
+                            filtered_month_number = {key: value for key, value in monthNumber.items() if int(ballRollList['monthNumber'][str(int(key))]) > 0 and int(key) >= unix_timestamp}
                             
                             # filtered_month_number = {key: value for key, value in filtered_month_number.items() if value > 0}
                             yearMonthDict = [datetime.utcfromtimestamp(
