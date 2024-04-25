@@ -1296,6 +1296,8 @@ def LineBotv1(company):
                                     ballRollList = dict(ballRollList)
                                 except (TypeError, ValueError):
                                     print("無法轉換為字典")
+
+                            print(ballRollList)
                             
                             filtered_month_number = {key: value for key, value in filtered_month_number.items() if ballRollList['monthNumber'][int(key)] > 0}
                             
