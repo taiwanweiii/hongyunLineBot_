@@ -1230,7 +1230,7 @@ def LineBotv1(company):
                                     line.replyText(
                                         f'👷項目:{projectName}\n⌚時間：{dt.year}/{dt.month}/{dt.day} ({weekday_chinese[dt.weekday()]})\n✉️提醒訊息:預約時段已滿')
                         case data if data.startswith('buyBallRoll:') and (user_status == True):
-                            if memberRole >= 2:
+                            if memberRole >= 1:
                                 reserve.reserveDB.updateThreeSearchWhere(
                                     "dataTime", None, "userId", event.uid, "status", "0", "company", company)
                                 reserve.reserveDB.updateThreeSearchWhere(
