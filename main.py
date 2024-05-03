@@ -446,34 +446,14 @@ def LineBotv1(company):
                             reserveDBSearch = MYSQLDB('reserve')
                             historySearchStatusUserId = reserveDBSearch.dynamicTableSearch(
                                 {'userId': event.uid, 'company': company, 'status': 1})
-                            phone = member.memberDB.dynamicTableSearch(
-                                {'userId': event.uid, 'company': company})[0]['phone']
-                            posMember = posDB('customers')
-                            posMemberId = posMember.dynamicTableSearch({'phone': phone})[
-                                0]['id']
-                            ordersDb = posDB('orders')
-                            ordersDataList = ordersDb.sellBuyHistory(
-                                posMemberId, timeRange)
-                            for item in ordersDataList:
-                                content = (item.get('content'))
-                                datetimeItem = item.get('datetime')
-                                formatted_date = datetimeItem.strftime(
-                                    "%Y/%m/%d")
 
-                                if not isinstance(content, dict):
-                                    try:
-                                        content = json.loads(content)
-                                        content = content['products']
-                                    except ValueError:
-                                        print("content 無法將變量轉換為字典")
-                                else:
-                                    content = content['products']
-                                for nameItems in content:
-                                    if ((nameItems.get('price')) > 0):
-                                        projectName = nameItems.get('name')
-                                        nameList.append(
-                                            [projectName, formatted_date])
-                                        # nameList.append({nameItems.get('name')})
+                            for item in historySearchStatusUserId:
+                                datetimeItem = item.get('dataTime')
+                                formatted_date = datetime.fromtimestamp(
+                                    datetimeItem, tz=TZ).strftime("%Y/%m/%d")
+                                projectName = item.get('project')
+                                nameList.append([projectName, formatted_date])
+                                
                             print(len(nameList))
                             i = 0
                             if (len(nameList) > 0):
