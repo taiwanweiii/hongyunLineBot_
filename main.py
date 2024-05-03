@@ -86,8 +86,7 @@ def LineBotv1(company):
             match event.type:
                 case "follow":
                     template = line.flexTemplate('first')
-                    template['hero']['action']['uri'] = f'https://liff.line.me/{
-                        liffID}?url=login'
+                    template['hero']['action']['uri'] = f'https://liff.line.me/{liffID}?url=login'
                     line.doubleReplyFlexMessageText(
                         '歡迎您加入此帳號🤩', template, '註冊訊息')
                 case 'message':
@@ -453,7 +452,7 @@ def LineBotv1(company):
                                     datetimeItem, tz=TZ).strftime("%Y/%m/%d")
                                 projectName = item.get('project')
                                 nameList.append([projectName, formatted_date])
-                                
+
                             print(len(nameList))
                             i = 0
                             if (len(nameList) > 0):
