@@ -213,8 +213,7 @@ def LineBotv1(company):
                                         'contents'][0]['text'] = f'點擊查看{projectlist[i]}'
                                     templateAdd['hero']['action'][
                                         'data'] = f'personalData:{projectlist[i]}'
-                                    templateAdd['hero']['action']['displayText'] = f'{
-                                        projectlist[i]}查詢'
+                                    templateAdd['hero']['action']['displayText'] = f'{projectlist[i]}查詢'
                                     template['contents'].append(
                                         copy.deepcopy(templateAdd))
                                     i += 1
