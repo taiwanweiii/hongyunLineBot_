@@ -86,7 +86,8 @@ def LineBotv1(company):
             match event.type:
                 case "follow":
                     template = line.flexTemplate('first')
-                    template['hero']['action']['uri'] = f'https://liff.line.me/{liffID}?url=login'
+                    template['hero']['action']['uri'] = f'https://liff.line.me/{
+                        liffID}?url=login'
                     line.doubleReplyFlexMessageText(
                         '歡迎您加入此帳號🤩', template, '註冊訊息')
                 case 'message':
@@ -213,7 +214,8 @@ def LineBotv1(company):
                                         'contents'][0]['text'] = f'點擊查看{projectlist[i]}'
                                     templateAdd['hero']['action'][
                                         'data'] = f'personalData:{projectlist[i]}'
-                                    templateAdd['hero']['action']['displayText'] = f'{projectlist[i]}查詢'
+                                    templateAdd['hero']['action']['displayText'] = f'{
+                                        projectlist[i]}查詢'
                                     template['contents'].append(
                                         copy.deepcopy(templateAdd))
                                     i += 1
@@ -328,7 +330,7 @@ def LineBotv1(company):
                             flex = copy.deepcopy(
                                 line.flexTemplate('otherFlexText'))
                             i = 0
-                            nameList = ['會員資料', '購買紀錄']
+                            nameList = ['會員資料', '購買紀錄', '簽到記錄']
                             if nameList:
                                 for key, value in enumerate(nameList):
                                     k = i % 3
@@ -418,16 +420,77 @@ def LineBotv1(company):
                         elif event.message == '#商家資訊':
                             line.replyTextAndImage("""地址:台南市東區裕文路376號
 📍Google Map:https://maps.app.goo.gl/g3S5iD1Woo7a2SZF8
-							  
+
 📱電話：0919-102-803
-							  
+
 🌻周一至週六營業時間
       下午13:30 至 晚上21:00
-							  
+
 🌷週日和例假日公休
 													""",
                                                    "https://i.imgur.com/KTOITqS.png")
+                        elif event.message == '#簽到記錄':
+                            template = copy.deepcopy(
+                                line.flexTemplate('checkinRecord'))
+                            templateAdd = copy.deepcopy(
+                                template['body']['contents'][1]['contents'][0])
+                            template['body']['contents'][1]['contents'] = []
+                            nameList = []
+                            end_time = datetime.now().strftime('%Y-%m-%d')
+                            # 前三十天
+                            start_time = (
+                                datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
+                            timeRange = [start_time, end_time]
+                            print('--start_time--')
+                            print(start_time)
+                            reserveDBSearch = MYSQLDB('reserve')
+                            historySearchStatusUserId = reserveDBSearch.dynamicTableSearch(
+                                {'userId': event.uid, 'company': company, 'status': 1})
+                            phone = member.memberDB.dynamicTableSearch(
+                                {'userId': event.uid, 'company': company})[0]['phone']
+                            posMember = posDB('customers')
+                            posMemberId = posMember.dynamicTableSearch({'phone': phone})[
+                                0]['id']
+                            ordersDb = posDB('orders')
+                            ordersDataList = ordersDb.sellBuyHistory(
+                                posMemberId, timeRange)
+                            for item in ordersDataList:
+                                content = (item.get('content'))
+                                datetimeItem = item.get('datetime')
+                                formatted_date = datetimeItem.strftime(
+                                    "%Y/%m/%d")
 
+                                if not isinstance(content, dict):
+                                    try:
+                                        content = json.loads(content)
+                                        content = content['products']
+                                    except ValueError:
+                                        print("content 無法將變量轉換為字典")
+                                else:
+                                    content = content['products']
+                                for nameItems in content:
+                                    if ((nameItems.get('price')) > 0):
+                                        projectName = nameItems.get('name')
+                                        nameList.append(
+                                            [projectName, formatted_date])
+                                        # nameList.append({nameItems.get('name')})
+                            print(len(nameList))
+                            i = 0
+                            if (len(nameList) > 0):
+                                nameListReverse = nameList[::-1]
+                                while i < len(nameList):
+                                    print(i)
+                                    templateAdd['contents'][0]['text'] = nameListReverse[i-1][0]
+                                    templateAdd['contents'][1]['text'] = nameListReverse[i-1][1]
+                                    template['body']['contents'][1]['contents'].append(
+                                        copy.deepcopy(templateAdd))
+                                    print('----nameListReverse----')
+                                    print(nameListReverse[i-1][0])
+                                    print('----nameListReverse----')
+                                    i = i+1
+                                line.replyFlex(template)
+                            else:
+                                line.replyText('尚無簽到紀錄😉')
                         elif event.message == '#團練/比賽專區':
                             template = copy.deepcopy(
                                 line.flexTemplate('houngyunPKAndGroup'))
@@ -1133,6 +1196,7 @@ def LineBotv1(company):
                                     if (projectGroupReserveStatus == 'groupReserve'):
                                         groupProjectList = []
                                         # numberAppointments=''
+                                        projectMaxAppointments = ''
                                         for group, details in projectGroupNameList.items():
                                             if f'project{AllProjectIndex+1}' in details['projectList']:
                                                 for item in details['projectList']:
@@ -1140,6 +1204,7 @@ def LineBotv1(company):
                                                         item)
                                                 # print(f"project{projectNameIdx+1} is in group {group}")
                                                 numberAppointments = details['numberAppointments']
+                                                projectMaxAppointments = details['maxNumberOfAppointments']
                                         # print(f'groupProjectList:{groupProjectList}')
                                         # print('projectDetails------')
                                         # print(projectDetails)
@@ -1181,7 +1246,12 @@ def LineBotv1(company):
                                         filterTimeUnix = [x for x in filterBlackTimeUnix if element_count.get(
                                             x, 0) <= int(numberAppointments)-int(projectSumberOfAppointments)]
                                         print('----filterTimeUnix----')
-                                    if (filterTimeUnix):
+
+                                        isMaxCount = False
+                                        isMaxCount = element_count[data['dataTime']] < int(
+                                            projectMaxAppointments)
+
+                                    if (filterTimeUnix and isMaxCount):
                                         # filterTimeUnix = [x for x in filterBlackTimeUnix if x not in historyDataTime]
                                         filterTimeYYYYDDList = []
                                         # print(f'filterTimeUnix:{filterTimeUnix}')
@@ -1274,14 +1344,13 @@ def LineBotv1(company):
                                     monthNumber = value.get('monthNumber', {})
                             filtered_month_number = {
                                 key: value for key, value in monthNumber.items() if int(key) >= unix_timestamp}
-                            
 
                             # 新增只顯示球卷數量大於0的月份
                             historySearchStatusUserId = reserve.reserveDB.dynamicTableSearch(
-                                    {'userid': event.uid, 'status': 'ballRoll', 'company': company})
+                                {'userid': event.uid, 'status': 'ballRoll', 'company': company})
 
                             getReserveTimeList = [item['dataTime']
-                                                    for item in historySearchStatusUserId]
+                                                  for item in historySearchStatusUserId]
                             nowTime = getDatetime()
                             nowTimeUinx = int(nowTime.timestamp())
                             ballRollDataList = []
@@ -1296,9 +1365,10 @@ def LineBotv1(company):
                                     ballRollList = dict(ballRollList)
                                 except (TypeError, ValueError):
                                     print("無法轉換為字典")
-                            
-                            filtered_month_number = {key: value for key, value in monthNumber.items() if int(ballRollList['monthNumber'][str(int(key))]) > 0 and int(key) >= unix_timestamp}
-                            
+
+                            filtered_month_number = {key: value for key, value in monthNumber.items() if int(
+                                ballRollList['monthNumber'][str(int(key))]) > 0 and int(key) >= unix_timestamp}
+
                             # filtered_month_number = {key: value for key, value in filtered_month_number.items() if value > 0}
                             yearMonthDict = [datetime.utcfromtimestamp(
                                 (int(timestamp)+86400)).strftime('%Y/%m') for timestamp in filtered_month_number.keys()]
