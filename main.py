@@ -1573,8 +1573,7 @@ def LineBotv1(company):
                                                 # print(f"project{projectNameIdx+1} is in group {group}")
                                                 numberAppointments = details[
                                                     'numberAppointments']
-                                                projectMaxAppointments = details[
-                                                    'maxNumberOfAppointments']
+                                                projectMaxAppointments = details.get('maxNumberOfAppointments', 999)
                                         # print(f'groupProjectList:{groupProjectList}')
                                         # print('projectDetails------')
                                         # print(projectDetails)
