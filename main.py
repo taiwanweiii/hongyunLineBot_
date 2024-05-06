@@ -61,7 +61,7 @@ print('-------clientWebhook------')
 
 @app.route('/Linebotv1/<company>', methods=['POST'])
 def LineBotv1(company):
-    liffID, configsSearchDBProjectList, LineToken, ballRollNumber, searchBallRollfillterTrue, projectDetails, projectList, projectNameList, projectsActiveList, projectsDayList, projectsintervalList, publicBlackTimeList, projectsoffsetList, projectsblockTimeList, projectSnumberOfAppointmentsList, projectGroupReserveStatusList, projectGroupNameList = getIsProject(
+    liffID, configsSearchDBProjectList, LineToken, ballRollNumber, searchBallRollfillterTrue, projectDetails, projectList, projectNameList, projectsActiveList, projectsDayList, projectsintervalList, publicBlackTimeList, projectsoffsetList, projectsblockTimeList, projectSnumberOfAppointmentsList, projectGroupReserveStatusList, projectGroupNameList, isNotify = getIsProject(
         company)
     line = LineToken
 
@@ -766,9 +766,10 @@ def LineBotv1(company):
                                                     0]
                                                 notifyFunction = notify(
                                                     filtered_courts['notify'])
-                                                notifyFunction.SendMessage(
-                                                    f'\n姓名:{memberList["name"]}\n電話:{memberList["phone"]}\n日期:{date}\n時間:{time}'
-                                                )
+                                                if (isNotify == 1):
+                                                    notifyFunction.SendMessage(
+                                                        f'\n姓名:{memberList["name"]}\n電話:{memberList["phone"]}\n日期:{date}\n時間:{time}'
+                                                    )
                                                 line.replyText(f'{place}已預約')
                                             else:
                                                 given_formatted_datetime = given_datetime.strftime(
@@ -998,9 +999,10 @@ def LineBotv1(company):
                                                         userReservedate[
                                                             "dataTime"])
                                                 ).strftime('%Y年%m月%d日 %H:%M')
-                                                notifyFunction.SendMessage(
-                                                    f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n'
-                                                )
+                                                if (isNotify == 1):
+                                                    notifyFunction.SendMessage(
+                                                        f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n'
+                                                    )
                                                 line.replyText(
                                                     f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}'
                                                 )
@@ -1020,9 +1022,10 @@ def LineBotv1(company):
                                                 datetime.fromtimestamp(
                                                     userReservedate["dataTime"]
                                                 )).strftime('%Y年%m月%d日 %H:%M')
-                                            notifyFunction.SendMessage(
-                                                f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n'
-                                            )
+                                            if (isNotify == 1):
+                                                notifyFunction.SendMessage(
+                                                    f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n'
+                                                )
                                             line.replyText(
                                                 f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}'
                                             )
@@ -2030,9 +2033,10 @@ def LineBotv1(company):
                                                 datetime.fromtimestamp(
                                                     userReservedate["dataTime"]
                                                 )).strftime('%Y年%m月%d日 %H:%M')
-                                            notifyFunction.SendMessage(
-                                                f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n球場:{userReservedate["project"]}\n球卷月份:{year_month_str}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n張數:{number}'
-                                            )
+                                            if (isNotify == 1):
+                                                notifyFunction.SendMessage(
+                                                    f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n球場:{userReservedate["project"]}\n球卷月份:{year_month_str}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n張數:{number}'
+                                                )
                                             line.replyText(
                                                 f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n球場:{userReservedate["project"]}\n球卷月份:{year_month_str}\n張數:{number}'
                                             )
@@ -2198,7 +2202,9 @@ def getIsProject(phone):
 
         projectGroupNameList = result_dict['projectGroupName']
 
-        return liffID, reserveProjectListStr, line, ballRollNumber, searchBallRollfillterTrue, result_dict, projects_with_status_1, projectsName, projectsActive, projectsDay, projectsinterval, publicBlackTimeList, projectsoffset, projectsblockTime, projectSnumberOfAppointments, projectGroupReserveStatus, projectGroupNameList
+        isNotify = botConfigsSearchAll[0]['isNotify']
+
+        return liffID, reserveProjectListStr, line, ballRollNumber, searchBallRollfillterTrue, result_dict, projects_with_status_1, projectsName, projectsActive, projectsDay, projectsinterval, publicBlackTimeList, projectsoffset, projectsblockTime, projectSnumberOfAppointments, projectGroupReserveStatus, projectGroupNameList, isNotify
     else:
         return "getIsProject Function Error"
 
