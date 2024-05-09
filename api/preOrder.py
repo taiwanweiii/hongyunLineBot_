@@ -67,7 +67,8 @@ def preOrderSendMessage(page):
                     projectsDayList, projectsintervalList, publicBlackTimeList,
                     projectsoffsetList, projectsblockTimeList,
                     projectSnumberOfAppointmentsList,
-                    projectGroupReserveStatusList, projectGroupNameList
+                    projectGroupReserveStatusList, projectGroupNameList,
+                    *extra_values
                 ] = getIsProject(companyPhone)
 
                 line = LineToken
@@ -279,7 +280,8 @@ def preOrderSendMessage(page):
                 projectNameList, projectsActiveList, projectsDayList,
                 projectsintervalList, publicBlackTimeList, projectsoffsetList,
                 projectsblockTimeList, projectSnumberOfAppointmentsList,
-                projectGroupReserveStatusList, projectGroupNameList
+                projectGroupReserveStatusList, projectGroupNameList,
+                *extra_values
             ] = getIsProject(companyPhone)
             line = LineToken
             userIdObj = ast.literal_eval(userId)
@@ -319,7 +321,8 @@ def preOrderSendMessage(page):
                 projectNameList, projectsActiveList, projectsDayList,
                 projectsintervalList, publicBlackTimeList, projectsoffsetList,
                 projectsblockTimeList, projectSnumberOfAppointmentsList,
-                projectGroupReserveStatusList, projectGroupNameList
+                projectGroupReserveStatusList, projectGroupNameList,
+                *extra_values
             ] = getIsProject(companyPhone)
             line = LineToken
             if title == "預約單":
