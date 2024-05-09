@@ -60,8 +60,15 @@ def preOrderSendMessage(page):
                 })
 
                 allBalance = allPrice - allPay
-                liffID, configsSearchDBProjectList, LineToken, ballRollNumber, searchBallRollfillterTrue, projectDetails, projectList, projectNameList, projectsActiveList, projectsDayList, projectsintervalList, publicBlackTimeList, projectsoffsetList, projectsblockTimeList, projectSnumberOfAppointmentsList, projectGroupReserveStatusList, projectGroupNameList = getIsProject(
-                    companyPhone)
+                [
+                    liffID, configsSearchDBProjectList, LineToken,
+                    ballRollNumber, searchBallRollfillterTrue, projectDetails,
+                    projectList, projectNameList, projectsActiveList,
+                    projectsDayList, projectsintervalList, publicBlackTimeList,
+                    projectsoffsetList, projectsblockTimeList,
+                    projectSnumberOfAppointmentsList,
+                    projectGroupReserveStatusList, projectGroupNameList
+                ] = getIsProject(companyPhone)
 
                 line = LineToken
                 template = copy.deepcopy(line.flexTemplate('posOrderMessage'))
@@ -266,8 +273,14 @@ def preOrderSendMessage(page):
             print(companyPhone)
             print(type(companyPhone))
             print(companyPhone[0])
-            liffID, configsSearchDBProjectList, LineToken, ballRollNumber, searchBallRollfillterTrue, projectDetails, projectList, projectNameList, projectsActiveList, projectsDayList, projectsintervalList, publicBlackTimeList, projectsoffsetList, projectsblockTimeList, projectSnumberOfAppointmentsList, projectGroupReserveStatusList, projectGroupNameList = getIsProject(
-                companyPhone)
+            [
+                liffID, configsSearchDBProjectList, LineToken, ballRollNumber,
+                searchBallRollfillterTrue, projectDetails, projectList,
+                projectNameList, projectsActiveList, projectsDayList,
+                projectsintervalList, publicBlackTimeList, projectsoffsetList,
+                projectsblockTimeList, projectSnumberOfAppointmentsList,
+                projectGroupReserveStatusList, projectGroupNameList
+            ] = getIsProject(companyPhone)
             line = LineToken
             userIdObj = ast.literal_eval(userId)
             message = ast.literal_eval(message)
@@ -300,8 +313,14 @@ def preOrderSendMessage(page):
                 memberData = memberData[0]
                 print(memberData)
             # from main import getIsProject
-            configsSearchDBProjectList, LineToken, ballRollNumber, searchBallRollfillterTrue, projectDetails, projectList, projectNameList, projectsActiveList, projectsDayList, projectsintervalList, publicBlackTimeList, projectsoffsetList, projectsblockTimeList, projectSnumberOfAppointmentsList, projectGroupReserveStatusList, projectGroupNameList = getIsProject(
-                companyPhone)
+            [
+                configsSearchDBProjectList, LineToken, ballRollNumber,
+                searchBallRollfillterTrue, projectDetails, projectList,
+                projectNameList, projectsActiveList, projectsDayList,
+                projectsintervalList, publicBlackTimeList, projectsoffsetList,
+                projectsblockTimeList, projectSnumberOfAppointmentsList,
+                projectGroupReserveStatusList, projectGroupNameList
+            ] = getIsProject(companyPhone)
             line = LineToken
             if title == "預約單":
                 title = title + '\n項目:'
