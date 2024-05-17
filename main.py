@@ -771,7 +771,8 @@ def LineBotv1(company):
                                                     filtered_courts['notify'])
                                                 if (isNotify == 1):
                                                     notifyFunction.SendMessage(
-                                                        f'\n姓名:{memberList["name"]}\n電話:{memberList["phone"]}\n日期:{date}\n時間:{time}'
+                                                        f'\n姓名:{memberList["name"]}\n電話:{
+                                                            memberList["phone"]}\n日期:{date}\n時間:{time}'
                                                     )
                                                 line.replyText(f'{place}已預約')
                                             else:
@@ -780,7 +781,8 @@ def LineBotv1(company):
                                                 current_formatted_datetime = current_datetime.strftime(
                                                     '%Y-%m-%d %H:%M')
                                                 line.replyText(
-                                                    f'可預約時間:{given_formatted_datetime}\n預約時間:{current_formatted_datetime}\n預約僅開放一個禮拜後'
+                                                    f'可預約時間:{given_formatted_datetime}\n預約時間:{
+                                                        current_formatted_datetime}\n預約僅開放一個禮拜後'
                                                 )
                             else:
                                 line.doubleReplyMessageText(
@@ -836,9 +838,9 @@ def LineBotv1(company):
                 # postback
                 case 'postback':
                     match event.postback:
-                    # 選擇小時
+                        # 選擇小時
                         case data if data.startswith(
-                            'appointment_confirm_reserve:'):
+                                'appointment_confirm_reserve:'):
                             # isReserveFunction=reserve.isReserveDBState(event.uid)
                             # if isReserveFunction.isShortReserveDBState()==True:
                             if len(data.split(":")) > 1:
@@ -924,7 +926,8 @@ def LineBotv1(company):
                                     if x is not None and x > int(nowTimeUinx)
                                 })
                                 result = reserve.reserveDB.execute_query(
-                                    f"SELECT * FROM reserve WHERE userId = '{event.uid}' AND status='0' AND dataTime IS NOT NULL AND project IS NOT NULL AND company = '{company}'"
+                                    f"SELECT * FROM reserve WHERE userId = '{
+                                        event.uid}' AND status='0' AND dataTime IS NOT NULL AND project IS NOT NULL AND company = '{company}'"
                                 )
                                 if result:
                                     if count < reserveCount:
@@ -1004,10 +1007,12 @@ def LineBotv1(company):
                                                 ).strftime('%Y年%m月%d日 %H:%M')
                                                 if (isNotify == 1):
                                                     notifyFunction.SendMessage(
-                                                        f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n'
+                                                        f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{
+                                                            userReservedate["project"]}\n預約時間:{notifyTime}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n'
                                                     )
                                                 line.replyText(
-                                                    f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}'
+                                                    f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{
+                                                        userReservedate["project"]}\n預約時間:{notifyTime}'
                                                 )
                                                 reserve.reserveDB.updateThreeSearchWhere(
                                                     'status', '1', 'userId',
@@ -1027,10 +1032,12 @@ def LineBotv1(company):
                                                 )).strftime('%Y年%m月%d日 %H:%M')
                                             if (isNotify == 1):
                                                 notifyFunction.SendMessage(
-                                                    f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n'
+                                                    f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{
+                                                        userReservedate["project"]}\n預約時間:{notifyTime}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n'
                                                 )
                                             line.replyText(
-                                                f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}'
+                                                f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{
+                                                    userReservedate["project"]}\n預約時間:{notifyTime}'
                                             )
                                             reserve.reserveDB.updateThreeSearchWhere(
                                                 'status', '1', 'userId',
@@ -1221,7 +1228,7 @@ def LineBotv1(company):
                                 line.replyText(
                                     f'Sorry🙇‍♂️\n{personalData}尚未有資料')
                         case data if data.startswith(
-                            'postReserveProject:') and (user_status == True):
+                                'postReserveProject:') and (user_status == True):
                             if memberRole >= 1:
                                 reserveProjectName = (data.split(":"))[1]
                                 # reserve.reserveDB.updateThreeSearchWhere('project',reserveProjectName,'userId',event.uid,'status','0',"company",company)
@@ -1339,7 +1346,7 @@ def LineBotv1(company):
                                 line.doubleReplyMessageText(
                                     f'🙇‍♂️權限不足！！', '☎️如有疑問請致電｜0919-102-803')
                         case data if data.startswith(
-                            'appointment_choose_time:') and 'project:' in data:
+                                'appointment_choose_time:') and 'project:' in data:
                             parts = data.split(":")
                             timeUnix = parts[1]
                             projectName = parts[3]
@@ -1425,7 +1432,8 @@ def LineBotv1(company):
                                 ]
                                 dt = datetime.fromtimestamp(int(timeUnix))
                                 print(
-                                    f"{dt.year}/{dt.month}/{dt.day} ({weekday_chinese[dt.weekday()]})"
+                                    f"{dt.year}/{dt.month}/{
+                                        dt.day} ({weekday_chinese[dt.weekday()]})"
                                 )
                                 unixActive = convert_to_timestamps(
                                     projectsActive)
@@ -1576,7 +1584,9 @@ def LineBotv1(company):
                                                 # print(f"project{projectNameIdx+1} is in group {group}")
                                                 numberAppointments = details[
                                                     'numberAppointments']
-                                                projectMaxAppointments = details.get('maxNumberOfAppointments', 999)
+                                                projectMaxAppointments = details.get(
+                                                    'maxNumberOfAppointments',
+                                                    999)
                                         # print(f'groupProjectList:{groupProjectList}')
                                         # print('projectDetails------')
                                         # print(projectDetails)
@@ -1707,10 +1717,11 @@ def LineBotv1(company):
 
                                 else:
                                     line.replyText(
-                                        f'👷項目:{projectName}\n⌚時間：{dt.year}/{dt.month}/{dt.day} ({weekday_chinese[dt.weekday()]})\n✉️提醒訊息:預約時段已滿'
+                                        f'👷項目:{projectName}\n⌚時間：{
+                                            dt.year}/{dt.month}/{dt.day} ({weekday_chinese[dt.weekday()]})\n✉️提醒訊息:預約時段已滿'
                                     )
                         case data if data.startswith('buyBallRoll:') and (
-                            user_status == True):
+                                user_status == True):
                             if memberRole >= 1:
                                 reserve.reserveDB.updateThreeSearchWhere(
                                     "dataTime", None, "userId", event.uid,
@@ -1823,7 +1834,8 @@ def LineBotv1(company):
                             for i in range(ballRollNumber):
                                 underButtonTextList.append(yearMonthDict[i])
                                 underButtonData.append(
-                                    f'ballRollunixTime:{yearMonthDict[i]}:ballRollnumber:{yearMonthValueDict[i]}:ballRollName:{ballRollName}'
+                                    f'ballRollunixTime:{yearMonthDict[i]}:ballRollnumber:{
+                                        yearMonthValueDict[i]}:ballRollName:{ballRollName}'
                                 )
                             print('-----underButtonTextList----')
                             print(underButtonTextList)
@@ -1851,10 +1863,14 @@ def LineBotv1(company):
 
                             underButtonTextList = ['1張', '2張', '3張', '4張']
                             underButtonData = [
-                                f'ballRollunixTime:{unixTime}:number:{1}:ballRollName:{name}',
-                                f'ballRollunixTime:{unixTime}:number:{2}:ballRollName:{name}',
-                                f'ballRollunixTime:{unixTime}:number:{3}:ballRollName:{name}',
-                                f'ballRollunixTime:{unixTime}:number:{4}:ballRollName:{name}'
+                                f'ballRollunixTime:{unixTime}:number:{
+                                    1}:ballRollName:{name}',
+                                f'ballRollunixTime:{unixTime}:number:{
+                                    2}:ballRollName:{name}',
+                                f'ballRollunixTime:{unixTime}:number:{
+                                    3}:ballRollName:{name}',
+                                f'ballRollunixTime:{unixTime}:number:{
+                                    4}:ballRollName:{name}'
                             ]
                             template = functionTemplate.postUnderTemplate(
                                 underButtonTextList, underButtonData, f"請選擇數量")
@@ -1863,7 +1879,7 @@ def LineBotv1(company):
 
                             line.replyMessage(template)
                         case data if data.startswith('ballRollunixTime:') and (
-                            'number:' in data) and ('ballRollName:' in data):
+                                'number:' in data) and ('ballRollName:' in data):
                             parts = data.split(":")
                             unixTime = parts[1]
                             number = parts[3]
@@ -1985,7 +2001,8 @@ def LineBotv1(company):
                                 if (isBallRollHistoryNumber +
                                         int(number)) > configsNumber:
                                     line.replyText(
-                                        f'球場：{name}\n球卷數量不足\n剩餘數量：{configsNumber-isBallRollHistoryNumber}\n您選擇數量{number}'
+                                        f'球場：{name}\n球卷數量不足\n剩餘數量：{
+                                            configsNumber-isBallRollHistoryNumber}\n您選擇數量{number}'
                                     )
                                 else:
                                     count = len({
@@ -1994,7 +2011,8 @@ def LineBotv1(company):
                                         x is not None and x > int(nowTimeUinx)
                                     })
                                     if reserve.reserveDB.execute_query(
-                                            f"SELECT * FROM reserve WHERE userId = '{event.uid}' AND (dataTime IS NULL AND project IS NOT NULL AND status='0') AND company = '{company}'"
+                                            f"SELECT * FROM reserve WHERE userId = '{
+                                                event.uid}' AND (dataTime IS NULL AND project IS NOT NULL AND status='0') AND company = '{company}'"
                                     ) and name in ballRollDataList:
                                         if count < reserveCount:
                                             # userReservedate=isReserveFunction.historyDBAdd()
@@ -2037,10 +2055,12 @@ def LineBotv1(company):
                                                 )).strftime('%Y年%m月%d日 %H:%M')
                                             if (isNotify == 1):
                                                 notifyFunction.SendMessage(
-                                                    f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n球場:{userReservedate["project"]}\n球卷月份:{year_month_str}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n張數:{number}'
+                                                    f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n球場:{userReservedate["project"]}\n球卷月份:{
+                                                        year_month_str}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n張數:{number}'
                                                 )
                                             line.replyText(
-                                                f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n球場:{userReservedate["project"]}\n球卷月份:{year_month_str}\n張數:{number}'
+                                                f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n球場:{
+                                                    userReservedate["project"]}\n球卷月份:{year_month_str}\n張數:{number}'
                                             )
                                         else:
 
@@ -2058,8 +2078,8 @@ def LineBotv1(company):
                                 line.doubleReplyMessageText(
                                     f'🙇‍♂️權限不足！！', '☎️如有疑問請致電｜0919-102-803')
                         case data if (user_status != True) and (
-                            data.startswith('postReserveProject:')
-                            or data.startswith('buyBallRoll:')):
+                                data.startswith('postReserveProject:')
+                                or data.startswith('buyBallRoll:')):
                             template = line.flexTemplate('first')
                             template['hero']['action'][
                                 'uri'] = f'https://liff.line.me/{liffID}?url=login'
