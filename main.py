@@ -917,10 +917,7 @@ def LineBotv1(company):
                                     for x in getReserveTimeList
                                     if x is not None and x > int(nowTimeUinx)
                                 })
-                                result = reserve.reserveDB.execute_query(
-                                    f"SELECT * FROM reserve WHERE userId = '{
-                                        event.uid}' AND status='0' AND dataTime IS NOT NULL AND project IS NOT NULL AND company = '{company}'"
-                                )
+                                result = reserve.reserveDB.execute_query(f"SELECT * FROM reserve WHERE userId = '{event.uid}' AND status='0' AND dataTime IS NOT NULL AND project IS NOT NULL AND company = '{company}'"                                )
                                 if result:
                                     if count < reserveCount:
                                         # userReservedate=isReserveFunction.historyDBAdd()
