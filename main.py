@@ -1686,6 +1686,8 @@ def LineBotv1(company):
                                         for range_item in projectsblockTime)
                                 ]
                                 if filterBlackTimeUnix:
+                                    isMaxCount = False
+
                                     if projectGroupReserveStatus == "own":
                                         historydate = (reserve.reserveDB.
                                                        dynamicTableSearch({
@@ -1713,9 +1715,7 @@ def LineBotv1(company):
                                             if element_count.get(x, 0) <
                                             projectSumberOfAppointments
                                         ]
-
-                                    isMaxCount = False
-
+                               
                                     if projectGroupReserveStatus == "groupReserve":
                                         groupProjectList = []
                                         # numberAppointments=''
@@ -1805,7 +1805,7 @@ def LineBotv1(company):
                                             int(projectSumberOfAppointments)
                                         ]
                                         print("----filterTimeUnix----")
-
+                                        isMaxCount = False
                                         # 检查是否达到最大预约数
                                         if data and "dataTime" in data:  # 确保 data 存在且包含 'dataTime'
                                             isMaxCount = element_count[
