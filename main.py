@@ -36,8 +36,7 @@ prefix = "/Linebotv1"
 appointmentsDB = DB('appointments')
 
 app = Flask(__name__)
-app.register_blueprint(api.preOrder.PreOrderBlueprint,
-                       url_prefix=f'{prefix}/api')
+app.register_blueprint(api.preOrder.PreOrderBlueprint,url_prefix=f'{prefix}/api')
 
 
 @app.route(prefix)
@@ -273,10 +272,7 @@ def LineBotv1(company):
                             projectsinterval = projectsintervalList[
                                 projectNameIdx]
                             current_datetime = datetime.now()
-                            current = current_datetime.replace(hour=0,
-                                                               minute=0,
-                                                               second=0,
-                                                               microsecond=0)
+                            current = current_datetime.replace(hour=0,minute=0,second=0,microsecond=0)
 
                             nowtimestamp = current.timestamp()
                             todayTimestamp = nowtimestamp + projectsDay + 86400
@@ -297,11 +293,9 @@ def LineBotv1(company):
                             print('---------------projectsoffset=====')
 
                             # dayList.append(todayTimestamp)
-                            ranges = [(start, start + 86400 - 1)
-                                      for start in publicBlackTimeList]
+                            ranges = [(start, start + 86400 - 1) for start in publicBlackTimeList]
                             while todayTimestamp < nextTimestamp:
-                                if not any(start <= todayTimestamp <= end
-                                           for start, end in ranges):
+                                if not any(start <= todayTimestamp <= end for start, end in ranges):
                                     dayList.append(todayTimestamp)
                                 todayTimestamp += 86400
 
@@ -771,8 +765,7 @@ def LineBotv1(company):
                                                     filtered_courts['notify'])
                                                 if (isNotify == 1):
                                                     notifyFunction.SendMessage(
-                                                        f'\n姓名:{memberList["name"]}\n電話:{
-                                                            memberList["phone"]}\n日期:{date}\n時間:{time}'
+                                                        f'\n姓名:{memberList["name"]}\n電話:{memberList["phone"]}\n日期:{date}\n時間:{time}'
                                                     )
                                                 line.replyText(f'{place}已預約')
                                             else:
@@ -781,8 +774,7 @@ def LineBotv1(company):
                                                 current_formatted_datetime = current_datetime.strftime(
                                                     '%Y-%m-%d %H:%M')
                                                 line.replyText(
-                                                    f'可預約時間:{given_formatted_datetime}\n預約時間:{
-                                                        current_formatted_datetime}\n預約僅開放一個禮拜後'
+                                                    f'可預約時間:{given_formatted_datetime}\n預約時間:{current_formatted_datetime}\n預約僅開放一個禮拜後'
                                                 )
                             else:
                                 line.doubleReplyMessageText(
@@ -1007,12 +999,10 @@ def LineBotv1(company):
                                                 ).strftime('%Y年%m月%d日 %H:%M')
                                                 if (isNotify == 1):
                                                     notifyFunction.SendMessage(
-                                                        f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{
-                                                            userReservedate["project"]}\n預約時間:{notifyTime}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n'
+                                                        f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n'
                                                     )
                                                 line.replyText(
-                                                    f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{
-                                                        userReservedate["project"]}\n預約時間:{notifyTime}'
+                                                    f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}'
                                                 )
                                                 reserve.reserveDB.updateThreeSearchWhere(
                                                     'status', '1', 'userId',
@@ -1032,12 +1022,10 @@ def LineBotv1(company):
                                                 )).strftime('%Y年%m月%d日 %H:%M')
                                             if (isNotify == 1):
                                                 notifyFunction.SendMessage(
-                                                    f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{
-                                                        userReservedate["project"]}\n預約時間:{notifyTime}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n'
+                                                    f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n'
                                                 )
                                             line.replyText(
-                                                f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{
-                                                    userReservedate["project"]}\n預約時間:{notifyTime}'
+                                                f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}'
                                             )
                                             reserve.reserveDB.updateThreeSearchWhere(
                                                 'status', '1', 'userId',
@@ -1101,8 +1089,7 @@ def LineBotv1(company):
                         case 'registerNow':
                             user_status = member.isMember(event.uid, company)
                             if user_status == 'nouser':
-                                member.memberDB.Insert(('userId', 'company'),
-                                                       (event.uid, company))
+                                member.memberDB.Insert(('userId', 'company'),(event.uid, company))
                                 line.replyText("請輸入使用者名稱")
                             elif user_status == 'name':
                                 line.replyText("請先輸入使用者名稱")
@@ -1263,8 +1250,7 @@ def LineBotv1(company):
                                         reserveProjectName)
                                     nextTimestamp = todayTimestamp + projectsoffset
                                     dayList = []
-                                    ranges = [(start, start + 86400 - 1)
-                                              for start in publicBlackTimeList]
+                                    ranges = [(start, start + 86400 - 1)for start in publicBlackTimeList]
 
                                     while todayTimestamp < nextTimestamp:
                                         if not any(
@@ -1308,8 +1294,7 @@ def LineBotv1(company):
                                             ) + 1 if idex % datapage > 0 else (
                                                 idex / datapage)
                                             typePage = int(typePage)
-                                            if len(template['contents']
-                                                   ) < typePage:
+                                            if len(template['contents']) < typePage:
                                                 template['contents'].append(
                                                     copy.deepcopy(
                                                         template['contents']
@@ -1443,8 +1428,7 @@ def LineBotv1(company):
                                 # 8 * 60 * 60
                                 current_time = datetime.now()
                                 current_date = current_time.date()
-                                currentUnixTime = int(current_time.timestamp()
-                                                      ) + projectsinterval
+                                currentUnixTime = int(current_time.timestamp()) + projectsinterval
                                 midnight = datetime.combine(
                                     current_date, datetime.min.time())
                                 # midnight_utc = midnight.replace(tzinfo=timezone.utc)
@@ -1456,58 +1440,47 @@ def LineBotv1(company):
                                 print(f'projectsinterval:{projectsinterval}')
 
                                 if (timeUnix == todayhourminZeroUnixTimestamp):
-                                    if ((unixActive[dt.weekday()]
-                                         )[1][0] == None):
+                                    if ((unixActive[dt.weekday()])[1][0] == None):
                                         while (
                                                 unixActive[dt.weekday()][0][0]
                                         ) < (unixActive[dt.weekday()][0][1]):
-                                            if ((unixActive[dt.weekday()][0][0]
-                                                 ) + (int(dt.timestamp()))
+                                            if ((unixActive[dt.weekday()][0][0]) + (int(dt.timestamp()))
                                                     > currentUnixTime):
                                                 unixTimeActive.append(
-                                                    (unixActive[dt.weekday()]
-                                                     [0][0]) +
+                                                    (unixActive[dt.weekday()][0][0]) +
                                                     (int(dt.timestamp())))
                                             unixActive[dt.weekday(
                                             )][0][0] += projectsinterval
                                             # timestamp = datetime.strptime(date_string, date_format).timestamp()
-                                            print((unixActive[dt.weekday()][0]
-                                                   [0]) +
-                                                  (int(dt.timestamp())))
+                                            print((unixActive[dt.weekday()][0][0]) +(int(dt.timestamp())))
                                     else:
                                         while (
                                                 unixActive[dt.weekday()][0][0]
                                         ) < (unixActive[dt.weekday()][0][1]):
-                                            if ((unixActive[dt.weekday()][0][0]
-                                                 ) + (int(dt.timestamp()))
+                                            if ((unixActive[dt.weekday()][0][0]) + (int(dt.timestamp()))
                                                     > currentUnixTime):
                                                 unixTimeActive.append(
-                                                    (unixActive[dt.weekday()]
-                                                     [0][0]) +
+                                                    (unixActive[dt.weekday()][0][0]) +
                                                     (int(dt.timestamp())))
                                             unixActive[dt.weekday(
                                             )][0][0] += projectsinterval
                                         while (
                                                 unixActive[dt.weekday()][1][0]
                                         ) < (unixActive[dt.weekday()][1][1]):
-                                            if ((unixActive[dt.weekday()][1][0]
-                                                 ) + (int(dt.timestamp()))
+                                            if ((unixActive[dt.weekday()][1][0]) + (int(dt.timestamp()))
                                                     > currentUnixTime):
                                                 unixTimeActive.append(
-                                                    (unixActive[dt.weekday()]
-                                                     [1][0]) +
+                                                    (unixActive[dt.weekday()][1][0]) +
                                                     (int(dt.timestamp())))
                                             unixActive[dt.weekday(
                                             )][1][0] += projectsinterval
                                 else:
-                                    if ((unixActive[dt.weekday()]
-                                         )[1][0] == None):
+                                    if ((unixActive[dt.weekday()])[1][0] == None):
                                         while (
                                                 unixActive[dt.weekday()][0][0]
                                         ) < (unixActive[dt.weekday()][0][1]):
                                             unixTimeActive.append(
-                                                (unixActive[dt.weekday()][0][0]
-                                                 ) + (int(dt.timestamp())))
+                                                (unixActive[dt.weekday()][0][0]) + (int(dt.timestamp())))
                                             unixActive[dt.weekday(
                                             )][0][0] += projectsinterval
                                         # timestamp = datetime.strptime(date_string, date_format).timestamp()
@@ -1516,16 +1489,14 @@ def LineBotv1(company):
                                                 unixActive[dt.weekday()][0][0]
                                         ) < (unixActive[dt.weekday()][0][1]):
                                             unixTimeActive.append(
-                                                (unixActive[dt.weekday()][0][0]
-                                                 ) + (int(dt.timestamp())))
+                                                (unixActive[dt.weekday()][0][0]) + (int(dt.timestamp())))
                                             unixActive[dt.weekday(
                                             )][0][0] += projectsinterval
                                         while (
                                                 unixActive[dt.weekday()][1][0]
                                         ) < (unixActive[dt.weekday()][1][1]):
                                             unixTimeActive.append(
-                                                (unixActive[dt.weekday()][1][0]
-                                                 ) + (int(dt.timestamp())))
+                                                (unixActive[dt.weekday()][1][0]) + (int(dt.timestamp())))
                                             unixActive[dt.weekday(
                                             )][1][0] += projectsinterval
                                 uniqueUnixTimeActive = list(
@@ -1559,8 +1530,7 @@ def LineBotv1(company):
                                         # print(historyDataTime)
                                         for x in historyDataTime:
                                             element_count[
-                                                x] = element_count.get(x,
-                                                                       0) + 1
+                                                x] = element_count.get(x,0) + 1
                                         print(element_count)
                                         filterTimeUnix = [
                                             x for x in filterBlackTimeUnix
@@ -1686,8 +1656,7 @@ def LineBotv1(company):
                                             ) + 1 if idx % timepage > 0 else (
                                                 idx / timepage)
                                             typePage = int(typePage)
-                                            if len(template['contents']
-                                                   ) < typePage:
+                                            if len(template['contents']) < typePage:
                                                 template['contents'].append(
                                                     copy.deepcopy(
                                                         template['contents']
@@ -1717,8 +1686,7 @@ def LineBotv1(company):
 
                                 else:
                                     line.replyText(
-                                        f'👷項目:{projectName}\n⌚時間：{
-                                            dt.year}/{dt.month}/{dt.day} ({weekday_chinese[dt.weekday()]})\n✉️提醒訊息:預約時段已滿'
+                                        f'👷項目:{projectName}\n⌚時間：{dt.year}/{dt.month}/{dt.day} ({weekday_chinese[dt.weekday()]})\n✉️提醒訊息:預約時段已滿'
                                     )
                         case data if data.startswith('buyBallRoll:') and (
                                 user_status == True):
@@ -1885,10 +1853,7 @@ def LineBotv1(company):
                             number = parts[3]
                             name = parts[5]
                             date_object = datetime.strptime(unixTime, "%Y/%m")
-                            first_day_of_month = date_object.replace(day=1,
-                                                                     hour=0,
-                                                                     minute=0,
-                                                                     second=0)
+                            first_day_of_month = date_object.replace(day=1,hour=0,minute=0,second=0)
                             unix_timestamp = int(
                                 first_day_of_month.timestamp())
                             reserve.reserveDB.updateThreeSearchWhere(
@@ -2001,8 +1966,7 @@ def LineBotv1(company):
                                 if (isBallRollHistoryNumber +
                                         int(number)) > configsNumber:
                                     line.replyText(
-                                        f'球場：{name}\n球卷數量不足\n剩餘數量：{
-                                            configsNumber-isBallRollHistoryNumber}\n您選擇數量{number}'
+                                        f'球場：{name}\n球卷數量不足\n剩餘數量：{configsNumber-isBallRollHistoryNumber}\n您選擇數量{number}'
                                     )
                                 else:
                                     count = len({
@@ -2055,12 +2019,10 @@ def LineBotv1(company):
                                                 )).strftime('%Y年%m月%d日 %H:%M')
                                             if (isNotify == 1):
                                                 notifyFunction.SendMessage(
-                                                    f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n球場:{userReservedate["project"]}\n球卷月份:{
-                                                        year_month_str}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n張數:{number}'
+                                                    f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n球場:{userReservedate["project"]}\n球卷月份:{year_month_str}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n張數:{number}'
                                                 )
                                             line.replyText(
-                                                f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n球場:{
-                                                    userReservedate["project"]}\n球卷月份:{year_month_str}\n張數:{number}'
+                                                f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n球場:{userReservedate["project"]}\n球卷月份:{year_month_str}\n張數:{number}'
                                             )
                                         else:
 
@@ -2102,8 +2064,7 @@ def getIsProject(phone):
         {"company_phone": phone})
     liffID = company_dataSearchAll[0]['liffID']
     botConfigsSearchAll = testDb.dynamicTableSearch({"companyphone": phone})
-    if isinstance(botConfigsSearchAll,
-                  list) and botConfigsSearchAll is not None:
+    if isinstance(botConfigsSearchAll,list) and botConfigsSearchAll is not None:
         LineToken = botConfigsSearchAll[0]['lineConfig']
         if not isinstance(LineToken, list):
             LineToken_dict = json.loads(LineToken)
@@ -2126,8 +2087,7 @@ def getIsProject(phone):
 
         searchBallRoll_dict = botConfigsSearchAll[0]['ballRoll']
 
-        if not isinstance(searchBallRoll_dict,
-                          list) and searchBallRoll_dict is not None:
+        if not isinstance(searchBallRoll_dict,list) and searchBallRoll_dict is not None:
             searchBallRoll_dict = json.loads(searchBallRoll_dict)
 
         if (searchBallRoll_dict):
@@ -2192,8 +2152,7 @@ def getIsProject(phone):
         # print(result_dict)
         # print('=======result_dict======')
         reserveProjectListStr = (botConfigsSearchAll[0]['projectList'])
-        if not isinstance(reserveProjectListStr,
-                          list) and reserveProjectListStr is not None:
+        if not isinstance(reserveProjectListStr,list) and reserveProjectListStr is not None:
             list(reserveProjectListStr)
         else:
             print('CONFIG_BOT設定檔案ProjectList欄位為必填')
@@ -2257,8 +2216,7 @@ def pushRemindMessage():
     tomorrow = today + timedelta(days=1)
     start_of_day = datetime(tomorrow.year, tomorrow.month, tomorrow.day, 0, 0,
                             0)
-    end_of_day = datetime(tomorrow.year, tomorrow.month, tomorrow.day, 23, 59,
-                          59)
+    end_of_day = datetime(tomorrow.year, tomorrow.month, tomorrow.day, 23, 59, 59)
     start_unix_timestamp = int(start_of_day.timestamp())
     end_unix_timestamp = int(end_of_day.timestamp())
     current_unix_time = int(time.time())
