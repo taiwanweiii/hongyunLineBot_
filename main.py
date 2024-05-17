@@ -1889,9 +1889,7 @@ def LineBotv1(company):
                                         print("----filterTimeUnix----")
 
                                         isMaxCount = False
-                                        isMaxCount = element_count[
-                                            data["dataTime"]
-                                        ] < int(projectMaxAppointments)
+                                        isMaxCount = element_count[data["dataTime"]] < int(projectMaxAppointments)
 
                                     if filterTimeUnix and isMaxCount:
                                         # filterTimeUnix = [x for x in filterBlackTimeUnix if x not in historyDataTime]
