@@ -1413,10 +1413,7 @@ def LineBotv1(company):
                                     '一', '二', '三', '四', '五', '六', '日'
                                 ]
                                 dt = datetime.fromtimestamp(int(timeUnix))
-                                print(
-                                    f"{dt.year}/{dt.month}/{
-                                        dt.day} ({weekday_chinese[dt.weekday()]})"
-                                )
+                                print(f"{dt.year}/{dt.month}/{dt.day} ({weekday_chinese[dt.weekday()]})")
                                 unixActive = convert_to_timestamps(
                                     projectsActive)
 
