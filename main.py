@@ -1715,6 +1715,7 @@ def LineBotv1(company):
                                         ]
 
                                     if projectGroupReserveStatus == "groupReserve":
+                                        isMaxCount = False
                                         groupProjectList = []
                                         # numberAppointments=''
                                         projectMaxAppointments = 999
@@ -1804,8 +1805,7 @@ def LineBotv1(company):
                                         ]
                                         print("----filterTimeUnix----")
 
-                                        # 检查是否达到最大预约数
-                                        isMaxCount = False
+                                        # 检查是否达到最大预约数                                        
                                         if data and "dataTime" in data:  # 确保 data 存在且包含 'dataTime'
                                             isMaxCount = element_count[
                                                 data["dataTime"]] < int(
