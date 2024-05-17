@@ -1738,67 +1738,57 @@ def LineBotv1(company):
                                         # print('projectDetails------')
                                         # print(projectDetails)
                                         # print(projectDetails[groupProjectList[0]])
+
                                         groupProjectName = []
+                                    element_count = {}  # 确保 element_count 已初始化
+                                    # 遍历 groupProjectList 来构建 groupProjectName 列表
+                                    for projectNumber in groupProjectList:
+                                        groupProjectName.append({
+                                            projectDetails[projectNumber]["name"]:
+                                            projectDetails[projectNumber]
+                                            ["numberOfAppointments"]
+                                        })
+                                    print(groupProjectName)
 
-                                        for projectNumber in groupProjectList:
-                                            groupProjectName.append({
-                                                projectDetails[projectNumber]["name"]:
-                                                projectDetails[projectNumber]
-                                                ["numberOfAppointments"]
-                                            })
-                                        print(groupProjectName)
-                                        # groupProjectUnixNumber={}
-                                        for item in groupProjectName:
-                                            for projectOneName, number in item.items(
-                                            ):
-                                                # print('=-----------projectOneName-----')
-                                                # print(projectOneName)
-                                                searchGroupHistoryUnixTime = reserve.reserveDB.dynamicTableSearch(
-                                                    {
-                                                        "project":
-                                                        projectOneName,
-                                                        "status": "1",
-                                                        "company": company,
-                                                    })
-                                                if searchGroupHistoryUnixTime:
-                                                    for (
-                                                            data
-                                                    ) in searchGroupHistoryUnixTime:
-                                                        found = False
-                                                        # print("測試")
-                                                        for (
-                                                                entryTime,
-                                                                entryNummber,
-                                                        ) in element_count.items(
-                                                        ):
-                                                            # print('---entry')
-                                                            # print(entryTime, entryNummber)
-                                                            # print(data['dataTime'])
-                                                            if (data[
-                                                                    "dataTime"]
-                                                                    ==
-                                                                    entryTime):
-                                                                element_count[data[
-                                                                    "dataTime"]] += number
-                                                                found = True
+                                    # 遍历 groupProjectName 列表中的每个项目
+                                    for item in groupProjectName:
+                                        for projectOneName, number in item.items(
+                                        ):
+                                            # 进行数据库查询
+                                            searchGroupHistoryUnixTime = reserve.reserveDB.dynamicTableSearch(
+                                                {
+                                                    "project": projectOneName,
+                                                    "status": "1",
+                                                    "company": company,
+                                                })
 
-                                                                break
-                                                        if not found:
+                                            if searchGroupHistoryUnixTime:
+                                                for data in searchGroupHistoryUnixTime:
+                                                    found = False
+                                                    for entryTime, entryNumber in element_count.items(
+                                                    ):
+                                                        if data["dataTime"] == entryTime:
                                                             element_count[data[
-                                                                "dataTime"]] = number
+                                                                "dataTime"]] += number
+                                                            found = True
+                                                            break
 
-                                                        # for key,value in groupProjectUnixNumber.items():
-                                                        # if key in
+                                                    if not found:
+                                                        element_count[data[
+                                                            "dataTime"]] = number
 
-                                        filterTimeUnix = [
-                                            x for x in filterBlackTimeUnix
-                                            if element_count.get(x, 0) <=
-                                            int(numberAppointments) -
-                                            int(projectSumberOfAppointments)
-                                        ]
-                                        print("----filterTimeUnix----")
+                                    # 过滤时间戳
+                                    filterTimeUnix = [
+                                        x for x in filterBlackTimeUnix
+                                        if element_count.get(
+                                            x, 0) <= int(numberAppointments) -
+                                        int(projectSumberOfAppointments)
+                                    ]
+                                    print("----filterTimeUnix----")
 
-                                        isMaxCount = False
+                                    # 检查是否达到最大预约数
+                                    isMaxCount = False
+                                    if data["dataTime"] in element_count:
                                         isMaxCount = element_count[
                                             data["dataTime"]] < int(
                                                 projectMaxAppointments)
