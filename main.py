@@ -1811,7 +1811,7 @@ def LineBotv1(company):
                                                 data["dataTime"]] < int(
                                                     projectMaxAppointments)
 
-                                    if filterTimeUnix and isMaxCount:
+                                    if filterTimeUnix and not isMaxCount:
                                         # filterTimeUnix = [x for x in filterBlackTimeUnix if x not in historyDataTime]
                                         filterTimeYYYYDDList = []
                                         # print(f'filterTimeUnix:{filterTimeUnix}')
