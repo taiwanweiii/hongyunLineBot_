@@ -1739,59 +1739,77 @@ def LineBotv1(company):
                                         # print(projectDetails)
                                         # print(projectDetails[groupProjectList[0]])
 
-                                        groupProjectName = []
-                                    element_count = {}  # 确保 element_count 已初始化
-                                    # 遍历 groupProjectList 来构建 groupProjectName 列表
-                                    for projectNumber in groupProjectList:
-                                        groupProjectName.append({
-                                            projectDetails[projectNumber]["name"]:
-                                            projectDetails[projectNumber]
-                                            ["numberOfAppointments"]
-                                        })
-                                    print(groupProjectName)
+                                        element_count = {
+                                        }  # 确保 element_count 已初始化
+                                        groupProjectName = [
+                                        ]  # 初始化 groupProjectName 列表
 
-                                    # 遍历 groupProjectName 列表中的每个项目
-                                    for item in groupProjectName:
-                                        for projectOneName, number in item.items(
-                                        ):
-                                            # 进行数据库查询
-                                            searchGroupHistoryUnixTime = reserve.reserveDB.dynamicTableSearch(
-                                                {
-                                                    "project": projectOneName,
-                                                    "status": "1",
-                                                    "company": company,
-                                                })
+                                        # 遍历 groupProjectList 来构建 groupProjectName 列表
+                                        for projectNumber in groupProjectList:
+                                            groupProjectName.append({
+                                                projectDetails[projectNumber]["name"]:
+                                                projectDetails[projectNumber]
+                                                ["numberOfAppointments"]
+                                            })
+                                        print(groupProjectName)
 
-                                            if searchGroupHistoryUnixTime:
-                                                for data in searchGroupHistoryUnixTime:
-                                                    found = False
-                                                    for entryTime, entryNumber in element_count.items(
-                                                    ):
-                                                        if data["dataTime"] == entryTime:
+                                        # 遍历 groupProjectName 列表中的每个项目
+                                        for item in groupProjectName:
+                                            for projectOneName, number in item.items(
+                                            ):
+                                                # 进行数据库查询
+                                                searchGroupHistoryUnixTime = reserve.reserveDB.dynamicTableSearch(
+                                                    {
+                                                        "project":
+                                                        projectOneName,
+                                                        "status": "1",
+                                                        "company": company,
+                                                    })
+
+                                                if searchGroupHistoryUnixTime:
+                                                    # 确保 searchGroupHistoryUnixTime 是一个列表
+                                                    if isinstance(
+                                                            searchGroupHistoryUnixTime,
+                                                            str):
+                                                        searchGroupHistoryUnixTime = json.loads(
+                                                            searchGroupHistoryUnixTime
+                                                        )
+
+                                                    for data in searchGroupHistoryUnixTime:
+                                                        # 确保 data 是字典
+                                                        if isinstance(
+                                                                data, str):
+                                                            data = json.loads(
+                                                                data)
+
+                                                        found = False
+                                                        for entryTime, entryNumber in element_count.items(
+                                                        ):
+                                                            if data["dataTime"] == entryTime:
+                                                                element_count[data[
+                                                                    "dataTime"]] += number
+                                                                found = True
+                                                                break
+
+                                                        if not found:
                                                             element_count[data[
-                                                                "dataTime"]] += number
-                                                            found = True
-                                                            break
+                                                                "dataTime"]] = number
 
-                                                    if not found:
-                                                        element_count[data[
-                                                            "dataTime"]] = number
+                                        # 过滤时间戳
+                                        filterTimeUnix = [
+                                            x for x in filterBlackTimeUnix
+                                            if element_count.get(x, 0) <=
+                                            int(numberAppointments) -
+                                            int(projectSumberOfAppointments)
+                                        ]
+                                        print("----filterTimeUnix----")
 
-                                    # 过滤时间戳
-                                    filterTimeUnix = [
-                                        x for x in filterBlackTimeUnix
-                                        if element_count.get(
-                                            x, 0) <= int(numberAppointments) -
-                                        int(projectSumberOfAppointments)
-                                    ]
-                                    print("----filterTimeUnix----")
-
-                                    # 检查是否达到最大预约数
-                                    isMaxCount = False
-                                    if data["dataTime"] in element_count:
-                                        isMaxCount = element_count[
-                                            data["dataTime"]] < int(
-                                                projectMaxAppointments)
+                                        # 检查是否达到最大预约数
+                                        isMaxCount = False
+                                        if data and "dataTime" in data:  # 确保 data 存在且包含 'dataTime'
+                                            isMaxCount = element_count[
+                                                data["dataTime"]] < int(
+                                                    projectMaxAppointments)
 
                                     if filterTimeUnix and isMaxCount:
                                         # filterTimeUnix = [x for x in filterBlackTimeUnix if x not in historyDataTime]
