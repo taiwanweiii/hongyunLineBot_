@@ -1715,7 +1715,7 @@ def LineBotv1(company):
                                             if element_count.get(x, 0) <
                                             projectSumberOfAppointments
                                         ]
-                               
+
                                     if projectGroupReserveStatus == "groupReserve":
                                         groupProjectList = []
                                         # numberAppointments=''
@@ -1812,7 +1812,7 @@ def LineBotv1(company):
                                                 data["dataTime"]] < int(
                                                     projectMaxAppointments)
 
-                                    if filterTimeUnix and not isMaxCount:
+                                    if filterTimeUnix:
                                         # filterTimeUnix = [x for x in filterBlackTimeUnix if x not in historyDataTime]
                                         filterTimeYYYYDDList = []
                                         # print(f'filterTimeUnix:{filterTimeUnix}')
