@@ -2091,7 +2091,7 @@ def LineBotv1(company):
 
                             line.doubleReplyFlexMessageText(
                                 f"目前剩餘球卷數量：{configsNumber-isBallRollHistoryNumber}",
-                                template)
+                                template, "請選擇數量")
                         case data if data.startswith("ballRollunixTime:") and (
                             "number:" in data) and ("ballRollName:" in data):
                             parts = data.split(":")
