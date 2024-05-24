@@ -2089,7 +2089,7 @@ def LineBotv1(company):
                                 unix_timestamp_str]
                             configsNumber = int(configsNumber)
 
-                            line.doubleReplyFlexMessageText(
+                            line.doubleMessageTextReplyFlex(
                                 f"目前剩餘球卷數量：{configsNumber-isBallRollHistoryNumber}",
                                 template, "請選擇數量")
                         case data if data.startswith("ballRollunixTime:") and (
