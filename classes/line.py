@@ -40,7 +40,8 @@ class Line:
         self.api.reply_message(self.event.replyToken, formatText)
 
     def doubleReplyTextAndMessage(self, text1, formatText):
-        self.api.reply_message(self.event.replyToken, text1, formatText)
+        self.api.reply_message(self.event.replyToken,
+                               TextSendMessage(text=f"{text1}"), formatText)
 
     def doubleReplyMessageText(self, text1, text2):
         messages = [
