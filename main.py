@@ -2080,8 +2080,8 @@ def LineBotv1(company):
 
                             underButtonTextList = []
                             underButtonData = []
-
-                            for i in range(5):
+                            for i in range(remainingNumber >
+                                           10 if 10 else remainingNumber):
                                 underButtonTextList.append(f"{i+1}張")
                                 underButtonData.append(
                                     f"ballRollunixTime:{unixTime}:number:{i+1}:ballRollName:{name}"
