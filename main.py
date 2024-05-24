@@ -2032,6 +2032,42 @@ def LineBotv1(company):
                         case data if data.startswith("ballRollunixTime:") and (
                             "ballRollnumber:" in data) and ("ballRollName:"
                                                             in data):
+                            ballRollDataList = []
+                            ballRollList = []
+                            for key, value in searchBallRollfillterTrue.items(
+                            ):
+                                ballRollDataList.append(value["courtName"])
+                                if value["courtName"] == name:
+                                    ballRollList.append(value)
+                            ballRollList = ballRollList[0]
+                            if not isinstance(ballRollList, dict):
+                                try:
+                                    ballRollList = dict(ballRollList)
+                                except (TypeError, ValueError):
+                                    print("無法轉換為字典")
+                            isBallRollSearch = reserve.reserveDB.dynamicTableSearch(
+                                {
+                                    "userid": event.uid,
+                                    "status": "ballRoll",
+                                    "company": company,
+                                    "dataTime": unix_timestamp,
+                                    "project": name,
+                                })
+                            isBallRollHistoryNumber = (0 if isBallRollSearch
+                                                       == "" else
+                                                       len(isBallRollSearch))
+                            unix_timestamp_str = str(unix_timestamp)
+                            print(unix_timestamp_str)
+                            print("----unix_timestamp---1704038400----")
+                            print(ballRollList)
+                            configsNumber = ballRollList["monthNumber"][
+                                unix_timestamp_str]
+                            configsNumber = int(configsNumber)
+
+                            line.replyText(
+                                f"目前剩餘球卷數量：{configsNumber-isBallRollHistoryNumber}"
+                            )
+
                             parts = data.split(":")
                             unixTime = parts[1]
                             number = parts[3]
