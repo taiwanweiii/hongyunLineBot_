@@ -2089,11 +2089,9 @@ def LineBotv1(company):
                                 unix_timestamp_str]
                             configsNumber = int(configsNumber)
 
-                            line.replyText(
-                                f"目前剩餘球卷數量：{configsNumber-isBallRollHistoryNumber}"
-                            )
-
-                            line.replyMessage(template)
+                            line.replyMessage(
+                                f"目前剩餘球卷數量：{configsNumber-isBallRollHistoryNumber}",
+                                template)
                         case data if data.startswith("ballRollunixTime:") and (
                             "number:" in data) and ("ballRollName:" in data):
                             parts = data.split(":")
