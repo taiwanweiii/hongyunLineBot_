@@ -2032,7 +2032,6 @@ def LineBotv1(company):
                         case data if data.startswith("ballRollunixTime:") and (
                             "ballRollnumber:" in data) and ("ballRollName:"
                                                             in data):
-
                             parts = data.split(":")
                             unixTime = parts[1]
                             number = parts[3]
@@ -2082,7 +2081,7 @@ def LineBotv1(company):
                             underButtonTextList = []
                             underButtonData = []
 
-                            for i in range(remainingNumber):
+                            for i in range(5):
                                 underButtonTextList.append(f"{i+1}張")
                                 underButtonData.append(
                                     f"ballRollunixTime:{unixTime}:number:{i+1}:ballRollName:{name}"
