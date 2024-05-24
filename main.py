@@ -2045,18 +2045,6 @@ def LineBotv1(company):
                             unix_timestamp = int(
                                 first_day_of_month.timestamp())
 
-                            underButtonTextList = ["1張", "2張", "3張", "4張"]
-                            underButtonData = [
-                                f"ballRollunixTime:{unixTime}:number:{1}:ballRollName:{name}",
-                                f"ballRollunixTime:{unixTime}:number:{2}:ballRollName:{name}",
-                                f"ballRollunixTime:{unixTime}:number:{3}:ballRollName:{name}",
-                                f"ballRollunixTime:{unixTime}:number:{4}:ballRollName:{name}",
-                            ]
-                            template = functionTemplate.postUnderTemplate(
-                                underButtonTextList, underButtonData, f"請選擇數量")
-
-                            print(template)
-
                             ballRollDataList = []
                             ballRollList = []
                             for key, value in searchBallRollfillterTrue.items(
@@ -2089,9 +2077,25 @@ def LineBotv1(company):
                                 unix_timestamp_str]
                             configsNumber = int(configsNumber)
 
-                            line.doubleMessageTextReplyFlex(
-                                f"目前剩餘球卷數量：{configsNumber-isBallRollHistoryNumber}",
-                                template, "請選擇數量")
+                            remainingNumber = configsNumber - isBallRollHistoryNumber
+
+                            underButtonTextList = []
+                            underButtonData = []
+
+                            for i in range(remainingNumber):
+                                underButtonTextList.append(f"{i+1}張")
+                                underButtonData.append(
+                                    f"ballRollunixTime:{unixTime}:number:{i+1}:ballRollName:{name}"
+                                )
+
+                            template = functionTemplate.postUnderTemplate(
+                                underButtonTextList, underButtonData,
+                                f"剩餘數量：{remainingNumber}，請選擇數量")
+
+                            print(template)
+
+                            line.replyMessage(template)
+
                         case data if data.startswith("ballRollunixTime:") and (
                             "number:" in data) and ("ballRollName:" in data):
                             parts = data.split(":")
