@@ -2033,7 +2033,29 @@ def LineBotv1(company):
                             "ballRollnumber:" in data) and ("ballRollName:"
                                                             in data):
 
-                            print(searchBallRollfillterTrue)
+                            parts = data.split(":")
+                            unixTime = parts[1]
+                            number = parts[3]
+                            name = parts[5]
+                            input_date = datetime.strptime(unixTime, "%Y/%m")
+                            first_day_of_month = input_date.replace(day=1,
+                                                                    hour=0,
+                                                                    minute=0,
+                                                                    second=0)
+                            unix_timestamp = int(
+                                first_day_of_month.timestamp())
+
+                            underButtonTextList = ["1張", "2張", "3張", "4張"]
+                            underButtonData = [
+                                f"ballRollunixTime:{unixTime}:number:{1}:ballRollName:{name}",
+                                f"ballRollunixTime:{unixTime}:number:{2}:ballRollName:{name}",
+                                f"ballRollunixTime:{unixTime}:number:{3}:ballRollName:{name}",
+                                f"ballRollunixTime:{unixTime}:number:{4}:ballRollName:{name}",
+                            ]
+                            template = functionTemplate.postUnderTemplate(
+                                underButtonTextList, underButtonData, f"請選擇數量")
+
+                            print(template)
 
                             ballRollDataList = []
                             ballRollList = []
@@ -2070,30 +2092,6 @@ def LineBotv1(company):
                             line.replyText(
                                 f"目前剩餘球卷數量：{configsNumber-isBallRollHistoryNumber}"
                             )
-
-                            parts = data.split(":")
-                            unixTime = parts[1]
-                            number = parts[3]
-                            name = parts[5]
-                            input_date = datetime.strptime(unixTime, "%Y/%m")
-                            first_day_of_month = input_date.replace(day=1,
-                                                                    hour=0,
-                                                                    minute=0,
-                                                                    second=0)
-                            unix_timestamp = int(
-                                first_day_of_month.timestamp())
-
-                            underButtonTextList = ["1張", "2張", "3張", "4張"]
-                            underButtonData = [
-                                f"ballRollunixTime:{unixTime}:number:{1}:ballRollName:{name}",
-                                f"ballRollunixTime:{unixTime}:number:{2}:ballRollName:{name}",
-                                f"ballRollunixTime:{unixTime}:number:{3}:ballRollName:{name}",
-                                f"ballRollunixTime:{unixTime}:number:{4}:ballRollName:{name}",
-                            ]
-                            template = functionTemplate.postUnderTemplate(
-                                underButtonTextList, underButtonData, f"請選擇數量")
-
-                            print(template)
 
                             line.replyMessage(template)
                         case data if data.startswith("ballRollunixTime:") and (
