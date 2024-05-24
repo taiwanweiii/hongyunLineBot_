@@ -39,10 +39,6 @@ class Line:
     def replyMessage(self, formatText):
         self.api.reply_message(self.event.replyToken, formatText)
 
-    def doubleReplyTextAndMessage(self, text1, formatText):
-        messages = [TextSendMessage(text=f"{text1}"), formatText]
-        self.replyMessage(self.event.replyToken, messages)
-
     def doubleReplyMessageText(self, text1, text2):
         messages = [
             TextSendMessage(text=f"{text1}"),
