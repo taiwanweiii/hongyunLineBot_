@@ -2032,6 +2032,9 @@ def LineBotv1(company):
                         case data if data.startswith("ballRollunixTime:") and (
                             "ballRollnumber:" in data) and ("ballRollName:"
                                                             in data):
+
+                            print(searchBallRollfillterTrue)
+
                             ballRollDataList = []
                             ballRollList = []
                             for key, value in searchBallRollfillterTrue.items(
