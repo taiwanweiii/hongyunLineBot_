@@ -2087,6 +2087,11 @@ def LineBotv1(company):
                                     f"ballRollunixTime:{unixTime}:number:{i+1}:ballRollName:{name}"
                                 )
 
+                            underButtonTextList.append(f"全部購買")
+                            underButtonData.append(
+                                f"ballRollunixTime:{unixTime}:number:{remainingNumber}:ballRollName:{name}"
+                            )
+
                             template = functionTemplate.postUnderTemplate(
                                 underButtonTextList, underButtonData,
                                 f"剩餘數量：{remainingNumber}，請選擇數量")
