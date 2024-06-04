@@ -839,6 +839,7 @@ def LineBotv1(company):
                                                 notifyFunction = notify(
                                                     filtered_courts["notify"])
                                                 if isNotify == 1:
+                                                    print("notifyFunction")
                                                     notifyFunction.SendMessage(
                                                         f'\n姓名:{memberList["name"]}\n電話:{memberList["phone"]}\n日期:{date}\n時間:{time}'
                                                     )
@@ -1092,7 +1093,7 @@ def LineBotv1(company):
                                                             "dataTime"])
                                                 ).strftime("%Y年%m月%d日 %H:%M")
                                                 if isNotify == 1:
-                                                    print("發送通知")
+                                                    print("notifyFunction")
                                                     notifyFunction.SendMessage(
                                                         f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n'
                                                     )
@@ -1125,7 +1126,7 @@ def LineBotv1(company):
                                                     userReservedate["dataTime"]
                                                 )).strftime("%Y年%m月%d日 %H:%M")
                                             if isNotify == 1:
-                                                print("發送通知")
+                                                print("notifyFunction")
                                                 notifyFunction.SendMessage(
                                                     f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n'
                                                 )
@@ -2293,6 +2294,7 @@ def LineBotv1(company):
                                                     userReservedate["dataTime"]
                                                 )).strftime("%Y年%m月%d日 %H:%M")
                                             if isNotify == 1:
+                                                print("notifyFunction")
                                                 notifyFunction.SendMessage(
                                                     f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n球場:{userReservedate["project"]}\n球卷月份:{year_month_str}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n張數:{number}'
                                                 )
@@ -2463,6 +2465,8 @@ def getIsProject(phone):
         projectGroupNameList = result_dict["projectGroupName"]
 
         isNotify = botConfigsSearchAll[0]["isNotify"]
+        print("-----isNotify----")
+        print(isNotify)
 
         return (
             liffID,
