@@ -89,6 +89,7 @@ def LineBotv1(company):
         data = request.get_json()
         print("===============data==================")
         print(data)
+        print("configs.appointment", configs.appointment.NOTIFYTOKEN)
         print("===============data==================")
 
         # try:
@@ -1093,11 +1094,10 @@ def LineBotv1(company):
                                                         userReservedate[
                                                             "dataTime"])
                                                 ).strftime("%Y年%m月%d日 %H:%M")
-                                                if isNotify == 1:
-                                                    print("notifyFunction")
-                                                    notifyFunction.SendMessage(
-                                                        f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n'
-                                                    )
+                                                print("notifyFunction")
+                                                notifyFunction.SendMessage(
+                                                    f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n'
+                                                )
                                                 line.replyText(
                                                     f'姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}'
                                                 )
