@@ -1092,6 +1092,7 @@ def LineBotv1(company):
                                                             "dataTime"])
                                                 ).strftime("%Y年%m月%d日 %H:%M")
                                                 if isNotify == 1:
+                                                    print("發送通知")
                                                     notifyFunction.SendMessage(
                                                         f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n'
                                                     )
@@ -1124,6 +1125,7 @@ def LineBotv1(company):
                                                     userReservedate["dataTime"]
                                                 )).strftime("%Y年%m月%d日 %H:%M")
                                             if isNotify == 1:
+                                                print("發送通知")
                                                 notifyFunction.SendMessage(
                                                     f'\n姓名:{userReservedate["name"]}\n電話:{userReservedate["phone"]}\n項目:{userReservedate["project"]}\n預約時間:{notifyTime}\n點擊預約時間\n{userReservedate["auto_updae_time"]}\n'
                                                 )
