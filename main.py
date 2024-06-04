@@ -1087,6 +1087,7 @@ def LineBotv1(company):
                                                 line.replyText(
                                                     f"此確認無效，目前時段預約已滿，請重新預約")
                                             else:
+                                                print(isNotify)
                                                 notifyTime = (
                                                     datetime.fromtimestamp(
                                                         userReservedate[
