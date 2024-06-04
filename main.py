@@ -57,6 +57,7 @@ clientWebhook = [
 ]
 print("-------clientWebhook------")
 print(clientWebhook)
+print("configs.appointment", configs.appointment.NOTIFYTOKEN)
 print("-------clientWebhook------")
 
 
@@ -89,7 +90,6 @@ def LineBotv1(company):
         data = request.get_json()
         print("===============data==================")
         print(data)
-        print("configs.appointment", configs.appointment.NOTIFYTOKEN)
         print("===============data==================")
 
         # try:
