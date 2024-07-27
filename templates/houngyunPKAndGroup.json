@@ -1,156 +1,156 @@
 {
-    "type": "carousel",
-    "contents": [
-        {
-            "type": "bubble",
-            "size": "kilo",
-            "direction": "ltr",
-            "header": {
-                "type": "box",
-                "layout": "vertical",
-                "contents": [
-                    {
-                        "type": "text",
-                        "text": "團練/比賽專區",
-                        "color": "#ffffff",
-                        "align": "center",
-                        "size": "md"
-                    }
-                ],
-                "backgroundColor": "#194051",
-                "height": "40px",
-                "justifyContent": "space-evenly",
-                "alignItems": "center"
-            },
-            "hero": {
-                "type": "box",
-                "layout": "vertical",
-                "contents": [
-                    {
-                        "type": "box",
-                        "layout": "vertical",
-                        "contents": [
-                            {
-                                "type": "image",
-                                "url": "https://i.imgur.com/HD83R4p.png",
-                                "position": "relative",
-                                "offsetStart": "10px"
-                            },
-                            {
-                                "type": "text",
-                                "text": "團練專區",
-                                "size": "xxl",
-                                "weight": "bold",
-                                "offsetBottom": "10px",
-                                "align": "center"
-                            }
-                        ]
-                    },
-                    {
-                        "type": "box",
-                        "layout": "vertical",
-                        "contents": [
-                            {
-                                "type": "button",
-                                "action": {
-                                    "type": "uri",
-                                    "label": "點我報名",
-                                    "uri": "https://aef4-106-104-100-159.ngrok-free.app/houngyunpk"
-                                }
-                            }
-                        ]
-                    }
-                ],
-                "height": "200px"
-            },
-            "footer": {
-                "type": "box",
-                "layout": "vertical",
-                "contents": [],
-                "backgroundColor": "#194051"
-            },
-            "styles": {
-                "body": {
-                    "backgroundColor": "#F0F0F0"
+  "type": "carousel",
+  "contents": [
+    {
+      "type": "bubble",
+      "size": "kilo",
+      "direction": "ltr",
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "團練/比賽專區",
+            "color": "#ffffff",
+            "align": "center",
+            "size": "md"
+          }
+        ],
+        "backgroundColor": "#194051",
+        "height": "40px",
+        "justifyContent": "space-evenly",
+        "alignItems": "center"
+      },
+      "hero": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "image",
+                "url": "https://i.imgur.com/HD83R4p.png",
+                "position": "relative",
+                "offsetStart": "10px"
+              },
+              {
+                "type": "text",
+                "text": "團練專區",
+                "size": "xxl",
+                "weight": "bold",
+                "offsetBottom": "10px",
+                "align": "center"
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "button",
+                "action": {
+                  "type": "uri",
+                  "label": "點我報名",
+                  "uri": "https://hongyun-line.mctech.tw/houngyunpk"
                 }
-            }
-        },
-        {
-            "type": "bubble",
-            "size": "kilo",
-            "direction": "ltr",
-            "header": {
-                "type": "box",
-                "layout": "vertical",
-                "contents": [
-                    {
-                        "type": "text",
-                        "text": "團體/比賽專區",
-                        "color": "#ffffff",
-                        "align": "center",
-                        "size": "md"
-                    }
-                ],
-                "backgroundColor": "#194051",
-                "height": "40px",
-                "justifyContent": "space-evenly",
-                "alignItems": "center"
-            },
-            "hero": {
-                "type": "box",
-                "layout": "vertical",
-                "contents": [
-                    {
-                        "type": "box",
-                        "layout": "vertical",
-                        "contents": [
-                            {
-                                "type": "image",
-                                "url": "https://i.imgur.com/ekSGB7U.png",
-                                "position": "relative",
-                                "offsetStart": "10px"
-                            },
-                            {
-                                "type": "text",
-                                "text": "比賽專區",
-                                "size": "xxl",
-                                "weight": "bold",
-                                "offsetBottom": "10px",
-                                "align": "center"
-                            }
-                        ]
-                    },
-                    {
-                        "type": "box",
-                        "layout": "vertical",
-                        "contents": [
-                            {
-                                "type": "button",
-                                "action": {
-                                    "type": "uri",
-                                    "label": "點我報名",
-                                    "uri": "https://aef4-106-104-100-159.ngrok-free.app/houngyunpk",
-                                    "altUri": {
-                                        "desktop": "https://aef4-106-104-100-159.ngrok-free.app/houngyunpk"
-                                    }
-                                }
-                            }
-                        ]
-                    }
-                ],
-                "height": "200px"
-            },
-            "footer": {
-                "type": "box",
-                "layout": "vertical",
-                "contents": [],
-                "backgroundColor": "#194051"
-            },
-            "styles": {
-                "body": {
-                    "backgroundColor": "#F0F0F0"
-                }
-            }
+              }
+            ]
+          }
+        ],
+        "height": "200px"
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [],
+        "backgroundColor": "#194051"
+      },
+      "styles": {
+        "body": {
+          "backgroundColor": "#F0F0F0"
         }
-    ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "kilo",
+      "direction": "ltr",
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "團體/比賽專區",
+            "color": "#ffffff",
+            "align": "center",
+            "size": "md"
+          }
+        ],
+        "backgroundColor": "#194051",
+        "height": "40px",
+        "justifyContent": "space-evenly",
+        "alignItems": "center"
+      },
+      "hero": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "image",
+                "url": "https://i.imgur.com/ekSGB7U.png",
+                "position": "relative",
+                "offsetStart": "10px"
+              },
+              {
+                "type": "text",
+                "text": "比賽專區",
+                "size": "xxl",
+                "weight": "bold",
+                "offsetBottom": "10px",
+                "align": "center"
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "button",
+                "action": {
+                  "type": "uri",
+                  "label": "點我報名",
+                  "uri": "https://hongyun-line.mctech.tw/houngyunpk",
+                  "altUri": {
+                    "desktop": "https://hongyun-line.mctech.tw/houngyunpk"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "height": "200px"
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [],
+        "backgroundColor": "#194051"
+      },
+      "styles": {
+        "body": {
+          "backgroundColor": "#F0F0F0"
+        }
+      }
+    }
+  ]
 }
