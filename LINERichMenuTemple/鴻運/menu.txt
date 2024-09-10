@@ -1,0 +1,198 @@
+{
+    "richmenus": [
+        {
+            "richMenuId": "richmenu-5cc6b160936f8b8583dcbf22f6f2aae9",
+            "name": "aaa",
+            "size": {
+                "width": 2500,
+                "height": 1686
+            },
+            "chatBarText": "基本功能",
+            "selected": true,
+            "areas": [
+                {
+                    "bounds": {
+                        "x": 95,
+                        "y": 10,
+                        "width": 1081,
+                        "height": 254
+                    },
+                    "action": {
+                        "type": "postback",
+                        "data": "no-data"
+                    }
+                },
+                {
+                    "bounds": {
+                        "x": 1298,
+                        "y": 15,
+                        "width": 1081,
+                        "height": 254
+                    },
+                    "action": {
+                        "type": "richmenuswitch",
+                        "data": "changeb",
+                        "richMenuAliasId": "bbb"
+                    }
+                },
+                {
+                    "bounds": {
+                        "x": 199,
+                        "y": 338,
+                        "width": 498,
+                        "height": 480
+                    },
+                    "action": {
+                        "type": "message",
+                        "text": "#會員查詢"
+                    }
+                },
+                {
+                    "bounds": {
+                        "x": 974,
+                        "y": 334,
+                        "width": 498,
+                        "height": 480
+                    },
+                    "action": {
+                        "type": "message",
+                        "text": "#個人狀況"
+                    }
+                },
+                {
+                    "bounds": {
+                        "x": 1778,
+                        "y": 334,
+                        "width": 498,
+                        "height": 480
+                    },
+                    "action": {
+                        "type": "message",
+                        "text": "#培訓專區"
+                    }
+                },
+                {
+                    "bounds": {
+                        "x": 594,
+                        "y": 1007,
+                        "width": 498,
+                        "height": 480
+                    },
+                    "action": {
+                        "type": "uri",
+                        "uri": "https://www.facebook.com/profile.php?id=100057631832609"
+                    }
+                },
+                {
+                    "bounds": {
+                        "x": 1370,
+                        "y": 1011,
+                        "width": 498,
+                        "height": 480
+                    },
+                    "action": {
+                        "type": "message",
+                        "text": "#商家資訊"
+                    }
+                }
+            ]
+        },
+        {
+            "richMenuId": "richmenu-7c85a1dd206abafd0bb01e893c4384bf",
+            "name": "bbb",
+            "size": {
+                "width": 2500,
+                "height": 1686
+            },
+            "chatBarText": "預約專區",
+            "selected": true,
+            "areas": [
+                {
+                    "bounds": {
+                        "x": 199,
+                        "y": 330,
+                        "width": 498,
+                        "height": 480
+                    },
+                    "action": {
+                        "type": "message",
+                        "text": "#教練課程"
+                    }
+                },
+                {
+                    "bounds": {
+                        "x": 978,
+                        "y": 330,
+                        "width": 498,
+                        "height": 480
+                    },
+                    "action": {
+                        "type": "postback",
+                        "data": "postReserveProject:模擬器預約"
+                    }
+                },
+                {
+                    "bounds": {
+                        "x": 1746,
+                        "y": 326,
+                        "width": 498,
+                        "height": 480
+                    },
+                    "action": {
+                        "type": "message",
+                        "text": "#球具維修預約"
+                    }
+                },
+                {
+                    "bounds": {
+                        "x": 199,
+                        "y": 1011,
+                        "width": 498,
+                        "height": 480
+                    },
+                    "action": {
+                        "type": "postback",
+                        "data": "buyBallRoll:"
+                    }
+                },
+                {
+                    "bounds": {
+                        "x": 974,
+                        "y": 1015,
+                        "width": 498,
+                        "height": 480
+                    },
+                    "action": {
+                        "type": "message",
+                        "text": "#球場預約"
+                    }
+                },
+                {
+                    "bounds": {
+                        "x": 1745,
+                        "y": 1007,
+                        "width": 498,
+                        "height": 480
+                    },
+                    "action": {
+                        "type": "postback",
+                        "data": "postReserveProject:健身預約"
+                    }
+                },
+                {
+                    "bounds": {
+                        "x": 100,
+                        "y": 19,
+                        "width": 1081,
+                        "height": 244
+                    },
+                    "action": {
+                        "type": "richmenuswitch",
+                        "data": "changea",
+                        "richMenuAliasId": "aaa"
+                    }
+                }
+            ]
+        }
+    ]
+}
